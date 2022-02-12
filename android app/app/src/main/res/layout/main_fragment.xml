@@ -7,32 +7,22 @@
     android:layout_height="match_parent"
     tools:context=".ui.main.MainFragment">
 
-    <TextView
-        android:id="@+id/message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="MainMenu"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <Button
         android:id="@+id/btn1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/main_menu_option"
         android:layout_marginTop="16dp"
-        android:text="Predicted Prices"
+        android:text="Predicted\nPrices"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/message" />
+        app:layout_constraintTop_toTopOf="@+id/guideline5" />
 
     <Button
         android:id="@+id/btn2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/main_menu_option"
+        android:layout_width="0dp"
+        android:layout_height="88dp"
         android:layout_marginTop="16dp"
-        android:text="Competitor Prices"
+        android:text="Competitor\nPrices"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,12 +30,42 @@
 
     <Button
         android:id="@+id/btn3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/main_menu_option"
+        android:layout_width="0dp"
+        android:layout_height="88dp"
         android:layout_marginTop="16dp"
-        android:text="Submit Prices"
+        android:text="Submit\nData"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn2" />
+
+    <Button
+        android:id="@+id/button"
+        style="@style/main_menu_option"
+        android:layout_width="0dp"
+        android:layout_height="88dp"
+        android:layout_marginTop="16dp"
+        android:text="Approve\nPrices"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn3" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="196dp" />
+
+    <Button
+        android:id="@+id/button2"
+        style="@style/main_menu_option"
+        android:layout_width="0dp"
+        android:layout_height="88dp"
+        android:layout_marginTop="16dp"
+        android:text="Other\nFactors"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
