@@ -88,5 +88,8 @@
         <action
             android:id="@+id/action_cropPredictedFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
+        <argument
+            android:name="crop"
+            app:argType="string" />
     </fragment>
 </navigation>

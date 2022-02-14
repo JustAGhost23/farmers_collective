@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.navigation.NavArgs
 import androidx.navigation.fragment.navArgs
 
 class CropCompetitorFragment : Fragment() {
@@ -25,7 +24,7 @@ class CropCompetitorFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.crop_competitor_fragment, container, false)
-        text = view.findViewById(R.id.cropData)
+        text = view.findViewById(R.id.crop_comp)
 
         text.text = args.crop
         return view

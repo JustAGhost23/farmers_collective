@@ -19,7 +19,7 @@ class CompetitorFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_competitor, container, false)
         val btns = mutableListOf<Button>()
-        val map = listOf("rice" to R.id.rice, "wheat" to R.id.wheat, "corn" to R.id.corn, "jute" to R.id.jute)
+        val map = listOf("rice" to R.id.rice_comp, "wheat" to R.id.wheat_comp, "corn" to R.id.corn_comp, "jute" to R.id.jute_comp)
 
         map.forEach {
             btns.add(view.findViewById(it.second))

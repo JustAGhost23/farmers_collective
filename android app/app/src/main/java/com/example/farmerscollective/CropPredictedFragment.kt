@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.navigation.fragment.navArgs
 
 class CropPredictedFragment : Fragment() {
 
@@ -14,12 +16,18 @@ class CropPredictedFragment : Fragment() {
     }
 
     private lateinit var viewModel: CropPredictedViewModel
+    val args: CropPredictedFragmentArgs by navArgs()
+    private lateinit var text: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.crop_predicted_fragment, container, false)
+        val view = inflater.inflate(R.layout.crop_predicted_fragment, container, false)
+        text = view.findViewById(R.id.crop_predict)
+
+        text.text = args.crop
+        return view
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

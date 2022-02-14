@@ -8,7 +8,7 @@
     tools:context=".CompetitorFragment">
 
     <Button
-        android:id="@+id/rice"
+        android:id="@+id/rice_comp"
         style="@style/main_menu_option"
         android:layout_marginTop="32dp"
         android:backgroundTint="@color/white"
@@ -16,65 +16,65 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/view" />
+        app:layout_constraintTop_toTopOf="@+id/comp_view1" />
 
     <Button
-        android:id="@+id/wheat"
+        android:id="@+id/wheat_comp"
         style="@style/main_menu_option"
         android:layout_marginTop="16dp"
         android:backgroundTint="@color/white"
         android:text="Wheat"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rice" />
+        app:layout_constraintTop_toBottomOf="@+id/rice_comp" />
 
     <Button
-        android:id="@+id/corn"
+        android:id="@+id/corn_comp"
         style="@style/main_menu_option"
         android:layout_marginTop="16dp"
         android:backgroundTint="@color/white"
         android:text="Corn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/wheat" />
+        app:layout_constraintTop_toBottomOf="@+id/wheat_comp" />
 
     <Button
-        android:id="@+id/jute"
+        android:id="@+id/jute_comp"
         style="@style/main_menu_option"
         android:layout_marginTop="16dp"
         android:backgroundTint="@color/white"
         android:text="Jute"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/corn" />
+        app:layout_constraintTop_toBottomOf="@+id/corn_comp" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
+        android:id="@+id/comp_guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.35" />
+        app:layout_constraintGuide_percent="0.3" />
 
     <View
-        android:id="@+id/view"
+        android:id="@+id/comp_view1"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="#FFEB3B"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline2" />
+        app:layout_constraintTop_toTopOf="@+id/comp_guideline" />
 
     <View
-        android:id="@+id/view3"
+        android:id="@+id/comp_view2"
         android:layout_width="315dp"
         android:layout_height="72dp"
         android:background="@drawable/design_bg"
-        app:layout_constraintBottom_toTopOf="@+id/view"
+        app:layout_constraintBottom_toTopOf="@+id/comp_view1"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/comp_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -85,6 +85,6 @@
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/view3" />
+        app:layout_constraintTop_toTopOf="@+id/comp_view2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
