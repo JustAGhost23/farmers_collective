@@ -34,6 +34,10 @@ android {
 
 dependencies {
 
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    implementation 'com.github.AnyChart:AnyChart-Android:1.1.2'
+//gradle kotlin DSL
+    implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.2.0") //for JVM platform
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.5.0'
