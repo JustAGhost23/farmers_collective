@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "946560781470",
+    "project_id": "appccd-6ee6a",
+    "storage_bucket": "appccd-6ee6a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:946560781470:android:a4aef4dc9d555ff6b77f8f",
+        "android_client_info": {
+          "package_name": "com.example.farmerscollective"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "946560781470-0j983kqf52vfo8hureds4rggedqihpcc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2B498cnJ0E1SxBfLD4-d-I3MfSfGQzY8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "946560781470-0j983kqf52vfo8hureds4rggedqihpcc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
