@@ -11,31 +11,15 @@
         android:label="main_fragment"
         tools:layout="@layout/main_fragment" >
         <action
-            android:id="@+id/action_mainFragment_to_predictedFragment"
-            app:destination="@id/predictedFragment"
-            app:popUpTo="@id/mainFragment" />
-        <action
-            android:id="@+id/action_mainFragment_to_competitorFragment"
-            app:destination="@id/competitorFragment"
-            app:popUpTo="@id/mainFragment" />
-        <action
             android:id="@+id/action_mainFragment_to_submitFragment"
             app:destination="@id/submitFragment"
             app:popUpTo="@id/mainFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/competitorFragment"
-        android:name="com.example.farmerscollective.CompetitorFragment"
-        android:label="fragment_competitor"
-        tools:layout="@layout/fragment_competitor" >
         <action
-            android:id="@+id/action_competitorFragment_to_mainFragment"
-            app:destination="@id/mainFragment"
-            app:popUpTo="@id/competitorFragment"
-            app:popUpToInclusive="true" />
+            android:id="@+id/action_mainFragment_to_cropPricesFragment"
+            app:destination="@id/cropPricesFragment" />
         <action
-            android:id="@+id/action_competitorFragment_to_cropCompetitorFragment"
-            app:destination="@id/cropCompetitorFragment" />
+            android:id="@+id/action_mainFragment_to_cropPredictedFragment2"
+            app:destination="@id/cropPredictedFragment" />
     </fragment>
     <fragment
         android:id="@+id/submitFragment"
@@ -49,33 +33,12 @@
             app:popUpToInclusive="true" />
     </fragment>
     <fragment
-        android:id="@+id/predictedFragment"
-        android:name="com.example.farmerscollective.PredictedFragment"
-        android:label="fragment_predicted"
-        tools:layout="@layout/fragment_predicted" >
+        android:id="@+id/cropPricesFragment"
+        android:name="com.example.farmerscollective.CropPricesFragment"
+        android:label="CropPricesFragment" >
         <action
-            android:id="@+id/action_predictedFragment_to_mainFragment"
-            app:destination="@id/mainFragment"
-            app:popUpTo="@id/predictedFragment"
-            app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/action_predictedFragment_to_cropPredictedFragment"
-            app:destination="@id/cropPredictedFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/cropCompetitorFragment"
-        android:name="com.example.farmerscollective.CropCompetitorFragment"
-        android:label="crop_competitor_fragment"
-        tools:layout="@layout/crop_competitor_fragment" >
-        <action
-            android:id="@+id/action_cropCompetitorFragment_to_competitorFragment"
-            app:destination="@id/competitorFragment" />
-        <action
-            android:id="@+id/action_cropCompetitorFragment_to_mainFragment"
+            android:id="@+id/action_cropPricesFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
-        <argument
-            android:name="crop"
-            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/cropPredictedFragment"
@@ -83,13 +46,7 @@
         android:label="crop_predicted_fragment"
         tools:layout="@layout/crop_predicted_fragment" >
         <action
-            android:id="@+id/action_cropPredictedFragment_to_predictedFragment"
-            app:destination="@id/predictedFragment" />
-        <action
             android:id="@+id/action_cropPredictedFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
-        <argument
-            android:name="crop"
-            app:argType="string" />
     </fragment>
 </navigation>

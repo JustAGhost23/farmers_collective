@@ -32,11 +32,11 @@ class MainFragment : Fragment() {
         btn3 = view.findViewById(R.id.btn3)
 
         btn1.setOnClickListener {
-            view.findNavController().navigate(R.id.action_mainFragment_to_predictedFragment)
+            view.findNavController().navigate(R.id.action_mainFragment_to_cropPricesFragment)
         }
 
         btn2.setOnClickListener {
-            view.findNavController().navigate(R.id.action_mainFragment_to_competitorFragment)
+            view.findNavController().navigate(R.id.action_mainFragment_to_cropPredictedFragment2)
         }
 
         btn3.setOnClickListener {

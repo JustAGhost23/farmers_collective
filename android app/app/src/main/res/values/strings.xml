@@ -11,4 +11,9 @@
     <string name="login_failed">"Login failed"</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="main_1">Realtime\nPrices</string>
+    <string name="main_2">Predictions</string>
+    <string name="main_3">Submit\nData</string>
+    <string name="main_4">Approve\nPrices</string>
+    <string name="main_5">Other\nFactors</string>
 </resources>

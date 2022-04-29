@@ -11,7 +11,7 @@
         android:id="@+id/btn1"
         style="@style/main_menu_option"
         android:layout_marginTop="16dp"
-        android:text="Predicted\nPrices"
+        android:text="@string/main_1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline5" />
@@ -22,7 +22,7 @@
         android:layout_width="0dp"
         android:layout_height="88dp"
         android:layout_marginTop="16dp"
-        android:text="Competitor\nPrices"
+        android:text="@string/main_2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,7 +34,7 @@
         android:layout_width="0dp"
         android:layout_height="88dp"
         android:layout_marginTop="16dp"
-        android:text="Submit\nData"
+        android:text="@string/main_3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn2" />
@@ -45,7 +45,7 @@
         android:layout_width="0dp"
         android:layout_height="88dp"
         android:layout_marginTop="16dp"
-        android:text="Approve\nPrices"
+        android:text="@string/main_4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn3" />
@@ -63,7 +63,7 @@
         android:layout_width="0dp"
         android:layout_height="88dp"
         android:layout_marginTop="16dp"
-        android:text="Other\nFactors"
+        android:text="@string/main_5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button" />
