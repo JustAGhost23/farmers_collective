@@ -55,4 +55,7 @@ dependencies {
     // Import the Firebase BoM
     implementation platform('com.google.firebase:firebase-bom:29.3.1')
     implementation 'com.google.firebase:firebase-firestore'
+
+    // Kotlin + coroutines
+    implementation("androidx.work:work-runtime-ktx:2.7.1")
 }

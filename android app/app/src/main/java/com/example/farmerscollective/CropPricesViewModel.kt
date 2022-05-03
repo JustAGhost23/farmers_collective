@@ -1,17 +1,20 @@
 package com.example.farmerscollective
 
+import android.app.Application
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.farmerscollective.data.Prediction
+import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.google.firebase.firestore.FirebaseFirestore
+import java.io.File
 
 
+class CropPricesViewModel(application: Application) : AndroidViewModel(application) {
 
-
-class CropPricesViewModel : ViewModel() {
-    // Access a Cloud Firestore instance from your Activity
-    var db: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private val context = application
     private val _data = MutableLiveData<MutableMap<String, Float>>(mutableMapOf())
 
     val data: LiveData<MutableMap<String, Float>>
@@ -21,22 +24,22 @@ class CropPricesViewModel : ViewModel() {
         getData()
     }
 
-    fun getData() {
-        db.collection("KOTA_Prices")
-            .get()
-            .addOnSuccessListener {
-                for(doc in it) {
-                    val prices = doc.data["data"] as ArrayList<HashMap<String, Any>>
-                    val temp = _data.value!!
-                    for(row in prices) {
-                        temp[row["DATE"]!!.toString()] = row["PRICE"]!!.toString().toFloat()
-                    }
-                    _data.value = temp
+    private fun getData() {
+
+        val temp = mutableMapOf<String, Float>()
+
+        if(context.fileList().isNotEmpty()) {
+            val file = File(context.filesDir, "prices.csv")
+
+            csvReader().open(file) {
+                readAllAsSequence().forEach {
+                    if(it[0] != "DATE") temp[it[0]] = it[1].toFloat()
                 }
             }
-            .addOnFailureListener {
-                Log.v("ViewModel", it.toString())
-            }
+
+            _data.value = temp
+        }
+
     }
 
 }

@@ -2,6 +2,7 @@ package com.example.farmerscollective
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -27,6 +28,9 @@ class CropPredictedFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(CropPredictedViewModel::class.java)
         // TODO: Use the ViewModel
+        viewModel.data.observe(viewLifecycleOwner, {
+            Log.v("Completed", it.toString())
+        })
     }
 
 }

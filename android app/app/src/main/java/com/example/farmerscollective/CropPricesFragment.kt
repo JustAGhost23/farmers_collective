@@ -10,6 +10,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -26,17 +27,18 @@ class CropPricesFragment : Fragment(), OnChartGestureListener {
         fun newInstance() = CropPricesFragment()
     }
 
-    private lateinit var viewModel: CropPricesViewModel
     private lateinit var chart: LineChart
     private lateinit var dates: ArrayList<String>
+    private val viewModel by viewModels<CropPricesViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.crop_prices_fragment, container, false)
+    ): View = inflater.inflate(R.layout.crop_prices_fragment, container, false)
 
-        viewModel = ViewModelProvider(this)[CropPricesViewModel::class.java]
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         val data = ArrayList<ILineDataSet>()
         val values1 = ArrayList<Entry>()
         dates = ArrayList()
@@ -94,8 +96,6 @@ class CropPricesFragment : Fragment(), OnChartGestureListener {
             chart.invalidate()
 
         })
-
-        return view
     }
 
     override fun onChartGestureStart(
@@ -107,7 +107,7 @@ class CropPricesFragment : Fragment(), OnChartGestureListener {
 
     override fun onChartGestureEnd(
         me: MotionEvent?,
-        lastPerformedGesture: ChartTouchListener.ChartGesture?
+             lastPerformedGesture: ChartTouchListener.ChartGesture?
     ) {
         Log.v("LongPress", "End")
     }
