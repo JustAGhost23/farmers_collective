@@ -22,7 +22,7 @@ class PredictWorker(appContext: Context, workerParams: WorkerParameters):
                 val data = doc.data["data"] as ArrayList<HashMap<String, Any>>
                 val temp = ArrayList<Prediction>()
                 for(row in data) {
-                    temp.add(Prediction(row["DATE"]!!.toString(), row["CONFIDENCE"]!!.toString().toFloat(), row["PREDICTED"]!!.toString().toFloat()))
+                    temp.add(Prediction(row["DATE"]!!.toString(), row["CONFIDENCE"]!!.toString().toFloat(), row["PREDICTED"]!!.toString().toFloat(), row["MEAN_GAIN"]!!.toString().toFloat(), row["MEAN_LOSS"]!!.toString().toFloat()))
                 }
 
                 temp.sortBy { value -> value.output }
@@ -30,7 +30,7 @@ class PredictWorker(appContext: Context, workerParams: WorkerParameters):
 
                 csvWriter().open(file) {
                     for(row in temp) {
-                        writeRow(row.date, row.confidence, row.output)
+                        writeRow(row.date, row.confidence, row.output, row.gain, row.loss)
                     }
                 }
 

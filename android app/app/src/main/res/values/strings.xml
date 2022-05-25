@@ -12,8 +12,29 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="main_1">Realtime\nPrices</string>
-    <string name="main_2">Predictions</string>
-    <string name="main_3">Submit\nData</string>
-    <string name="main_4">Approve\nPrices</string>
-    <string name="main_5">Other\nFactors</string>
+    <string name="main_2">Recommendation</string>
+    <string name="main_3">Competitor\nPrices</string>
+    <string name="main_4">About</string>
+    <string name="profit_chance">Profit chance:</string>
+
+    <string-array name="mandi">
+
+        <item>TELANGANA_ADILABAD_Price</item>
+        <item>RAJASTHAN_KOTA_Price</item>
+        <item>RAJASTHAN_BHAWANI MANDI_Price</item>
+        <item>MADHYA PRADESH_SONKATCH_Price</item>
+        <item>MADHYA PRADESH_RATLAM_Price</item>
+        <item>MADHYA PRADESH_MAHIDPUR_Price</item>
+        <item>MADHYA PRADESH_GANJBASODA_Price</item>
+
+    </string-array>
+
+    <string-array name="commodity">
+        <item>Soyabean</item>
+    </string-array>
+
+    <string name="about_text">
+        <item>This app informs you about the current prices in Adilabad, our recommendations for selling produce and prices offered by competitors.</item>
+    </string>
+
 </resources>

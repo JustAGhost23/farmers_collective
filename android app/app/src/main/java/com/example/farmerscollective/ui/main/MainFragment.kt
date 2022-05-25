@@ -20,6 +20,7 @@ class MainFragment : Fragment() {
     private lateinit var btn1: Button
     private lateinit var btn2: Button
     private lateinit var btn3: Button
+    private lateinit var btn4: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,6 +31,7 @@ class MainFragment : Fragment() {
         btn1 = view.findViewById(R.id.btn1)
         btn2 = view.findViewById(R.id.btn2)
         btn3 = view.findViewById(R.id.btn3)
+        btn4 = view.findViewById(R.id.btn4)
 
         btn1.setOnClickListener {
             view.findNavController().navigate(R.id.action_mainFragment_to_cropPricesFragment)
@@ -40,7 +42,11 @@ class MainFragment : Fragment() {
         }
 
         btn3.setOnClickListener {
-            view.findNavController().navigate(R.id.action_mainFragment_to_submitFragment)
+            view.findNavController().navigate(R.id.action_mainFragment_to_competitorFragment)
+        }
+
+        btn4.setOnClickListener {
+            view.findNavController().navigate(R.id.action_mainFragment_to_aboutFragment)
         }
 
         return view

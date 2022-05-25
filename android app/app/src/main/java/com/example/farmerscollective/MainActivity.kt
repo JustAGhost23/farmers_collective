@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
 
         WorkManager
             .getInstance(applicationContext)
-            .enqueueUniquePeriodicWork("price", ExistingPeriodicWorkPolicy.KEEP, worker1)
+            .enqueueUniquePeriodicWork("price", ExistingPeriodicWorkPolicy.REPLACE, worker1)
 
         WorkManager
             .getInstance(applicationContext)

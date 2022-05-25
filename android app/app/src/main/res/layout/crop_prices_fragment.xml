@@ -1,51 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+ <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         tools:context=".CropPredictedFragment">
 
 
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/predict_guideline"
+            android:id="@+id/about_guideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.3" />
 
         <View
-            android:id="@+id/predict_view1"
+            android:id="@+id/price_view1"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="#FFEB3B"
             app:layout_constraintBottom_toTopOf="@+id/guideline8"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/predict_guideline" />
+            app:layout_constraintTop_toTopOf="@+id/about_guideline" />
 
 
         <View
-            android:id="@+id/predict_view2"
+            android:id="@+id/price_view2"
             android:layout_width="315dp"
             android:layout_height="72dp"
             android:background="@drawable/design_bg"
-            app:layout_constraintBottom_toTopOf="@+id/predict_view1"
+            app:layout_constraintBottom_toTopOf="@+id/price_view1"
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:id="@+id/predict_title"
+            android:id="@+id/price_title"
             android:text="@string/main_1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/predict_view2"
+            app:layout_constraintTop_toTopOf="@+id/price_view2"
             style="@style/title_text" />
 
         <androidx.constraintlayout.widget.Guideline
@@ -59,65 +54,38 @@
             android:id="@+id/chart"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/textView3"
+            android:minHeight="200dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/predict_view1">
+            app:layout_constraintTop_toBottomOf="@+id/chipGroup">
 
         </com.github.mikephil.charting.charts.LineChart>
 
-        <TextView
-            android:id="@+id/textView3"
-            style="@style/title_text"
+        <Spinner
+            android:id="@+id/spinner2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="36dp"
-            android:text="Neighbouring Mandis"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/guideline10" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline10"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.85" />
+            app:layout_constraintTop_toTopOf="@+id/guideline8" />
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chipGroup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView3">
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Koregaon" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Bhawani" />
-
-
-        </com.google.android.material.chip.ChipGroup>
-
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/chart2"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:orientation="horizontal"
+            app:singleSelection="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/chipGroup" />
+            app:layout_constraintTop_toBottomOf="@+id/spinner2" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-</ScrollView>

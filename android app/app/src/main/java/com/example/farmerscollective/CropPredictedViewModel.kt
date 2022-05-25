@@ -29,11 +29,14 @@ class CropPredictedViewModel(application: Application) : AndroidViewModel(applic
         if(context.fileList().isNotEmpty()) {
             val file = File(context.filesDir, "predict.csv")
 
-            csvReader().open(file) {
-                readAllAsSequence().forEach {
-                    temp.add(Prediction(it[0], it[1].toFloat(), it[2].toFloat()))
+            if(file.exists()) {
+                csvReader().open(file) {
+                    readAllAsSequence().forEach {
+                        temp.add(Prediction(it[0], it[1].toFloat(), it[2].toFloat(), it[3].toFloat(), it[4].toFloat()))
+                    }
                 }
             }
+
 
             _data.value = temp
         }

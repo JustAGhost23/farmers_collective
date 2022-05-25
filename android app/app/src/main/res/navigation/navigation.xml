@@ -11,26 +11,17 @@
         android:label="main_fragment"
         tools:layout="@layout/main_fragment" >
         <action
-            android:id="@+id/action_mainFragment_to_submitFragment"
-            app:destination="@id/submitFragment"
-            app:popUpTo="@id/mainFragment" />
-        <action
             android:id="@+id/action_mainFragment_to_cropPricesFragment"
             app:destination="@id/cropPricesFragment" />
         <action
             android:id="@+id/action_mainFragment_to_cropPredictedFragment2"
             app:destination="@id/cropPredictedFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/submitFragment"
-        android:name="com.example.farmerscollective.SubmitFragment"
-        android:label="fragment_submit"
-        tools:layout="@layout/fragment_submit" >
         <action
-            android:id="@+id/action_submitFragment_to_mainFragment"
-            app:destination="@id/mainFragment"
-            app:popUpTo="@id/submitFragment"
-            app:popUpToInclusive="true" />
+            android:id="@+id/action_mainFragment_to_competitorFragment"
+            app:destination="@id/competitorFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_aboutFragment"
+            app:destination="@id/aboutFragment" />
     </fragment>
     <fragment
         android:id="@+id/cropPricesFragment"
@@ -47,6 +38,23 @@
         tools:layout="@layout/crop_predicted_fragment" >
         <action
             android:id="@+id/action_cropPredictedFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/competitorFragment"
+        android:name="com.example.farmerscollective.CompetitorFragment"
+        android:label="competitor_fragment"
+        tools:layout="@layout/competitor_fragment" >
+        <action
+            android:id="@+id/action_competitorFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="com.example.farmerscollective.AboutFragment"
+        android:label="AboutFragment" >
+        <action
+            android:id="@+id/action_aboutFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
     </fragment>
 </navigation>

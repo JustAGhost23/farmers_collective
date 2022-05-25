@@ -16,7 +16,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [SubmitFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class SubmitFragment : Fragment() {
+class CompetitorFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -34,7 +34,7 @@ class SubmitFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_submit, container, false)
+        return inflater.inflate(R.layout.competitor_fragment, container, false)
     }
 
     companion object {
@@ -49,7 +49,7 @@ class SubmitFragment : Fragment() {
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            SubmitFragment().apply {
+            CompetitorFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)

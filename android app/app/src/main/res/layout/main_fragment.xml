@@ -40,7 +40,7 @@
         app:layout_constraintTop_toBottomOf="@+id/btn2" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/btn4"
         style="@style/main_menu_option"
         android:layout_width="0dp"
         android:layout_height="88dp"
@@ -56,16 +56,5 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.3" />
-
-    <Button
-        android:id="@+id/button2"
-        style="@style/main_menu_option"
-        android:layout_width="0dp"
-        android:layout_height="88dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/main_5"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
