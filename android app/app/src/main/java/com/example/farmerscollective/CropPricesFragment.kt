@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
@@ -32,8 +33,8 @@ import java.util.stream.Collectors
 import java.util.stream.Stream
 
 import com.google.android.material.chip.ChipDrawable
-
-
+import com.google.android.material.switchmaterial.SwitchMaterial
+import kotlin.random.Random
 
 
 class CropPricesFragment : Fragment(), OnChartGestureListener {
@@ -43,6 +44,7 @@ class CropPricesFragment : Fragment(), OnChartGestureListener {
     }
 
     private lateinit var chart: LineChart
+    private lateinit var spin: Spinner
     private lateinit var spin2: Spinner
     private lateinit var group: ChipGroup
     private val viewModel by viewModels<CropPricesViewModel>()
@@ -56,34 +58,47 @@ class CropPricesFragment : Fragment(), OnChartGestureListener {
         super.onViewCreated(view, savedInstanceState)
 
         val data = ArrayList<ILineDataSet>()
-        val start = LocalDate.of(2022, 1, 1)
-        val colors = mapOf("TELANGANA_ADILABAD_Price" to "#FF0000", "RAJASTHAN_KOTA_Price" to "#00FF00",
-        "RAJASTHAN_BHAWANI MANDI_Price" to "#0000FF", "MADHYA PRADESH_SONKATCH_Price" to "#FFFF00",
-        "MADHYA PRADESH_RATLAM_Price" to "#00FFFF", "MADHYA PRADESH_MAHIDPUR_Price" to "#FF00FF",
-        "MADHYA PRADESH_GANJBASODA_Price" to "#000000")
+        val start = LocalDate.of(2001, 7, 1)
+        val end = LocalDate.of(2002, 6, 30)
 
 
         chart = view.findViewById(R.id.chart)
+        spin = view.findViewById(R.id.spinner)
         spin2 = view.findViewById(R.id.spinner2)
         group = view.findViewById(R.id.chipGroup)
 
+        val adap1 = ArrayAdapter(context!!, android.R.layout.simple_spinner_item, resources.getStringArray(R.array.mandi))
+        adap1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        spin.adapter = adap1
+
+        spin.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                viewModel.changeMandi(resources.getStringArray(R.array.mandi)[p2])
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                //do nothing
+            }
+        }
         val adap2 = ArrayAdapter(context!!, android.R.layout.simple_spinner_item, resources.getStringArray(R.array.commodity))
         adap2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
         spin2.adapter = adap2
 
-        val arr = resources.getStringArray(R.array.mandi)
+        val current = if (LocalDate.now().isBefore(LocalDate.of(LocalDate.now().year, 6, 30)))
+            LocalDate.now().year - 1
+        else LocalDate.now().year
 
+        val arr = 2014..current
 
         for(item in arr) {
 
-            if(!item.equals("TELANGANA_ADILABAD_Price")) {
-                val res = Regex("_.+_").find(item)
-                val text = res!!.value.substring(1, res.value.length - 1)
+            val text = "${item}-${(item + 1) % 100}"
 
-                val chip = Chip(context)
-                chip.text = text
-                chip.isCheckable = true
+            val chip = Chip(context)
+            chip.text = text
+            chip.isCheckable = true
 //                val chipDrawable = ChipDrawable.createFromAttributes(
 //                    context!!,
 //                    null,
@@ -91,12 +106,13 @@ class CropPricesFragment : Fragment(), OnChartGestureListener {
 //                    R.style.Widget_Material3_Chip_Filter
 //                )
 //                chip.setChipDrawable(chipDrawable)
-                chip.setOnCheckedChangeListener { button, b ->
-                    viewModel.makeSelection(item, b)
-                }
+            if(item == current) chip.isChecked = true
 
-                group.addView(chip)
+            chip.setOnCheckedChangeListener { button, b ->
+                viewModel.makeSelection(item, b)
             }
+
+            group.addView(chip)
 
         }
 
@@ -120,49 +136,57 @@ class CropPricesFragment : Fragment(), OnChartGestureListener {
         chart.setScaleEnabled(true)
         chart.isDoubleTapToZoomEnabled = false
         // if disabled, scaling can be done on x- and y-axis separately
-        chart.setPinchZoom(true)
+        chart.setPinchZoom(false)
 
         viewModel.data.observe(viewLifecycleOwner, {
 
             chart.clear()
             data.clear()
 
-            val dates = ArrayList<String>()
-            val end = LocalDate.parse(it["TELANGANA_ADILABAD_Price"]!!.keys.last())
+            if(it.isNotEmpty()) {
+                val dates = ArrayList<String>()
 
-            Stream.iterate(start, { d ->
-                d.plusDays(1)
-            })
-                .limit(start.until(end, ChronoUnit.DAYS))
-                .forEach { date ->
-                    dates.add(date.toString())
+                Stream.iterate(start, { d ->
+                    d.plusDays(1)
+                })
+                    .limit(start.until(end, ChronoUnit.DAYS))
+                    .forEach { date ->
+                        dates.add("${if(date.monthValue < 10) "0" else ""}${date.monthValue}-${if(date.dayOfMonth < 10) "0" else ""}${date.dayOfMonth}")
+                    }
+
+
+                for(year in it) {
+
+                    val values1 = ArrayList<Entry>()
+                    var nextYear = false
+
+                    for(mmdd in dates) {
+                        val i = dates.indexOf(mmdd)
+                        if(mmdd.equals("01-01")) nextYear = true
+
+                        Log.v("frag", "${year.key + if(nextYear) 1 else 0}-${mmdd}")
+
+                        if(year.value.containsKey("${year.key + if(nextYear) 1 else 0}-${mmdd}"))
+                            values1.add(Entry(i.toFloat(), year.value["${year.key + if(nextYear) 1 else 0}-${mmdd}"]!!))
+                    }
+
+                    val dataset1 = LineDataSet(values1, year.key.toString())
+                    dataset1.setDrawCircles(false)
+                    dataset1.color = Color.rgb(Random.nextInt(255), Random.nextInt(255), Random.nextInt(255))
+
+                    data.add(dataset1)
+
                 }
 
 
-            for(mandi in it) {
 
-                val values1 = ArrayList<Entry>()
+                chart.xAxis.valueFormatter = IndexAxisValueFormatter(dates)
+                // enable scaling and dragging
 
-                for(date in mandi.value.keys) {
-                    val i = dates.indexOf(date)
-                    values1.add(Entry(i.toFloat(), mandi.value[date]!!))
-                }
 
-                val dataset1 = LineDataSet(values1, mandi.key)
-                dataset1.setDrawCircles(false)
-                dataset1.color = Color.parseColor(colors[mandi.key])
-
-                data.add(dataset1)
-
+                chart.data = LineData(data)
             }
 
-
-
-            chart.xAxis.valueFormatter = IndexAxisValueFormatter(dates)
-            // enable scaling and dragging
-
-
-            chart.data = LineData(data)
             chart.onChartGestureListener = this
 
             chart.invalidate()

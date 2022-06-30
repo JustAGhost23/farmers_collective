@@ -1,21 +1,19 @@
 <resources>
-    <string name="app_name">FarmersCollective</string>
+    <string name="app_name">Rythu Vaani</string>
     <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="welcome">"Welcome!"</string>
-    <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_password">Password must be >5 characters</string>
-    <string name="login_failed">"Login failed"</string>
+    <string name="prompt_email" translatable="false">Email</string>
+    <string name="prompt_password" translatable="false">Password</string>
+    <string name="action_sign_in" translatable="false">Sign in or register</string>
+    <string name="action_sign_in_short" translatable="false">Sign in</string>
+    <string name="welcome" translatable="false">"Welcome!"</string>
+    <string name="invalid_username" translatable="false">Not a valid username</string>
+    <string name="invalid_password" translatable="false">Password must be >5 characters</string>
+    <string name="login_failed" translatable="false">"Login failed"</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="main_1">Realtime\nPrices</string>
     <string name="main_2">Recommendation</string>
     <string name="main_3">Competitor\nPrices</string>
     <string name="main_4">About</string>
-    <string name="profit_chance">Profit chance:</string>
 
     <string-array name="mandi">
 
@@ -33,8 +31,9 @@
         <item>Soyabean</item>
     </string-array>
 
-    <string name="about_text">
-        <item>This app informs you about the current prices in Adilabad, our recommendations for selling produce and prices offered by competitors.</item>
-    </string>
+    <string name="about_text">This app informs you about the current prices in Adilabad, our recommendations for selling produce and prices offered by competitors.</string>
+    <string name="top_3_days_to_sell" translatable="false">Green represents the expected gain if the forecasted price is greater than today, and red represents the expected loss if the price is less than today.\n\n<b>Top 3 days to sell: </b></string>
+    <string name="title">Rythu\nVaani</string>
+    <string name="see_last_year_prices" translatable="false">See last year prices</string>
 
 </resources>
