@@ -136,22 +136,20 @@ class CropPredictedFragment : Fragment() {
                 d1.compareTo(d2)
             }
 
-
+            val pred_dates = dates.subList(dates.size - 30, dates.size)
+            val real_dates = dates.subList(0, dates.size - 30)
 
             Log.d("k", dates.toString())
 
             val values1 = ArrayList<Entry>()
             val values2 = ArrayList<Entry>()
-            val itr = dates.iterator()
 
-            for(ind in 0..29) {
-                val date = itr.next()
+            for(date in real_dates) {
                 val i = dates.indexOf(date)
                 values1.add(Entry(i.toFloat(), it[date]!!))
             }
 
-            while(itr.hasNext()) {
-                val date = itr.next()
+            for(date in pred_dates) {
                 val i = dates.indexOf(date)
                 values2.add(Entry(i.toFloat(), it[date]!!))
             }
@@ -171,7 +169,6 @@ class CropPredictedFragment : Fragment() {
 
             chart.xAxis.valueFormatter = IndexAxisValueFormatter(dates)
             // enable scaling and dragging
-
 
             chart.data = LineData(data)
 

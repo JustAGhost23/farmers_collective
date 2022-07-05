@@ -5,9 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
+import androidx.work.*
 import com.example.farmerscollective.workers.DataWorker
 import java.util.concurrent.TimeUnit
 
@@ -21,7 +19,15 @@ class MainActivity : AppCompatActivity() {
 
         controller = Navigation.findNavController(this, R.id.nav_host_fragment_container)
 
-        val worker = PeriodicWorkRequestBuilder<DataWorker>(1, TimeUnit.DAYS).build()
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        val worker = PeriodicWorkRequestBuilder<DataWorker>(1, TimeUnit.DAYS)
+            .setConstraints(constraints)
+            .build()
+
+
 
         WorkManager
             .getInstance(applicationContext)

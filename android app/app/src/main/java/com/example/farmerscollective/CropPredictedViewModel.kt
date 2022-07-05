@@ -41,21 +41,23 @@ class CropPredictedViewModel(application: Application) : AndroidViewModel(applic
                     readAllAsSequence().forEachIndexed { i, it ->
 
                         if(i == 0) date = it[0]
-                        temp.add(Prediction(it[0], it[1].toFloat(), it[2].toFloat(), it[3].toFloat(), it[4].toFloat()))
-                        map[it[0]] = it[3].toFloat()
+                        temp.add(Prediction(it[0], it[1].toFloat(), it[2].toFloat(), it[3].toFloat(), it[4].toFloat(), it[5].toFloat()))
+                        map[it[0]] = it[2].toFloat()
                     }
                 }
             }
 
             file = File(context.filesDir, "TELANGANA_ADILABAD_Price")
 
+            val start = if (LocalDate.now().isBefore(LocalDate.of(LocalDate.now().year, 7, 1)))
+                LocalDate.of(LocalDate.now().year - 2, 12, 31)
+            else LocalDate.of(LocalDate.now().year - 1, 12, 31)
+
             if(file.exists()) {
                 csvReader().open(file) {
                     readAllAsSequence().forEach {
-                        if(LocalDate.parse(it[0])
-                                .plusDays(31)
-                                .isAfter(LocalDate.parse(date)) &&
-                            LocalDate.parse(it[0]).isBefore(LocalDate.parse(date))) {
+                        val dt = LocalDate.parse(it[0])
+                        if(dt.isAfter(start) && dt.isBefore(LocalDate.parse(date))) {
 //                        if(it[0] != "DATE" && LocalDate.parse(it[0])
 //                                .isBefore(LocalDate.of(2022, 5, 1)) &&
 //                                LocalDate.parse(it[0]).isAfter(LocalDate.of(2022, 2, 28))) {
