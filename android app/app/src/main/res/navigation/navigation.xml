@@ -17,11 +17,11 @@
             android:id="@+id/action_mainFragment_to_cropPredictedFragment2"
             app:destination="@id/cropPredictedFragment" />
         <action
-            android:id="@+id/action_mainFragment_to_competitorFragment"
-            app:destination="@id/competitorFragment" />
-        <action
             android:id="@+id/action_mainFragment_to_aboutFragment"
             app:destination="@id/aboutFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_cropPastPredictedFragment"
+            app:destination="@id/cropPastPredictedFragment" />
     </fragment>
     <fragment
         android:id="@+id/cropPricesFragment"
@@ -41,20 +41,19 @@
             app:destination="@id/mainFragment" />
     </fragment>
     <fragment
-        android:id="@+id/competitorFragment"
-        android:name="com.example.farmerscollective.CompetitorFragment"
-        android:label="competitor_fragment"
-        tools:layout="@layout/competitor_fragment" >
-        <action
-            android:id="@+id/action_competitorFragment_to_mainFragment"
-            app:destination="@id/mainFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/aboutFragment"
         android:name="com.example.farmerscollective.AboutFragment"
         android:label="AboutFragment" >
         <action
             android:id="@+id/action_aboutFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/cropPastPredictedFragment"
+        android:name="com.example.farmerscollective.CropPastPredictedFragment"
+        android:label="CropPastPredictedFragment" >
+        <action
+            android:id="@+id/action_cropPastPredictedFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
     </fragment>
 </navigation>

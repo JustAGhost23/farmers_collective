@@ -59,7 +59,10 @@ class MainFragment : Fragment() {
         }
 
         btn3.setOnClickListener {
-            view.findNavController().navigate(R.id.action_mainFragment_to_competitorFragment)
+            val click = activity?.getSharedPreferences("prefs", Context.MODE_PRIVATE)?.getBoolean("isDataAvailable", false)
+            Log.d("TESTING", click.toString())
+            if(click == true) view.findNavController().navigate(R.id.action_mainFragment_to_cropPastPredictedFragment)
+            else Toast.makeText(activity, "Please wait! Still loading data", Toast.LENGTH_SHORT).show()
         }
 
         btn4.setOnClickListener {

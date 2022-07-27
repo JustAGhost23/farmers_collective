@@ -1,12 +1,13 @@
 package com.example.farmerscollective
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.work.*
 import com.example.farmerscollective.workers.DataWorker
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
@@ -27,15 +28,16 @@ class MainActivity : AppCompatActivity() {
             .setConstraints(constraints)
             .build()
 
-
-
         WorkManager
             .getInstance(applicationContext)
             .enqueueUniquePeriodicWork("data", ExistingPeriodicWorkPolicy.KEEP, worker)
 
     }
 
+
     fun toHome(view: View) {
         controller.navigate(R.id.mainFragment)
     }
+
+
 }

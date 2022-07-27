@@ -12,7 +12,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="main_1">Realtime\nPrices</string>
     <string name="main_2">Recommendation</string>
-    <string name="main_3">Competitor\nPrices</string>
+    <string name="main_3">Past Recommendations</string>
+    <string name="main_3_nl">Past \nRecommendations</string>
     <string name="main_4">About</string>
 
     <string-array name="mandi">

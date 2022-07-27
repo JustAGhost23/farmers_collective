@@ -10,14 +10,26 @@
         tools:context=".CropPredictedFragment">
 
 
-    <Spinner
-        android:id="@+id/spinner"
+    <View
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/chart" />
+
+     <Spinner
+        android:id="@+id/mandiSelector"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner2" />
+        app:layout_constraintTop_toBottomOf="@+id/commSelector" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/about_guideline"
@@ -57,25 +69,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="257dp" />
+        app:layout_constraintGuide_begin="258dp" />
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/chart"
         android:layout_width="0dp"
-        android:layout_height="250dp"
+        android:layout_height="300dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:minHeight="200dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chipGroup"/>
+        app:layout_constraintTop_toBottomOf="@+id/chipGroup" />
 
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/chart2"
         android:layout_width="0dp"
-        android:layout_height="250dp"
+        android:layout_height="300dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
@@ -84,7 +96,7 @@
         app:layout_constraintTop_toBottomOf="@+id/chipGroup2" />
 
     <Spinner
-        android:id="@+id/spinner2"
+        android:id="@+id/commSelector"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:layout_marginStart="8dp"
@@ -102,7 +114,7 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner"
+        app:layout_constraintTop_toBottomOf="@+id/mandiSelector"
         app:singleSelection="false" />
 
     <com.google.android.material.chip.ChipGroup
@@ -113,11 +125,22 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chart">
+        app:layout_constraintTop_toBottomOf="@+id/divider">
 
     </com.google.android.material.chip.ChipGroup>
+
+    <Spinner
+        android:id="@+id/yearSelector"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:paddingBottom="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/chart2" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -26,6 +26,7 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.github.mikephil.charting.listener.ChartTouchListener
 import com.github.mikephil.charting.listener.OnChartGestureListener
+import java.text.DecimalFormat
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import java.time.temporal.TemporalUnit
@@ -113,6 +114,12 @@ class CropPredictedFragment : Fragment() {
                 param2.guidePercent = (1f + g) / 2
                 right.layoutParams = param2
 
+                val loss = prediction.findViewById<TextView>(R.id.loss_val)
+                val gain = prediction.findViewById<TextView>(R.id.gain_val)
+
+                loss.text = (Math.round(-item.loss * 10.0) / 10.0).toString()
+                gain.text = (Math.round(item.gain * 10.0) / 10.0).toString()
+
                 recomm.addView(row)
 
             }
@@ -167,10 +174,16 @@ class CropPredictedFragment : Fragment() {
 
             data.add(dataset2)
 
-            chart.xAxis.valueFormatter = IndexAxisValueFormatter(dates)
+            chart.xAxis.valueFormatter = IndexAxisValueFormatter(ArrayList(dates.map { date->
+                //2022-07-25
+                date.substring(8) + date.substring(4, 8) + date.substring(2, 4)
+            }))
             // enable scaling and dragging
 
             chart.data = LineData(data)
+            chart.setVisibleXRangeMaximum(30.0f)
+            chart.moveViewToX((dates.size - 45).toFloat())
+
 
             chart.invalidate()
         })

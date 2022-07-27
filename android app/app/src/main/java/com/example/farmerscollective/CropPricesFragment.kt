@@ -30,7 +30,7 @@ import java.util.stream.Stream
 import kotlin.random.Random
 
 
-class CropPricesFragment : Fragment(), OnChartGestureListener {
+class CropPricesFragment : Fragment() {
 
     companion object {
         fun newInstance() = CropPricesFragment()
@@ -40,6 +40,7 @@ class CropPricesFragment : Fragment(), OnChartGestureListener {
     private lateinit var mandiChart: LineChart
     private lateinit var spin: Spinner
     private lateinit var spin2: Spinner
+    private lateinit var spin3: Spinner
     private lateinit var group: ChipGroup
     private lateinit var group2: ChipGroup
     private val viewModel by viewModels<CropPricesViewModel>()
@@ -58,8 +59,9 @@ class CropPricesFragment : Fragment(), OnChartGestureListener {
         yearChart = view.findViewById(R.id.chart)
         mandiChart = view.findViewById(R.id.chart2)
 
-        spin = view.findViewById(R.id.spinner)
-        spin2 = view.findViewById(R.id.spinner2)
+        spin = view.findViewById(R.id.mandiSelector)
+        spin2 = view.findViewById(R.id.commSelector)
+        spin3 = view.findViewById(R.id.yearSelector)
 
         group = view.findViewById(R.id.chipGroup)
         group2 = view.findViewById(R.id.chipGroup2)
@@ -69,7 +71,7 @@ class CropPricesFragment : Fragment(), OnChartGestureListener {
             "MADHYA PRADESH_RATLAM_Price" to "#00FFFF", "MADHYA PRADESH_MAHIDPUR_Price" to "#FF00FF",
             "MADHYA PRADESH_GANJBASODA_Price" to "#000000")
 
-        val yearColors = mutableMapOf<Int, String>()
+        val yearColors = mutableMapOf<Int, Int>()
 
         val adap1 = ArrayAdapter(context!!, android.R.layout.simple_spinner_item, resources.getStringArray(R.array.mandi))
         adap1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -94,18 +96,28 @@ class CropPricesFragment : Fragment(), OnChartGestureListener {
             LocalDate.now().year - 1
         else LocalDate.now().year
 
-        val arr = (current - 2)..current
+        val arr = 2014..current
+
+        val adap3 = ArrayAdapter(context!!, android.R.layout.simple_spinner_item, arr.toList())
+        adap3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        spin3.adapter = adap3
+        spin3.setSelection(adap3.getPosition(current))
+
+        spin3.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                viewModel.changeYear(arr.toList()[p2])
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                //do nothing
+            }
+        }
 
         for(item in arr) {
 
             val text = "${item}-${(item + 1) % 100}"
-            var color = "#000000"
-
-            val replace = color.toCharArray()
-            replace[(current - item) * 2 + 1] = 'F'
-            replace[(current - item) * 2 + 2] = 'F'
-            color = String(replace)
-
+            val color = Color.rgb(Random.nextInt(200), Random.nextInt(200), Random.nextInt(200))
             yearColors[item] = color
 
             val chip = Chip(context)
@@ -127,20 +139,6 @@ class CropPricesFragment : Fragment(), OnChartGestureListener {
             group.addView(chip)
 
         }
-
-        yearColors[-1] = "#000000"
-
-        val text = "2014-present (mean data)"
-
-        val chip = Chip(context)
-        chip.text = text
-        chip.isCheckable = true
-
-        chip.setOnCheckedChangeListener { button, b ->
-            viewModel.selectYear(-1, b)
-        }
-
-        group.addView(chip)
 
         val mandis = resources.getStringArray(R.array.mandi)
 
@@ -166,45 +164,23 @@ class CropPricesFragment : Fragment(), OnChartGestureListener {
         }
 
 
-        yearChart.setDrawGridBackground(false)
-        yearChart.description.isEnabled = false
-        yearChart.setDrawBorders(false)
-//        chart.legend.isEnabled = false
-        yearChart.legend.isWordWrapEnabled = true
+        ready(yearChart)
+        ready(mandiChart)
 
+        val dates = ArrayList<String>()
 
-        yearChart.axisLeft.isEnabled = false
-        yearChart.axisRight.setDrawAxisLine(false)
-        yearChart.axisRight.setDrawGridLines(false)
-        yearChart.xAxis.setDrawAxisLine(true)
-        yearChart.xAxis.setDrawGridLines(false)
-        yearChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
-        yearChart.xAxis.granularity = 1f
-        yearChart.isDragEnabled = true
-        yearChart.setScaleEnabled(true)
-        yearChart.isDoubleTapToZoomEnabled = false
-        // if disabled, scaling can be done on x- and y-axis separately
-        yearChart.setPinchZoom(false)
+        val start = LocalDate.of(2001, 7, 1)
+        val end = LocalDate.of(2002, 6, 30)
 
-        mandiChart.setDrawGridBackground(false)
-        mandiChart.description.isEnabled = false
-        mandiChart.setDrawBorders(false)
-//        chart.legend.isEnabled = false
-        mandiChart.legend.isWordWrapEnabled = true
+        Stream.iterate(start, { d ->
+            d.plusDays(1)
+        })
+            .limit(start.until(end, ChronoUnit.DAYS))
+            .forEach { date ->
+                val dt = date.toString()
+                dates.add(dt.substring(8) + dt.substring(4, 7))
+            }
 
-
-        mandiChart.axisLeft.isEnabled = false
-        mandiChart.axisRight.setDrawAxisLine(false)
-        mandiChart.axisRight.setDrawGridLines(false)
-        mandiChart.xAxis.setDrawAxisLine(true)
-        mandiChart.xAxis.setDrawGridLines(false)
-        mandiChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
-        mandiChart.xAxis.granularity = 1f
-        mandiChart.isDragEnabled = true
-        mandiChart.setScaleEnabled(true)
-        mandiChart.isDoubleTapToZoomEnabled = false
-        // if disabled, scaling can be done on x- and y-axis separately
-        mandiChart.setPinchZoom(false)
 
         viewModel.dataByYear.observe(viewLifecycleOwner, {
             Log.d("observer", "dataByYear")
@@ -212,20 +188,7 @@ class CropPricesFragment : Fragment(), OnChartGestureListener {
             yearChart.clear()
             dataByYear.clear()
 
-            val start = LocalDate.of(2001, 7, 1)
-            val end = LocalDate.of(2002, 6, 30)
-
             if(it.isNotEmpty()) {
-                val dates = ArrayList<String>()
-
-                Stream.iterate(start, { d ->
-                    d.plusDays(1)
-                })
-                    .limit(start.until(end, ChronoUnit.DAYS))
-                    .forEach { date ->
-                        dates.add(date.toString().substring(5))
-                    }
-
 
                 for(year in it) {
 
@@ -234,28 +197,26 @@ class CropPricesFragment : Fragment(), OnChartGestureListener {
                     for(date in dates) {
                         val i = dates.indexOf(date)
 
-                        if(year.value.containsKey(date))
+                        if(year.value.containsKey(date) && !year.value[date]!!.equals(0f))
                             values1.add(Entry(i.toFloat(), year.value[date]!!))
                     }
 
-                    val dataset1 = if(year.key == -1) LineDataSet(values1, "Mean values for each day") else LineDataSet(values1, year.key.toString())
+                    val dataset1 = LineDataSet(values1, year.key.toString())
                     dataset1.setDrawCircles(false)
-                    dataset1.color = Color.parseColor(yearColors[year.key])
+                    dataset1.color = yearColors[year.key]!!
+                    dataset1.lineWidth = 2f
 
                     dataByYear.add(dataset1)
 
                 }
 
-
-
                 yearChart.xAxis.valueFormatter = IndexAxisValueFormatter(dates)
                 // enable scaling and dragging
-
-
                 yearChart.data = LineData(dataByYear)
             }
 
-            yearChart.onChartGestureListener = this
+            yearChart.onChartGestureListener = CustomChartListener(context!!, yearChart, dates)
+            yearChart.setVisibleXRangeMaximum(10.0f)
 
             yearChart.invalidate()
 
@@ -267,25 +228,6 @@ class CropPricesFragment : Fragment(), OnChartGestureListener {
             dataByMandi.clear()
 
             if(it.isNotEmpty()) {
-                val dates = ArrayList<String>()
-
-                val start = if (LocalDate.now().isBefore(LocalDate.of(LocalDate.now().year, 7, 1)))
-                    LocalDate.of(LocalDate.now().year - 1, 1, 1)
-                else LocalDate.of(LocalDate.now().year, 1, 1)
-
-                val end = LocalDate.now()
-
-                Stream.iterate(start, { d ->
-                    d.plusDays(1)
-                })
-                    .limit(start.until(end, ChronoUnit.DAYS))
-                    .forEach { date ->
-                        dates.add(date.toString())
-
-                    }
-
-                Log.d("debugging", dates.toString())
-
 
                 for(mandi in it) {
 
@@ -301,6 +243,7 @@ class CropPricesFragment : Fragment(), OnChartGestureListener {
                     val dataset1 = LineDataSet(values1, mandi.key)
                     dataset1.setDrawCircles(false)
                     dataset1.color = Color.parseColor(mandiColors[mandi.key])
+                    dataset1.lineWidth = 2f
 
                     dataByMandi.add(dataset1)
 
@@ -308,64 +251,33 @@ class CropPricesFragment : Fragment(), OnChartGestureListener {
 
                 mandiChart.xAxis.valueFormatter = IndexAxisValueFormatter(dates)
                 // enable scaling and dragging
-
-
                 mandiChart.data = LineData(dataByMandi)
             }
 
-            mandiChart.onChartGestureListener = this
+            mandiChart.onChartGestureListener = CustomChartListener(context!!, mandiChart, dates)
+            mandiChart.setVisibleXRangeMaximum(10.0f)
 
             mandiChart.invalidate()
         })
     }
-
-    override fun onChartGestureStart(
-        me: MotionEvent?,
-        lastPerformedGesture: ChartTouchListener.ChartGesture?
-    ) {
-        Log.v("LongPress", "Start")
+    
+    private fun ready(chart: LineChart) {
+        chart.setDrawGridBackground(false)
+        chart.description.isEnabled = false
+        chart.setDrawBorders(false)
+//        chart.legend.isEnabled = false
+        chart.legend.isWordWrapEnabled = true
+        chart.axisLeft.isEnabled = false
+        chart.axisRight.setDrawAxisLine(false)
+        chart.axisRight.setDrawGridLines(false)
+        chart.xAxis.setDrawAxisLine(true)
+        chart.xAxis.setDrawGridLines(false)
+        chart.xAxis.position = XAxis.XAxisPosition.BOTTOM
+        chart.xAxis.granularity = 1f
+        chart.isDragEnabled = true
+        chart.setScaleEnabled(true)
+        chart.isDoubleTapToZoomEnabled = false
+        chart.setPinchZoom(false)
     }
 
-    override fun onChartGestureEnd(
-        me: MotionEvent?,
-             lastPerformedGesture: ChartTouchListener.ChartGesture?
-    ) {
-        Log.v("LongPress", "End")
-    }
-
-    override fun onChartLongPressed(me: MotionEvent?) {
-        //pass
-    }
-
-    override fun onChartDoubleTapped(me: MotionEvent?) {
-        //why you always
-//        Log.v("LongPress", "Double tap")
-//        val x = chart.getHighlightByTouchPoint(me!!.x, me.y).x.toInt()
-//        if(x < dates.size) {
-//            val y = chart.getHighlightByTouchPoint(me.x, me.y).y
-//            val date = dates[x]
-//            Toast.makeText(activity, "$date $y", Toast.LENGTH_SHORT).show()
-//        }
-    }
-
-    override fun onChartSingleTapped(me: MotionEvent?) {
-        //in the mood
-    }
-
-    override fun onChartFling(
-        me1: MotionEvent?,
-        me2: MotionEvent?,
-        velocityX: Float,
-        velocityY: Float
-    ) {
-        //flippin out
-    }
-
-    override fun onChartScale(me: MotionEvent?, scaleX: Float, scaleY: Float) {
-        //actin brand new
-    }
-
-    override fun onChartTranslate(me: MotionEvent?, dX: Float, dY: Float) {
-        //i aint tryna tell you what to do
-    }
 }

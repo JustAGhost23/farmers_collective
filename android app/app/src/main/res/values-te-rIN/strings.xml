@@ -3,20 +3,21 @@
     <string name="app_name">రైతు వాణి</string>
     <string name="main_1">ప్రస్తుత ధరలు</string>
     <string name="main_2">సిఫార్సు</string>
-    <string name="main_3">గరిష్ఠ ధరలు</string>
+    <string name="main_3">మునుపటి సిఫార్సు</string>
+    <string name="main_3_nl">మునుపటి\nసిఫార్సు</string>
     <string name="main_4">మా గురించి</string>
     <string name="about_text">ఈ ఆప్ ఆదిలాబాద్ లోని ప్రస్తుత ధరల గురించి,ఉత్పత్తులు గురించి మా సిఫార్సులు మరియు గరిష్ఠ ధరల గురించి తెలియచేస్తుంది</string>
     <string name="title">రైతు వాణి</string>
 
     <string-array name="mandi">
 
-        <item>TELANGANA_ADILABAD_Price</item>
-        <item>RAJASTHAN_KOTA_Price</item>
-        <item>RAJASTHAN_BHAWANI MANDI_Price</item>
-        <item>MADHYA PRADESH_SONKATCH_Price</item>
-        <item>MADHYA PRADESH_RATLAM_Price</item>
-        <item>MADHYA PRADESH_MAHIDPUR_Price</item>
-        <item>MADHYA PRADESH_GANJBASODA_Price</item>
+        <item>తెలంగాణ ఆదిలాబాద్ ధరలు</item>
+        <item>రాజస్థాన్ కోట ధరలు</item>
+        <item>రాజస్థాన్  భవానీ మండి ధరలు</item>
+        <item>మధ్యప్రదేశ్  సోన్‌కచ్ ధరలు</item>
+        <item>మధ్యప్రదేశ్  రత్లాం ధరలు</item>
+        <item>మధ్యప్రదేశ్ మహిద్పూర్ ధరలు</item>
+        <item>మధ్యప్రదేశ్ గంజ్‌బాసోడా ధరలు</item>
 
     </string-array>
 
