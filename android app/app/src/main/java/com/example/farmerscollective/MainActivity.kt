@@ -1,14 +1,16 @@
 package com.example.farmerscollective
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.work.*
-import com.example.farmerscollective.workers.DataWorker
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.example.farmerscollective.workers.DailyWorker
+import com.example.farmerscollective.workers.OneTimeWorker
 import java.util.concurrent.TimeUnit
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,13 +26,29 @@ class MainActivity : AppCompatActivity() {
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
 
-        val worker = PeriodicWorkRequestBuilder<DataWorker>(1, TimeUnit.DAYS)
+        val worker1 = OneTimeWorkRequestBuilder<OneTimeWorker>()
             .setConstraints(constraints)
             .build()
 
+        val worker2 = PeriodicWorkRequestBuilder<DailyWorker>(24, TimeUnit.HOURS)
+            .setConstraints(constraints)
+            .setInitialDelay(24, TimeUnit.HOURS)
+            .build()
+
+        val sharedPref =
+            applicationContext.getSharedPreferences(
+                "prefs",
+                Context.MODE_PRIVATE
+            )
+
+        if(!sharedPref.getBoolean("isDataAvailable", false))
+            WorkManager
+                .getInstance(applicationContext)
+                .enqueueUniqueWork("one-time", ExistingWorkPolicy.KEEP, worker1)
+
         WorkManager
             .getInstance(applicationContext)
-            .enqueueUniquePeriodicWork("data", ExistingPeriodicWorkPolicy.KEEP, worker)
+            .enqueueUniquePeriodicWork("refresh", ExistingPeriodicWorkPolicy.KEEP, worker2)
 
     }
 
@@ -38,6 +56,8 @@ class MainActivity : AppCompatActivity() {
     fun toHome(view: View) {
         controller.navigate(R.id.mainFragment)
     }
+
+
 
 
 }

@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
  <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".CropPredictedFragment">
-
+        tools:context=".prediction.CropPredictedFragment">
 
     <View
         android:id="@+id/divider"
@@ -20,7 +19,7 @@
         android:background="@android:color/darker_gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/chart" />
+        app:layout_constraintTop_toBottomOf="@id/yearChart" />
 
      <Spinner
         android:id="@+id/mandiSelector"
@@ -72,7 +71,7 @@
         app:layout_constraintGuide_begin="258dp" />
 
     <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/chart"
+        android:id="@+id/yearChart"
         android:layout_width="0dp"
         android:layout_height="300dp"
         android:layout_marginStart="8dp"
@@ -85,7 +84,7 @@
 
 
     <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/chart2"
+        android:id="@+id/mandiChart"
         android:layout_width="0dp"
         android:layout_height="300dp"
         android:layout_marginStart="8dp"
@@ -140,7 +139,8 @@
         android:paddingBottom="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/chart2" />
+        app:layout_constraintTop_toBottomOf="@id/mandiChart" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

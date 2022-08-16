@@ -25,6 +25,7 @@
         <item>MADHYA PRADESH_RATLAM_Price</item>
         <item>MADHYA PRADESH_MAHIDPUR_Price</item>
         <item>MADHYA PRADESH_GANJBASODA_Price</item>
+        <item>MAHARASHTRA_NAGPUR_Price</item>
 
     </string-array>
 
@@ -33,8 +34,14 @@
     </string-array>
 
     <string name="about_text">This app informs you about the current prices in Adilabad, our recommendations for selling produce and prices offered by competitors.</string>
-    <string name="top_3_days_to_sell" translatable="false">Green represents the expected gain if the forecasted price is greater than today, and red represents the expected loss if the price is less than today.\n\n<b>Top 3 days to sell: </b></string>
+    <string name="top_3_days_to_sell" translatable="false">Green represents the expected gain if the forecasted price is greater than today, and red represents the expected loss if the price is less than today. Below each date is the probability of the day\'s price being higher than today\'s.\n\n<b>Top 3 days to sell: </b></string>
     <string name="title">Rythu\nVaani</string>
     <string name="see_last_year_prices" translatable="false">See last year prices</string>
+    <string name="past_recommendation">On this day, we recommended the following days to sell produce for maximum profit. Listed below are our recommendations, along with the actual gain/loss of selling this day.</string>
+    <string name="best">The best recommendation on this day would be to sell on %1$s for a profit of %2$.2f</string>
+    <string name="day_price">Price for %1$s was Rs %2$.1f</string>
+    <string name="today_price">Price for today is Rs %1$.1f</string>
+    <string name="actual">Nagpur</string>
+    <string name="predicted">Predicted</string>
 
 </resources>

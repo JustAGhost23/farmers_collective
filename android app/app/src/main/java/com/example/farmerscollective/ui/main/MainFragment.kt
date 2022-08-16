@@ -10,8 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
+import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
 import com.example.farmerscollective.R
+import com.example.farmerscollective.databinding.MainFragmentBinding
 
 class MainFragment : Fragment() {
 
@@ -20,56 +22,48 @@ class MainFragment : Fragment() {
     }
 
     private lateinit var viewModel: MainViewModel
-    private lateinit var btn1: Button
-    private lateinit var btn2: Button
-    private lateinit var btn3: Button
-    private lateinit var btn4: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view = inflater.inflate(R.layout.main_fragment, container, false)
-
-        btn1 = view.findViewById(R.id.btn1)
-        btn2 = view.findViewById(R.id.btn2)
-        btn3 = view.findViewById(R.id.btn3)
-        btn4 = view.findViewById(R.id.btn4)
+        val binding = DataBindingUtil.inflate<MainFragmentBinding>(
+            inflater, R.layout.main_fragment, container, false)
 
         val test = activity?.getSharedPreferences("prefs", Context.MODE_PRIVATE)?.getBoolean("isDataAvailable", false)
         Log.d("TESTING", test.toString())
 
+        with(binding) {
 
-        btn1.setOnClickListener {
-            val click = activity?.getSharedPreferences("prefs", Context.MODE_PRIVATE)?.getBoolean("isDataAvailable", false)
-            Log.d("TESTING", click.toString())
-            if(click == true) {
-                view.findNavController().navigate(R.id.action_mainFragment_to_cropPricesFragment)
+            btn1.setOnClickListener {
+                val click = activity?.getSharedPreferences("prefs", Context.MODE_PRIVATE)?.getBoolean("isDataAvailable", false)
+                Log.d("TESTING", click.toString())
+                if(click == true) it.findNavController().navigate(R.id.action_mainFragment_to_cropPricesFragment)
+                else Toast.makeText(activity, "Please wait! Still loading data", Toast.LENGTH_SHORT).show()
             }
-            else {
-                Toast.makeText(activity, "Please wait! Still loading data", Toast.LENGTH_SHORT).show()
+
+            btn2.setOnClickListener {
+                val click = activity?.getSharedPreferences("prefs", Context.MODE_PRIVATE)?.getBoolean("isDataAvailable", false)
+                Log.d("TESTING", click.toString())
+                if(click == true) it.findNavController().navigate(R.id.action_mainFragment_to_cropPredictedFragment2)
+                else Toast.makeText(activity, "Please wait! Still loading data", Toast.LENGTH_SHORT).show()
             }
+
+            btn3.setOnClickListener {
+                val click = activity?.getSharedPreferences("prefs", Context.MODE_PRIVATE)?.getBoolean("isDataAvailable", false)
+                Log.d("TESTING", click.toString())
+                if(click == true) it.findNavController().navigate(R.id.action_mainFragment_to_cropPastPredictedFragment)
+                else Toast.makeText(activity, "Please wait! Still loading data", Toast.LENGTH_SHORT).show()
+            }
+
+            btn4.setOnClickListener {
+                it.findNavController().navigate(R.id.action_mainFragment_to_aboutFragment)
+            }
+
         }
 
-        btn2.setOnClickListener {
-            val click = activity?.getSharedPreferences("prefs", Context.MODE_PRIVATE)?.getBoolean("isDataAvailable", false)
-            Log.d("TESTING", click.toString())
-            if(click == true) view.findNavController().navigate(R.id.action_mainFragment_to_cropPredictedFragment2)
-            else Toast.makeText(activity, "Please wait! Still loading data", Toast.LENGTH_SHORT).show()
-        }
 
-        btn3.setOnClickListener {
-            val click = activity?.getSharedPreferences("prefs", Context.MODE_PRIVATE)?.getBoolean("isDataAvailable", false)
-            Log.d("TESTING", click.toString())
-            if(click == true) view.findNavController().navigate(R.id.action_mainFragment_to_cropPastPredictedFragment)
-            else Toast.makeText(activity, "Please wait! Still loading data", Toast.LENGTH_SHORT).show()
-        }
-
-        btn4.setOnClickListener {
-            view.findNavController().navigate(R.id.action_mainFragment_to_aboutFragment)
-        }
-
-        return view
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

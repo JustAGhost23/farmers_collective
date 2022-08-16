@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/parent"
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools">
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/parent"
     android:layout_width="match_parent"
     android:layout_height="68dp">
 
@@ -12,29 +13,30 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:textColor="@color/black"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="22-05-22" />
+        tools:text="22-05-22\n0.56" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.3" />
+        app:layout_constraintGuide_percent="0.25" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/prediction"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
@@ -48,7 +50,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/gain"
             app:layout_constraintStart_toStartOf="@+id/left"
-            app:layout_constraintTop_toTopOf="parent" >
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/loss_val"
@@ -106,44 +108,5 @@
             app:layout_constraintGuide_percent="1" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!--    <LinearLayout-->
-<!--        android:id="@+id/prediction"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:layout_marginStart="16dp"-->
-<!--        android:layout_marginTop="16dp"-->
-<!--        android:layout_marginEnd="16dp"-->
-<!--        android:layout_marginBottom="16dp"-->
-<!--        android:orientation="horizontal"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="@+id/guideline2"-->
-<!--        app:layout_constraintTop_toTopOf="parent">-->
-
-<!--        <View-->
-<!--            android:id="@+id/loss"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="1"-->
-<!--            android:background="@drawable/loss" />-->
-
-<!--        <View-->
-<!--            android:id="@+id/gain"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="1"-->
-<!--            android:background="@drawable/gain" />-->
-<!--    </LinearLayout>-->
-
-<!--    <View-->
-<!--        android:id="@+id/middle"-->
-<!--        android:layout_width="2dp"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:background="#000000"-->
-<!--        android:translationZ="5dp"-->
-<!--        app:layout_constraintBottom_toBottomOf="@+id/prediction"-->
-<!--        app:layout_constraintEnd_toEndOf="@+id/prediction"-->
-<!--        app:layout_constraintStart_toStartOf="@+id/prediction"-->
-<!--        app:layout_constraintTop_toTopOf="@+id/prediction" />-->
-
 </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

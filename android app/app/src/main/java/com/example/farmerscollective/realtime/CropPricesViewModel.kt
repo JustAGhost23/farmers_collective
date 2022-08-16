@@ -1,4 +1,4 @@
-package com.example.farmerscollective
+package com.example.farmerscollective.realtime
 
 import android.app.Application
 import android.util.Log
@@ -6,6 +6,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.time.LocalDate
 
@@ -16,8 +18,8 @@ class CropPricesViewModel(application: Application) : AndroidViewModel(applicati
     private val _dataByYear = MutableLiveData<Map<Int, Map<String, Float>>>(mapOf())
     private val _dataByMandi = MutableLiveData<Map<String, Map<String, Float>>>(mapOf())
     private val _selectedYears = MutableLiveData(arrayListOf<Int>())
-    private val _mandi = MutableLiveData("TELANGANA_ADILABAD_Price")
-    private val _selectedMandis = MutableLiveData(arrayListOf("TELANGANA_ADILABAD_Price"))
+    private val _mandi = MutableLiveData("MAHARASHTRA_NAGPUR_Price")
+    private val _selectedMandis = MutableLiveData(arrayListOf("MAHARASHTRA_NAGPUR_Price"))
     private val _year = MutableLiveData<Int>()
 
     val dataByYear: LiveData<Map<Int, Map<String, Float>>>
@@ -46,25 +48,39 @@ class CropPricesViewModel(application: Application) : AndroidViewModel(applicati
         val temp = mutableMapOf<Int, Map<String, Float>>()
 
         if(context.fileList().isNotEmpty()) {
-            val mandi = _mandi.value
+            val mandi = _mandi.value!!
 
             val range = _selectedYears.value!!
 
             for(year in range) {
-                val file = File(context.filesDir, mandi!!)
+                val file1 = File(context.filesDir, "${mandi}_${year}")
+                val file2 = File(context.filesDir, "${mandi}_${year + 1}")
                 val prices = mutableMapOf<String, Float>()
 
-                if(file.exists()) {
-                    csvReader().open(file) {
+                if(file1.exists()) {
+                    csvReader().open(file1) {
                         readAllAsSequence().forEachIndexed { i, it ->
                             val date = LocalDate.parse(it[0])
                             val ddmm = it[0].substring(8) + "-" + it[0].substring(5, 7)
 
                             //12-25
                             val start = LocalDate.of(year, 6, 30)
+
+                            if(date.isAfter(start)) prices[ddmm] = it[1].toFloat()
+
+                        }
+                    }
+                }
+
+                if(file2.exists()) {
+                    csvReader().open(file2) {
+                        readAllAsSequence().forEachIndexed { i, it ->
+                            val date = LocalDate.parse(it[0])
+                            val ddmm = it[0].substring(8) + "-" + it[0].substring(5, 7)
+
                             val end = LocalDate.of(year + 1, 7, 1)
 
-                            if(date.isAfter(start) && date.isBefore(end)) prices[ddmm] = it[1].toFloat()
+                            if(date.isBefore(end)) prices[ddmm] = it[1].toFloat()
 
                         }
                     }
@@ -88,35 +104,34 @@ class CropPricesViewModel(application: Application) : AndroidViewModel(applicati
             val array = _selectedMandis.value
             val year = _year.value!!
 
-//            val start = if (LocalDate.now().isBefore(LocalDate.of(LocalDate.now().year, 7, 1)))
-//                LocalDate.of(LocalDate.now().year - 2, 12, 31)
-//            else LocalDate.of(LocalDate.now().year - 1, 12, 31)
             val start = LocalDate.of(year, 6, 30)
             val end = LocalDate.of(year + 1, 7, 1)
 
             for(mandi in array!!) {
-                val file = File(context.filesDir, mandi)
+                val file1 = File(context.filesDir, "${mandi}_${year}")
+                val file2 = File(context.filesDir, "${mandi}_${year + 1}")
 
                 val prices = mutableMapOf<String, Float>()
 
-//                if(file.exists()) {
-//                    csvReader().open(file) {
-//                        readAllAsSequence().forEachIndexed { i, it ->
-//                            val date = LocalDate.parse(it[0])
-//
-//                            if(date.isAfter(start) && date.isBefore(end)) prices[it[0]] = it[1].toFloat()
-//
-//                        }
-//                    }
-//                }
-
-                if(file.exists()) {
-                    csvReader().open(file) {
+                if(file1.exists()) {
+                    csvReader().open(file1) {
                         readAllAsSequence().forEachIndexed { i, it ->
                             val date = LocalDate.parse(it[0])
                             val ddmm = it[0].substring(8) + "-" + it[0].substring(5, 7)
 
-                            if(date.isAfter(start) && date.isBefore(end)) prices[ddmm] = it[1].toFloat()
+                            if(date.isAfter(start)) prices[ddmm] = it[1].toFloat()
+
+                        }
+                    }
+                }
+
+                if(file2.exists()) {
+                    csvReader().open(file2) {
+                        readAllAsSequence().forEachIndexed { i, it ->
+                            val date = LocalDate.parse(it[0])
+                            val ddmm = it[0].substring(8) + "-" + it[0].substring(5, 7)
+
+                            if(date.isBefore(end)) prices[ddmm] = it[1].toFloat()
 
                         }
                     }
@@ -153,15 +168,6 @@ class CropPricesViewModel(application: Application) : AndroidViewModel(applicati
 
         getDataByMandi()
     }
-
-//    fun getMeanData(b: Boolean) {
-//        val temp = _dataByYear.value!!
-//
-//        if(b) temp[-1] = _meanData.value!!
-//        else temp.remove(-1)
-//
-//        _dataByYear.value = temp
-//    }
 
     fun changeMandi(mandi: String) {
         _mandi.value = mandi

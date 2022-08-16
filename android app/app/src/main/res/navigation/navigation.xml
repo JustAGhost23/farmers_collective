@@ -25,7 +25,7 @@
     </fragment>
     <fragment
         android:id="@+id/cropPricesFragment"
-        android:name="com.example.farmerscollective.CropPricesFragment"
+        android:name="com.example.farmerscollective.realtime.CropPricesFragment"
         android:label="CropPricesFragment" >
         <action
             android:id="@+id/action_cropPricesFragment_to_mainFragment"
@@ -33,7 +33,7 @@
     </fragment>
     <fragment
         android:id="@+id/cropPredictedFragment"
-        android:name="com.example.farmerscollective.CropPredictedFragment"
+        android:name="com.example.farmerscollective.prediction.CropPredictedFragment"
         android:label="crop_predicted_fragment"
         tools:layout="@layout/crop_predicted_fragment" >
         <action
@@ -50,7 +50,7 @@
     </fragment>
     <fragment
         android:id="@+id/cropPastPredictedFragment"
-        android:name="com.example.farmerscollective.CropPastPredictedFragment"
+        android:name="com.example.farmerscollective.prediction.CropPastPredictedFragment"
         android:label="CropPastPredictedFragment" >
         <action
             android:id="@+id/action_cropPastPredictedFragment_to_mainFragment"

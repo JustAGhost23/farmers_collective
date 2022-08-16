@@ -1,14 +1,11 @@
-package com.example.farmerscollective
+package com.example.farmerscollective.prediction
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.example.farmerscollective.data.Prediction
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
-import com.google.firebase.firestore.FirebaseFirestore
 import java.io.File
 import java.time.LocalDate
 
@@ -17,12 +14,16 @@ class CropPredictedViewModel(application: Application) : AndroidViewModel(applic
     val context = application
     private val _data = MutableLiveData<ArrayList<Prediction>>(arrayListOf())
     private val _graph = MutableLiveData<Map<String, Float>>(mapOf())
+    private val _today = MutableLiveData<Float>()
 
     val data: LiveData<ArrayList<Prediction>>
         get() = _data
 
     val graph: LiveData<Map<String, Float>>
         get() = _graph
+
+    val today: LiveData<Float>
+        get() = _today
 
     init {
         getData()
@@ -47,7 +48,7 @@ class CropPredictedViewModel(application: Application) : AndroidViewModel(applic
                 }
             }
 
-            file = File(context.filesDir, "TELANGANA_ADILABAD_Price")
+            file = File(context.filesDir, "MAHARASHTRA_NAGPUR_Price")
 
             val start = if (LocalDate.now().isBefore(LocalDate.of(LocalDate.now().year, 7, 1)))
                 LocalDate.of(LocalDate.now().year - 2, 12, 31)
@@ -75,6 +76,8 @@ class CropPredictedViewModel(application: Application) : AndroidViewModel(applic
             temp.sortBy { value -> value.output }
             _data.value = temp
             _graph.value = map
+
+            _today.value = map[LocalDate.parse(date).minusDays(1).toString()] ?: 0.0f
         }
     }
 

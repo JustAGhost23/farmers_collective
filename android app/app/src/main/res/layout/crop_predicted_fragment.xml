@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewmodel"
+            type="com.example.farmerscollective.prediction.CropPredictedViewModel" />
+    </data>
+
+<androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CropPredictedFragment">
+    tools:context=".prediction.CropPredictedFragment">
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline8"
+        android:text="@{@string/today_price(viewmodel.today)}"
+        tools:text="Price for today is 4820.2" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/predict_guideline"
@@ -54,7 +74,7 @@
         android:layout_height="300dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/predict_view1">
+        app:layout_constraintTop_toBottomOf="@+id/textView3">
 
     </com.github.mikephil.charting.charts.LineChart>
 
@@ -85,7 +105,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:layout_marginTop="6dp"
-            android:text="Predicted"
+            android:text="@string/predicted"
             android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@+id/view2"
             app:layout_constraintTop_toTopOf="parent" />
@@ -96,7 +116,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:layout_marginTop="6dp"
-            android:text="Adilabad"
+            android:text="@string/actual"
             android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@+id/view"
             app:layout_constraintTop_toTopOf="parent" />
@@ -134,4 +154,4 @@
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
+</layout>
