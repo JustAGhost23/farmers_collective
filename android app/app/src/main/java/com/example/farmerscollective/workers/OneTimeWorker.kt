@@ -31,12 +31,12 @@ class OneTimeWorker(appContext: Context, workerParams: WorkerParameters) :
                 db.collection(mandi)
                     .get()
                     .addOnSuccessListener {
-                        val temp = mutableListOf<List<String>>()
+
                         Log.v("firebase", mandi)
 //                        val doc = it.last()
                         it.forEachIndexed { i, doc ->
 
-
+                            val temp = mutableListOf<List<String>>()
                             val prices = doc.data["data"] as ArrayList<HashMap<String, Any>>
 
                             try {

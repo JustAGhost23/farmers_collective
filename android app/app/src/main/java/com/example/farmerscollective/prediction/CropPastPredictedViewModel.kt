@@ -34,7 +34,7 @@ class CropPastPredictedViewModel(application: Application) : AndroidViewModel(ap
         get() = _price
 
     init {
-        _date.value = LocalDate.now()
+        _date.value = LocalDate.now().minusDays(30)
         getSelectedYear()
     }
 

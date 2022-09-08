@@ -48,30 +48,31 @@ class CropPredictedViewModel(application: Application) : AndroidViewModel(applic
                 }
             }
 
-            file = File(context.filesDir, "MAHARASHTRA_NAGPUR_Price")
-
-            val start = if (LocalDate.now().isBefore(LocalDate.of(LocalDate.now().year, 7, 1)))
-                LocalDate.of(LocalDate.now().year - 2, 12, 31)
-            else LocalDate.of(LocalDate.now().year - 1, 12, 31)
+            file = File(context.filesDir, "MAHARASHTRA_NAGPUR_Price_${LocalDate.now().year}")
 
             if(file.exists()) {
                 csvReader().open(file) {
                     readAllAsSequence().forEach {
                         val dt = LocalDate.parse(it[0])
-                        if(dt.isAfter(start) && dt.isBefore(LocalDate.parse(date))) {
-//                        if(it[0] != "DATE" && LocalDate.parse(it[0])
-//                                .isBefore(LocalDate.of(2022, 5, 1)) &&
-//                                LocalDate.parse(it[0]).isAfter(LocalDate.of(2022, 2, 28))) {
-
-                            map[it[0]] = it[1].toFloat()
-                        }
+                        if(dt.isBefore(LocalDate.parse(date))) map[it[0]] = it[1].toFloat()
                     }
                 }
             }
 
-//           temp.forEach {
-//               map[it.date] = it.gain
-//           }
+            if (LocalDate.now().isBefore(LocalDate.of(LocalDate.now().year, 7, 1))) {
+                file = File(context.filesDir, "MAHARASHTRA_NAGPUR_Price_${LocalDate.now().year - 1}")
+
+                if(file.exists()) {
+                    csvReader().open(file) {
+                        readAllAsSequence().forEach {
+                            val dt = LocalDate.parse(it[0])
+                            if(dt.isBefore(LocalDate.parse(date))) map[it[0]] = it[1].toFloat()
+                        }
+                    }
+                }
+
+            }
+
 
             temp.sortBy { value -> value.output }
             _data.value = temp

@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         tools:context=".prediction.CropPredictedFragment">
 
-    <View
+     <View
         android:id="@+id/divider"
         android:layout_width="0dp"
         android:layout_height="1dp"

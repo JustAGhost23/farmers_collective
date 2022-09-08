@@ -18,10 +18,10 @@ class DatePickerFragment(private val viewModel: CropPastPredictedViewModel) : Di
         // Use the current date as the default date in the picker
 
         if(dialog == null) {
-            val c = Calendar.getInstance()
-            val year = c.get(Calendar.YEAR)
-            val month = c.get(Calendar.MONTH)
-            val day = c.get(Calendar.DAY_OF_MONTH)
+            val start = LocalDate.now().minusDays(30)
+            val year = start.year
+            val month = start.monthValue - 1
+            val day = start.dayOfMonth
 
             // Create a new instance of DatePickerDialog and return it
             dialog = DatePickerDialog(requireContext(), this, year, month, day)
