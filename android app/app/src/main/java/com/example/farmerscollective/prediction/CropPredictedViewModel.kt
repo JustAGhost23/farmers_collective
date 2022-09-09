@@ -12,11 +12,11 @@ import java.time.LocalDate
 class CropPredictedViewModel(application: Application) : AndroidViewModel(application) {
     // TODO: Implement the ViewModel
     val context = application
-    private val _data = MutableLiveData<ArrayList<Prediction>>(arrayListOf())
+    private val _data = MutableLiveData<List<Prediction>>(arrayListOf())
     private val _graph = MutableLiveData<Map<String, Float>>(mapOf())
     private val _today = MutableLiveData<Float>()
 
-    val data: LiveData<ArrayList<Prediction>>
+    val data: LiveData<List<Prediction>>
         get() = _data
 
     val graph: LiveData<Map<String, Float>>
@@ -75,7 +75,7 @@ class CropPredictedViewModel(application: Application) : AndroidViewModel(applic
 
 
             temp.sortBy { value -> value.output }
-            _data.value = temp
+            _data.value = temp.reversed().subList(1, 4)
             _graph.value = map
 
             _today.value = map[LocalDate.parse(date).minusDays(1).toString()] ?: 0.0f

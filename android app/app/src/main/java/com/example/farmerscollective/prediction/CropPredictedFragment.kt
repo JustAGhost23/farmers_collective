@@ -1,11 +1,9 @@
 package com.example.farmerscollective.prediction
 
 import android.graphics.Color
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,19 +12,22 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.Guideline
 import androidx.core.text.bold
-import com.example.farmerscollective.utils.Utils.Companion.ready
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.farmerscollective.R
 import com.example.farmerscollective.databinding.CropPredictedFragmentBinding
 import com.example.farmerscollective.utils.Utils
+import com.example.farmerscollective.utils.Utils.Companion.ready
 import com.example.farmerscollective.utils.Utils.Companion.roundToString
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
+import com.github.mikephil.charting.utils.EntryXComparator
+import java.text.NumberFormat
 import java.time.LocalDate
-import kotlin.math.round
-import kotlin.math.roundToInt
+import java.util.*
 
 class CropPredictedFragment : Fragment() {
 
@@ -53,11 +54,10 @@ class CropPredictedFragment : Fragment() {
 
             viewModel.data.observe(viewLifecycleOwner) {
 
-//            recomm.adapter = CustomAdapter(ArrayList(it.reversed().subList(1, 4)), context!!)
+                val format = NumberFormat.getPercentInstance()
+                format.minimumFractionDigits = 0
 
-                val list = it.reversed().subList(1, 4)
-
-                for (item in list) {
+                for (item in it) {
                     val row = LayoutInflater.from(context).inflate(R.layout.recomm, recomm, false)
 
                     val g = item.confidence
@@ -69,7 +69,7 @@ class CropPredictedFragment : Fragment() {
                         .append(item.date)
                         .append("\n")
                         .bold {
-                            append(roundToString(g, 2))
+                            append(format.format(g))
                         }
 
                     val left: Guideline = prediction.findViewById(R.id.left)
@@ -118,6 +118,7 @@ class CropPredictedFragment : Fragment() {
 
                 val values1 = ArrayList<Entry>()
                 val values2 = ArrayList<Entry>()
+                val values3 = ArrayList<Entry>()
 
                 for (date in real_dates) {
                     val i = dates.indexOf(date)
@@ -129,18 +130,35 @@ class CropPredictedFragment : Fragment() {
                     values2.add(Entry(i.toFloat(), it[date]!!))
                 }
 
+                val hls = viewModel.data.value!!
+
+                for(pred in hls) {
+                    val date = pred.date
+
+                    val i = dates.indexOf(date)
+                    values3.add(Entry(i.toFloat(), it[date]!!))
+                }
+
+                Collections.sort(values3, EntryXComparator())
+
                 val dataset1 = LineDataSet(values1, "Nagpur")
                 val dataset2 = LineDataSet(values2, "Predicted")
+                val dataset3 = LineDataSet(values3, "")
 
                 dataset1.setDrawCircles(false)
                 dataset1.color = Color.parseColor("#FF0000")
-
                 data.add(dataset1)
 
                 dataset2.setDrawCircles(false)
                 dataset2.color = Color.parseColor("#0000FF")
-
                 data.add(dataset2)
+
+                dataset3.color = Color.TRANSPARENT
+                dataset3.setDrawValues(false)
+                dataset3.circleRadius = 5f
+                dataset3.circleHoleRadius = 3f
+                dataset3.setCircleColor(Color.parseColor("#0000FF"))
+                data.add(dataset3)
 
                 predictChart.xAxis.valueFormatter = IndexAxisValueFormatter(ArrayList(dates.map { date ->
                     //2022-07-25

@@ -35,10 +35,10 @@ class CropPastPredictedViewModel(application: Application) : AndroidViewModel(ap
 
     init {
         _date.value = LocalDate.now().minusDays(30)
-        getSelectedYear()
+        getPastRecomm()
     }
 
-    private fun getSelectedYear() {
+    private fun getPastRecomm() {
 
         val date = _date.value!!
         val map1 = mutableMapOf<String, Float>()
@@ -158,7 +158,7 @@ class CropPastPredictedViewModel(application: Application) : AndroidViewModel(ap
             newDate
         else LocalDate.now()
 
-        getSelectedYear()
+        getPastRecomm()
 
     }
 }

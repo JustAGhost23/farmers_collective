@@ -27,10 +27,11 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
+import com.github.mikephil.charting.utils.EntryXComparator
+import java.text.NumberFormat
 import java.time.LocalDate
+import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.math.round
-import kotlin.math.roundToInt
 
 
 class CropPastPredictedFragment : Fragment() {
@@ -59,6 +60,8 @@ class CropPastPredictedFragment : Fragment() {
                 Log.v("ok", "amhere")
 
                 pastRecomm.removeAllViews()
+                val format = NumberFormat.getPercentInstance()
+                format.minimumFractionDigits = 0
 
                 for (item in it) {
                     val row = DataBindingUtil.inflate<PastRecommBinding>(
@@ -78,7 +81,7 @@ class CropPastPredictedFragment : Fragment() {
                             .append(item[0])
                             .append("\n")
                             .bold {
-                                append(roundToString(g, 2))
+                                append(format.format(g))
                             }
 
                         val left: Guideline = prediction.findViewById(R.id.left)
@@ -143,6 +146,7 @@ class CropPastPredictedFragment : Fragment() {
 
                 val values1 = ArrayList<Entry>()
                 val values2 = ArrayList<Entry>()
+                val values3 = ArrayList<Entry>()
 
                 for (date in dates) {
                     val i = dates.indexOf(date)
@@ -150,8 +154,20 @@ class CropPastPredictedFragment : Fragment() {
                     if (it[1].containsKey(date)) values2.add(Entry(i.toFloat(), it[1][date]!!))
                 }
 
+                val hls = viewModel.recomm.value!!
+
+                for(pred in hls) {
+                    val date = pred[0]
+
+                    val i = dates.indexOf(date)
+                    values3.add(Entry(i.toFloat(), it[0][date]!!))
+                }
+
+                Collections.sort(values3, EntryXComparator())
+
                 val dataset1 = LineDataSet(values1, "Predicted")
                 val dataset2 = LineDataSet(values2, "Actual")
+                val dataset3 = LineDataSet(values3, "")
 
                 dataset1.setDrawCircles(false)
                 dataset1.color = Color.parseColor("#0000FF")
@@ -162,6 +178,13 @@ class CropPastPredictedFragment : Fragment() {
                 dataset2.color = Color.parseColor("#FF0000")
 
                 data.add(dataset2)
+
+                dataset3.color = Color.TRANSPARENT
+                dataset3.setDrawValues(false)
+                dataset3.circleRadius = 5f
+                dataset3.circleHoleRadius = 3f
+                dataset3.setCircleColor(Color.parseColor("#0000FF"))
+                data.add(dataset3)
 
                 pastPredictChart.xAxis.valueFormatter =
                     IndexAxisValueFormatter(ArrayList(dates.map { date ->
