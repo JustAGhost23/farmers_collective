@@ -10,3 +10,5 @@ collaboration with ACT4D - IIT Delhi, Gram Vaani and CCD.
 - Application FlowChart : https://www.figma.com/file/XqE6NrQ4jf9Hglowd6YjBA/FlowChart
 - Mid Program AI4SG Workshop : https://www.youtube.com/watch?v=CBejp1uK55c&t=1835s
 - Current Status of the Application (Visuals) :  https://drive.google.com/file/d/1Lhp8tbWW9vtFGcLZf8ANXB4qR5ED-4Kz/view?usp=sharing
+- Application Description (SlideShow) : https://docs.google.com/presentation/d/1aJQr4w4535DM4W9SDmgYJvEZIvhNGMgpx35XLd3NYpc/edit?usp=sharing
+- APK Download : https://drive.google.com/file/d/1r8o56TbB2xRj05T3IODPna4LZyfbWrDG/view?usp=sharing
