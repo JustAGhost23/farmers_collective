@@ -30,7 +30,7 @@ class CropPredictedViewModel(application: Application) : AndroidViewModel(applic
     }
 
     fun getData() {
-        val temp = ArrayList<Prediction>()
+        var temp = ArrayList<Prediction>()
         val map = mutableMapOf<String, Float>()
         var date = ""
 
@@ -73,12 +73,16 @@ class CropPredictedViewModel(application: Application) : AndroidViewModel(applic
 
             }
 
+            _graph.value = map
+            _today.value = map[LocalDate.parse(date).minusDays(1).toString()] ?: 0.0f
 
             temp.sortBy { value -> value.output }
+            temp = ArrayList(temp.map {
+                it.gain -= map[date]!!
+                it.loss -= map[date]!!
+                it
+            })
             _data.value = temp.reversed().subList(1, 4)
-            _graph.value = map
-
-            _today.value = map[LocalDate.parse(date).minusDays(1).toString()] ?: 0.0f
         }
     }
 

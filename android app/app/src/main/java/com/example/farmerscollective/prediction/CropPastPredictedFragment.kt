@@ -170,12 +170,12 @@ class CropPastPredictedFragment : Fragment() {
                 val dataset3 = LineDataSet(values3, "")
 
                 dataset1.setDrawCircles(false)
-                dataset1.color = Color.parseColor("#0000FF")
+                dataset1.color = Color.parseColor("#00FF00")
 
                 data.add(dataset1)
 
                 dataset2.setDrawCircles(false)
-                dataset2.color = Color.parseColor("#FF0000")
+                dataset2.color = Color.parseColor("#FFA500")
 
                 data.add(dataset2)
 

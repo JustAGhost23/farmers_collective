@@ -41,7 +41,7 @@ class CropPredictedFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = CropPredictedFragmentBinding.inflate(layoutInflater)
+        binding = CropPredictedFragmentBinding.inflate(layoutInflater)
         viewModel = ViewModelProvider(this)[CropPredictedViewModel::class.java]
         binding.viewmodel = viewModel
 
@@ -164,7 +164,6 @@ class CropPredictedFragment : Fragment() {
                     //2022-07-25
                     date.substring(8) + date.substring(4, 8) + date.substring(2, 4)
                 }))
-                // enable scaling and dragging
 
                 predictChart.data = LineData(data)
                 predictChart.onChartGestureListener = Utils.Companion.CustomChartListener(requireContext(), predictChart, dates)

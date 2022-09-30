@@ -28,9 +28,6 @@ class CropPricesViewModel(application: Application) : AndroidViewModel(applicati
     val dataByMandi: LiveData<Map<String, Map<String, Float>>>
     get() = _dataByMandi
 
-//    val selected: LiveData<ArrayList<Int>>
-//    get() = _selected
-
     init {
         val current = if (LocalDate.now().isBefore(LocalDate.of(LocalDate.now().year, 7, 1)))
             LocalDate.now().year - 1
@@ -63,7 +60,6 @@ class CropPricesViewModel(application: Application) : AndroidViewModel(applicati
                             val date = LocalDate.parse(it[0])
                             val ddmm = it[0].substring(8) + "-" + it[0].substring(5, 7)
 
-                            //12-25
                             val start = LocalDate.of(year, 6, 30)
 
                             if(date.isAfter(start)) prices[ddmm] = it[1].toFloat()

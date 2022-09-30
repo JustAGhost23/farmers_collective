@@ -1,39 +1,63 @@
 package com.example.farmerscollective.realtime
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.farmerscollective.R
 import com.example.farmerscollective.databinding.CropPricesFragmentBinding
-import com.example.farmerscollective.utils.ChartRangeDialog
+import com.example.farmerscollective.utils.FirstDrawListener
 import com.example.farmerscollective.utils.Utils
 import com.example.farmerscollective.utils.Utils.Companion.ready
+import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
+import com.github.mikephil.charting.utils.EntryXComparator
 import com.google.android.material.chip.Chip
+import com.google.firebase.perf.FirebasePerformance
+import com.google.firebase.perf.metrics.Trace
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
+import java.util.*
 import java.util.stream.Stream
-import kotlin.math.max
+
 
 class CropPricesFragment : Fragment() {
 
     private val viewModel by viewModels<CropPricesViewModel>()
     private lateinit var binding: CropPricesFragmentBinding
+    private lateinit var loadTrace: Trace
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        loadTrace = FirebasePerformance.startTrace("CropPricesFragment-LoadTime")
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        FirstDrawListener.registerFirstDrawListener(view, object : FirstDrawListener.OnFirstDrawCallback {
+            override fun onDrawingStart() {
+                // In practice you can also record this event separately
+            }
+
+            override fun onDrawingFinish() {
+                // This is when the Fragment UI is completely drawn on the screen
+                loadTrace.stop()
+            }
+        })
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -243,32 +267,50 @@ class CropPricesFragment : Fragment() {
                 mandiChart.clear()
                 dataByMandi.clear()
 
+                val axis = mandiChart.axisRight
+                val axis2 = mandiChart.axisLeft
+
+                val mspLine = LimitLine(Utils.MSP[2015 + yearSelector.selectedItemPosition]!!, "Minimum Support Price")
+                mspLine.lineColor = Color.GRAY
+                mspLine.lineWidth = 2f
+                mspLine.textColor = Color.BLACK
+                mspLine.textSize = 8f
+
+                axis.removeAllLimitLines()
+                axis.axisMinimum = 0f
+                axis2.axisMinimum = 0f
+                axis.addLimitLine(mspLine)
+
                 if (it.isNotEmpty()) {
 
                     for (mandi in it) {
 
+
+
                         val values1 = ArrayList<Entry>()
-                        val maxMap = mutableMapOf<Int, Pair<String, Float>>()
+                        val maxList = MutableList(12) { Pair("", 0.0f) }
 
                         for (date in dates) {
                             val i = dates.indexOf(date)
 
-                            if (mandi.value.containsKey(date)) {
+                            if (mandi.value.containsKey(date) && mandi.value[date] != 0f) {
                                 values1.add(Entry(i.toFloat(), mandi.value[date]!!))
 
-                                val m = date.substring(3).toInt()
-                                if(maxMap.containsKey(m) && maxMap[m]!!.second < mandi.value[date]!!)
-                                    maxMap[m] = Pair(date, mandi.value[date]!!)
-                                else if(!maxMap.containsKey(m)) maxMap[m] = Pair(date, mandi.value[date]!!)
+                                val m = date.substring(3).toInt() - 1
+                                if(maxList[m].second < mandi.value[date]!!) maxList[m] = Pair(date, mandi.value[date]!!)
+
                             }
 
                         }
 
                         val values2 = ArrayList<Entry>()
 
-                        for(pair in maxMap.values) {
-                            values2.add(Entry(dates.indexOf(pair.first).toFloat(), pair.second))
+                        for(pair in maxList) {
+                            if(pair.second != 0f) values2.add(Entry(dates.indexOf(pair.first).toFloat(), pair.second))
                         }
+
+                        Collections.sort(values1, EntryXComparator())
+                        Collections.sort(values2, EntryXComparator())
 
                         val dataset1 = LineDataSet(values1, mandi.key)
                         dataset1.setDrawCircles(false)

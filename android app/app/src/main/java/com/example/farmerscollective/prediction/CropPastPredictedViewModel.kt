@@ -136,8 +136,8 @@ class CropPastPredictedViewModel(application: Application) : AndroidViewModel(ap
                         item.date,
                         l.toString(),
                         g.toString(),
-                        item.loss.toString(),
-                        item.gain.toString(),
+                        (item.loss - map1[_date.value!!.toString()]!!).toString(),
+                        (item.gain - map1[_date.value!!.toString()]!!).toString(),
                         profit
                     )
                 )
