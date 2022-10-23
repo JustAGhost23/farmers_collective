@@ -13,6 +13,7 @@ import com.example.farmerscollective.utils.ChartRangeDialog
 import com.example.farmerscollective.workers.DailyWorker
 import com.example.farmerscollective.workers.OneTimeWorker
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.analytics.FirebaseAnalytics
 import java.util.concurrent.TimeUnit
 
 
@@ -106,6 +107,15 @@ class MainActivity : AppCompatActivity(), ChartRangeDialog.DialogListener {
             putBoolean("compress", selected == 1)
             apply()
         }
+
+        val id = controller.currentDestination?.id
+        controller.popBackStack(id!!,true)
+        controller.navigate(id)
+
+        val analytics = FirebaseAnalytics.getInstance(this)
+        val bundle = Bundle()
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "compress: ${(selected == 1)}")
+        analytics.logEvent("GraphSetting", bundle)
     }
 
 

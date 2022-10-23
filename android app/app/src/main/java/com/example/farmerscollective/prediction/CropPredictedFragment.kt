@@ -1,5 +1,6 @@
 package com.example.farmerscollective.prediction
 
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.text.SpannableStringBuilder
@@ -7,15 +8,16 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.Guideline
 import androidx.core.text.bold
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import com.example.farmerscollective.R
 import com.example.farmerscollective.databinding.CropPredictedFragmentBinding
+import com.example.farmerscollective.utils.FirstDrawListener
 import com.example.farmerscollective.utils.Utils
 import com.example.farmerscollective.utils.Utils.Companion.ready
 import com.example.farmerscollective.utils.Utils.Companion.roundToString
@@ -25,6 +27,8 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.github.mikephil.charting.utils.EntryXComparator
+import com.google.firebase.perf.FirebasePerformance
+import com.google.firebase.perf.metrics.Trace
 import java.text.NumberFormat
 import java.time.LocalDate
 import java.util.*
@@ -33,9 +37,28 @@ class CropPredictedFragment : Fragment() {
 
 
     private lateinit var viewModel: CropPredictedViewModel
-    private lateinit var recomm: LinearLayout
     private lateinit var binding: CropPredictedFragmentBinding
+    private lateinit var loadTrace: Trace
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        loadTrace = FirebasePerformance.startTrace("CropPredictedFragment-LoadTime")
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        FirstDrawListener.registerFirstDrawListener(view, object : FirstDrawListener.OnFirstDrawCallback {
+            override fun onDrawingStart() {
+                // In practice you can also record this event separately
+            }
+
+            override fun onDrawingFinish() {
+                // This is when the Fragment UI is completely drawn on the screen
+                loadTrace.stop()
+            }
+        })
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,6 +69,10 @@ class CropPredictedFragment : Fragment() {
         binding.viewmodel = viewModel
 
         with(binding) {
+
+            predictView2.setOnClickListener {
+                it.findNavController().navigateUp()
+            }
 
             val data = ArrayList<ILineDataSet>()
 

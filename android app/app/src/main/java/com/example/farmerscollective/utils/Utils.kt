@@ -1,16 +1,13 @@
 package com.example.farmerscollective.utils
 
 import android.content.Context
-import android.graphics.Color
 import android.view.MotionEvent
 import android.widget.Toast
 import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.listener.ChartTouchListener
 import com.github.mikephil.charting.listener.OnChartGestureListener
 import kotlin.math.pow
-import kotlin.math.round
 import kotlin.math.roundToInt
 
 class Utils {

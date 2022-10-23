@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import com.example.farmerscollective.R
 import com.example.farmerscollective.databinding.CropPricesFragmentBinding
 import com.example.farmerscollective.utils.FirstDrawListener
@@ -25,6 +26,7 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.github.mikephil.charting.utils.EntryXComparator
 import com.google.android.material.chip.Chip
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.perf.FirebasePerformance
 import com.google.firebase.perf.metrics.Trace
 import java.time.LocalDate
@@ -38,6 +40,7 @@ class CropPricesFragment : Fragment() {
     private val viewModel by viewModels<CropPricesViewModel>()
     private lateinit var binding: CropPricesFragmentBinding
     private lateinit var loadTrace: Trace
+    private lateinit var analytics: FirebaseAnalytics
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -64,6 +67,7 @@ class CropPricesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.crop_prices_fragment, container, false)
+        analytics = FirebaseAnalytics.getInstance(requireContext())
 
         val dataByYear = ArrayList<ILineDataSet>()
         val dataByMandi = ArrayList<ILineDataSet>()
@@ -84,6 +88,10 @@ class CropPricesFragment : Fragment() {
 
         with(binding) {
 
+            priceView2.setOnClickListener {
+                it.findNavController().navigateUp()
+            }
+
             val adap1 = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, resources.getStringArray(
                 R.array.mandi
             ))
@@ -95,6 +103,12 @@ class CropPricesFragment : Fragment() {
 
             mandiSelector.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                    val bundle = Bundle()
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_ID, LocalDate.now().toEpochDay().toString())
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, resources.getStringArray(R.array.mandi)[p2])
+                    bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "text")
+                    bundle.putString("type", "single-select-mandi")
+                    analytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
                     viewModel.changeMandi(resources.getStringArray(R.array.mandi)[p2])
                 }
 
@@ -125,6 +139,12 @@ class CropPricesFragment : Fragment() {
 
             yearSelector.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                    val bundle = Bundle()
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_ID, p2.toString())
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, arr.toList()[p2].substring(0, 4))
+                    bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "text")
+                    bundle.putString("type", "single-select-year")
+                    analytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
                     viewModel.changeYear(arr.toList()[p2].substring(0, 4).toInt())
                 }
 
@@ -150,6 +170,17 @@ class CropPricesFragment : Fragment() {
                 if(year == current) chip.isChecked = true
 
                 chip.setOnCheckedChangeListener { button, b ->
+
+                    if(b) {
+                        val bundle = Bundle()
+                        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, i.toString())
+                        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, year.toString().plus("-chip"))
+                        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "text")
+                        bundle.putString("type", "multi-select-year")
+                        analytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
+
+                    }
+
                     viewModel.selectYear(year, b)
                 }
 
@@ -168,6 +199,16 @@ class CropPricesFragment : Fragment() {
                 if(mandi == "MAHARASHTRA_NAGPUR_Price") mChip.isChecked = true
 
                 mChip.setOnCheckedChangeListener { button, b ->
+
+                    if(b) {
+                        val bundle = Bundle()
+                        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, mandis.indexOf(mandi).toString())
+                        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, mandi.toString().plus("-chip"))
+                        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "text")
+                        bundle.putString("type", "multi-select-mandi")
+                        analytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
+                    }
+
                     viewModel.selectMandi(mandi, b)
                 }
 
@@ -346,27 +387,27 @@ class CropPricesFragment : Fragment() {
                 mandiChart.invalidate()
             }
 
-            sharedPref.registerOnSharedPreferenceChangeListener { sharedPreferences, s ->
-                if(s != "compress") return@registerOnSharedPreferenceChangeListener
-
-                if(sharedPreferences!!.getBoolean("compress", false)) {
-                    mandiChart.setVisibleXRangeMaximum(365.0f)
-                    yearChart.setVisibleXRangeMaximum(365.0f)
-
-                    mandiChart.fitScreen()
-                    yearChart.fitScreen()
-                }
-
-                else {
-                    mandiChart.setVisibleXRangeMaximum(10.0f)
-                    yearChart.setVisibleXRangeMaximum(10.0f)
-
-                    mandiChart.moveViewToX(0.0f)
-                    yearChart.moveViewToX(0.0f)
-                }
-
-
-            }
+//            sharedPref.registerOnSharedPreferenceChangeListener { sharedPreferences, s ->
+//                if(s != "compress") return@registerOnSharedPreferenceChangeListener
+//
+//                if(sharedPreferences!!.getBoolean("compress", false)) {
+//                    mandiChart.setVisibleXRangeMaximum(365.0f)
+//                    yearChart.setVisibleXRangeMaximum(365.0f)
+//
+//                    mandiChart.fitScreen()
+//                    yearChart.fitScreen()
+//                }
+//
+//                else {
+//                    mandiChart.setVisibleXRangeMaximum(10.0f)
+//                    yearChart.setVisibleXRangeMaximum(10.0f)
+//
+//                    mandiChart.moveViewToX(0.0f)
+//                    yearChart.moveViewToX(0.0f)
+//                }
+//
+//
+//            }
         }
 
         return binding.root

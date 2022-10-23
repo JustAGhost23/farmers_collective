@@ -1,23 +1,21 @@
 package com.example.farmerscollective.workers
 
 import android.content.Context
+import android.os.Bundle
 import android.util.Log
-import androidx.work.Worker
+import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.example.farmerscollective.R
 import com.example.farmerscollective.data.Prediction
 import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.firestore.FirebaseFirestore
-import java.io.File
-import android.net.ConnectivityManager
-import android.widget.Toast
-import androidx.work.CoroutineWorker
-import com.example.farmerscollective.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.time.LocalDate
+import java.io.File
 
 
-class DailyWorker(appContext: Context, workerParams: WorkerParameters) :
+class DailyWorker(appContext: Context, workerParams: WorkerParameters, val analytics: FirebaseAnalytics) :
     CoroutineWorker(appContext, workerParams) {
 
     override suspend fun doWork(): Result {
@@ -131,6 +129,8 @@ class DailyWorker(appContext: Context, workerParams: WorkerParameters) :
                                                     putBoolean("isDataAvailable", true)
                                                     apply()
                                                 }
+
+                                                logWorkerEvent(doc.id, "WorkerSuccess")
                                             }
 
                                         }
@@ -138,16 +138,16 @@ class DailyWorker(appContext: Context, workerParams: WorkerParameters) :
 
                                     }
                                     .addOnFailureListener {
-                                        Log.v("ViewModel", it.toString())
+                                        logWorkerEvent(doc.id, "WorkerFailure")
                                     }
                             }
 
                         } catch (e: Exception) {
-                            Log.d("Worker/$mandi", e.toString())
+                            logWorkerEvent(doc.id, "WorkerFailure")
                         }
                     }
                     .addOnFailureListener {
-                        Log.v("ViewModel", it.toString())
+                        logWorkerEvent("failed", "WorkerFailure")
 
                     }
 
@@ -160,5 +160,12 @@ class DailyWorker(appContext: Context, workerParams: WorkerParameters) :
 
         return Result.success()
 
+    }
+
+    private fun logWorkerEvent(id: String, event: String) {
+        val bundle = Bundle()
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "worker-${id}")
+        bundle.putString("type", "DailyWorker")
+        analytics.logEvent(event, bundle)
     }
 }
