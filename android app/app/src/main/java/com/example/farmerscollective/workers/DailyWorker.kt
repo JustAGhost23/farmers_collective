@@ -15,8 +15,10 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 
-class DailyWorker(appContext: Context, workerParams: WorkerParameters, val analytics: FirebaseAnalytics) :
+class DailyWorker(appContext: Context, workerParams: WorkerParameters) :
     CoroutineWorker(appContext, workerParams) {
+
+    private val analytics = FirebaseAnalytics.getInstance(applicationContext)
 
     override suspend fun doWork(): Result {
 
