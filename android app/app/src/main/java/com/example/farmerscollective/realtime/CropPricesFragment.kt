@@ -1,6 +1,9 @@
 package com.example.farmerscollective.realtime
 
 import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Bitmap.CompressFormat
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +12,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
+import androidx.core.content.FileProvider
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -29,6 +34,9 @@ import com.google.android.material.chip.Chip
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.perf.FirebasePerformance
 import com.google.firebase.perf.metrics.Trace
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import java.util.*
@@ -233,6 +241,21 @@ class CropPricesFragment : Fragment() {
                     dates.add(dt.substring(8) + dt.substring(4, 7))
                 }
 
+            viewModel.trends.observe(viewLifecycleOwner) {
+                trends.text = this@CropPricesFragment.getString(R.string.trends,
+                    it.getInt("0"),
+                    it.getString("1"),
+                    it.getFloat("2"),
+                    it.getString("3"),
+                    it.getFloat("4"),
+                    it.getInt("5"),
+                    it.getString("6"),
+                    it.getFloat("7"),
+                    it.getString("8"),
+                    it.getFloat("9"),
+                    mandiSelector.selectedItem.toString())
+            }
+
 
             viewModel.dataByYear.observe(viewLifecycleOwner) {
                 Log.d("observer", "dataByYear")
@@ -254,9 +277,9 @@ class CropPricesFragment : Fragment() {
                                 values1.add(Entry(i.toFloat(), year.value[date]!!))
 
                                 val m = date.substring(3).toInt()
-                                if(maxMap.containsKey(m) && maxMap[m]!!.second < year.value[date]!!)
-                                    maxMap[m] = Pair(date, year.value[date]!!)
-                                else if(!maxMap.containsKey(m)) maxMap[m] = Pair(date, year.value[date]!!)
+                                if(!maxMap.containsKey(m)) maxMap[m] = Pair(date, year.value[date]!!)
+                                else if(maxMap[m]!!.second < year.value[date]!!) maxMap[m] = Pair(date, year.value[date]!!)
+
                             }
 
                         }
@@ -296,9 +319,10 @@ class CropPricesFragment : Fragment() {
 
                 if(!sharedPref.getBoolean("compress", false)) {
                     yearChart.setVisibleXRangeMaximum(10.0f)
-                    yearChart.moveViewToX(0.0f)
                 }
 
+
+                yearChart.moveViewToX(dates.size - 30f)
                 yearChart.invalidate()
 
             }
@@ -381,9 +405,9 @@ class CropPricesFragment : Fragment() {
 
                 if(!sharedPref.getBoolean("compress", false)) {
                     mandiChart.setVisibleXRangeMaximum(10.0f)
-                    mandiChart.moveViewToX(0.0f)
                 }
 
+                mandiChart.moveViewToX(dates.size - 30f)
                 mandiChart.invalidate()
             }
 
@@ -408,6 +432,63 @@ class CropPricesFragment : Fragment() {
 //
 //
 //            }
+
+
+            yearChartShare.setOnClickListener {
+                val icon: Bitmap = yearChart.chartBitmap
+                val share = Intent(Intent.ACTION_SEND)
+                share.type = "image/png"
+
+                try {
+                    val file = File(requireContext().cacheDir, "temp.png")
+                    val fOut = FileOutputStream(file)
+                    icon.compress(CompressFormat.PNG, 100, fOut)
+                    fOut.flush()
+                    fOut.close()
+                    file.setReadable(true, false)
+                    share.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(requireContext(), requireContext().packageName + ".provider", file))
+                    share.putExtra(Intent.EXTRA_TEXT, mandiSelector.selectedItem.toString())
+
+                    val bundle = Bundle()
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_ID, mandiSelector.selectedItem.toString())
+                    bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "image")
+                    analytics.logEvent(FirebaseAnalytics.Event.SHARE, bundle)
+
+                    startActivity(share)
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                    Toast.makeText(requireContext(), "Error occurred, please try later", Toast.LENGTH_SHORT).show()
+                }
+
+            }
+
+            mandiChartShare.setOnClickListener {
+                val icon: Bitmap = mandiChart.chartBitmap
+                val share = Intent(Intent.ACTION_SEND)
+                share.type = "image/png"
+
+                try {
+                    val file = File(requireContext().cacheDir, "temp.png")
+                    val fOut = FileOutputStream(file)
+                    icon.compress(CompressFormat.PNG, 100, fOut)
+                    fOut.flush()
+                    fOut.close()
+                    file.setReadable(true, false)
+                    share.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(requireContext(), requireContext().packageName + ".provider", file))
+                    share.putExtra(Intent.EXTRA_TEXT, "Prices in ${yearSelector.selectedItem}")
+
+                    val bundle = Bundle()
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_ID, yearSelector.selectedItem.toString())
+                    bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "image")
+                    analytics.logEvent(FirebaseAnalytics.Event.SHARE, bundle)
+
+                    startActivity(share)
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                    Toast.makeText(requireContext(), "Error occurred, please try later", Toast.LENGTH_SHORT).show()
+                }
+
+            }
         }
 
         return binding.root

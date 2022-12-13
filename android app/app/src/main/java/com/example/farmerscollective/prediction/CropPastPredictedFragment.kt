@@ -1,6 +1,8 @@
 package com.example.farmerscollective.prediction
 
 import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
 import android.text.SpannableStringBuilder
@@ -12,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.Guideline
+import androidx.core.content.FileProvider
 import androidx.core.text.bold
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
@@ -31,8 +34,12 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.github.mikephil.charting.utils.EntryXComparator
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.perf.FirebasePerformance
 import com.google.firebase.perf.metrics.Trace
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.text.NumberFormat
 import java.time.LocalDate
 import java.util.*
@@ -228,6 +235,57 @@ class CropPastPredictedFragment : Fragment() {
                 pastPredictChart.invalidate()
 
             }
+
+            pastRecommShare.setOnClickListener {
+                val analytics = FirebaseAnalytics.getInstance(requireContext())
+                val icon: Bitmap = pastPredictChart.chartBitmap
+                val share = Intent(Intent.ACTION_SEND)
+                share.type = "image/png"
+                val list = viewModel.recomm.value!!
+
+                try {
+                    val file = File(requireContext().cacheDir, "temp.png")
+                    val fOut = FileOutputStream(file)
+                    icon.compress(Bitmap.CompressFormat.PNG, 100, fOut)
+                    fOut.flush()
+                    fOut.close()
+                    file.setReadable(true, false)
+                    share.putExtra(
+                        Intent.EXTRA_STREAM,
+                        FileProvider.getUriForFile(
+                            requireContext(),
+                            requireContext().packageName + ".provider",
+                            file
+                        )
+                    )
+                    var str = "Predicted dates for ${viewModel.date.value!!} were: \n\n"
+                    for(pred in list) {
+                        str += "${pred[0]}: Actual profit if sold Rs. ${pred[5]}\n"
+                    }
+
+                    share.putExtra(Intent.EXTRA_TEXT, str)
+
+                    val bundle = Bundle()
+                    bundle.putString(
+                        FirebaseAnalytics.Param.ITEM_ID,
+                        "predict ${viewModel.date.value!!}"
+                    )
+                    bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "image")
+                    analytics.logEvent(FirebaseAnalytics.Event.SHARE, bundle)
+
+
+
+                    startActivity(share)
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                    Toast.makeText(
+                        requireContext(),
+                        "Error occurred, please try later",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
         }
 
         return binding.root

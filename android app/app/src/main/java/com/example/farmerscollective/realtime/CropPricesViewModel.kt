@@ -1,6 +1,7 @@
 package com.example.farmerscollective.realtime
 
 import android.app.Application
+import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -9,6 +10,7 @@ import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.text.DateFormatSymbols
 import java.time.LocalDate
 
 
@@ -21,6 +23,7 @@ class CropPricesViewModel(application: Application) : AndroidViewModel(applicati
     private val _mandi = MutableLiveData("MAHARASHTRA_NAGPUR_Price")
     private val _selectedMandis = MutableLiveData(arrayListOf("MAHARASHTRA_NAGPUR_Price"))
     private val _year = MutableLiveData<Int>()
+    private val _trends = MutableLiveData<Bundle>()
 
     val dataByYear: LiveData<Map<Int, Map<String, Float>>>
     get() = _dataByYear
@@ -28,16 +31,71 @@ class CropPricesViewModel(application: Application) : AndroidViewModel(applicati
     val dataByMandi: LiveData<Map<String, Map<String, Float>>>
     get() = _dataByMandi
 
+    val trends: LiveData<Bundle>
+    get() = _trends
+
+    private val current = if (LocalDate.now().isBefore(LocalDate.of(LocalDate.now().year, 7, 1)))
+        LocalDate.now().year - 1
+    else LocalDate.now().year
+
     init {
-        val current = if (LocalDate.now().isBefore(LocalDate.of(LocalDate.now().year, 7, 1)))
-            LocalDate.now().year - 1
-        else LocalDate.now().year
 
         _selectedYears.value = arrayListOf(current)
         _year.value = current
 
         getDataByYear()
         getDataByMandi()
+        getTrends(current)
+
+    }
+
+    private fun getTrends(current: Int) {
+        val file1 = File(context.filesDir, "${_mandi.value}_${current - 2}")
+        val file2 = File(context.filesDir, "${_mandi.value}_${current - 1}")
+        var min1 = Pair("", Float.MAX_VALUE)
+        var min2 = Pair("", Float.MAX_VALUE)
+        var max1 = Pair("", Float.MIN_VALUE)
+        var max2 = Pair("", Float.MIN_VALUE)
+
+        if(file1.exists()) {
+            csvReader().open(file1) {
+                readAllAsSequence().forEachIndexed { i, it ->
+                    val p = it[1].toFloat()
+                    val m = it[0].substring(5, 7).toInt()
+
+                    if(min1.second > p) min1 = Pair(DateFormatSymbols().months[m-1], p)
+                    if(max1.second < p) max1 = Pair(DateFormatSymbols().months[m-1], p)
+
+                }
+            }
+        }
+
+        if(file2.exists()) {
+            csvReader().open(file2) {
+                readAllAsSequence().forEachIndexed { i, it ->
+                    val p = it[1].toFloat()
+                    val m = it[0].substring(5, 7).toInt()
+
+                    if(min2.second > p) min2 = Pair(DateFormatSymbols().months[m-1], p)
+                    if(max2.second < p) max2 = Pair(DateFormatSymbols().months[m-1], p)
+
+                }
+            }
+        }
+
+        val data = Bundle()
+        data.putInt("0", current - 2)
+        data.putString("1", min1.first)
+        data.putFloat("2", min1.second)
+        data.putString("3", max1.first)
+        data.putFloat("4", max1.second)
+        data.putInt("5", current - 1)
+        data.putString("6", min2.first)
+        data.putFloat("7", min2.second)
+        data.putString("8", max2.first)
+        data.putFloat("9", max2.second)
+
+        _trends.value = data
     }
 
     private fun getDataByYear() {
@@ -87,6 +145,7 @@ class CropPricesViewModel(application: Application) : AndroidViewModel(applicati
             }
 
             _dataByYear.value = temp
+            getTrends(current)
 
         }
 

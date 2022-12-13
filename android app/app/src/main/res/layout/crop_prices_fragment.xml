@@ -9,6 +9,35 @@
         android:layout_height="match_parent"
         tools:context=".prediction.CropPredictedFragment">
 
+     <Button
+         android:id="@+id/mandiChartShare"
+         android:layout_width="0dp"
+         android:layout_height="wrap_content"
+         android:layout_marginStart="8dp"
+         android:layout_marginTop="16dp"
+         android:layout_marginEnd="8dp"
+         android:backgroundTint="#FFEB3B"
+         android:text="@string/share"
+         android:textColor="@android:color/primary_text_light"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintHorizontal_bias="0.0"
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintTop_toBottomOf="@+id/yearSelector" />
+
+     <Button
+         android:id="@+id/yearChartShare"
+         android:layout_width="0dp"
+         android:layout_height="wrap_content"
+         android:layout_marginStart="8dp"
+         android:layout_marginTop="16dp"
+         android:layout_marginEnd="8dp"
+         android:backgroundTint="#FFEB3B"
+         android:text="@string/share"
+         android:textColor="@android:color/primary_text_light"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintTop_toBottomOf="@+id/yearChart" />
+
      <View
         android:id="@+id/divider"
         android:layout_width="0dp"
@@ -19,7 +48,7 @@
         android:background="@android:color/darker_gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/yearChart" />
+        app:layout_constraintTop_toBottomOf="@id/yearChartShare" />
 
      <Spinner
         android:id="@+id/mandiSelector"
@@ -80,7 +109,9 @@
         android:minHeight="200dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chipGroup" />
+        app:layout_constraintTop_toBottomOf="@+id/chipGroup" >
+
+    </com.github.mikephil.charting.charts.LineChart>
 
 
     <com.github.mikephil.charting.charts.LineChart
@@ -94,14 +125,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/chipGroup2" />
 
-    <Spinner
-        android:id="@+id/commSelector"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline8" />
+     <Spinner
+         android:id="@+id/commSelector"
+         android:layout_width="wrap_content"
+         android:layout_height="48dp"
+         android:layout_marginStart="8dp"
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintTop_toBottomOf="@+id/trends" />
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/chipGroup"
@@ -129,18 +159,31 @@
 
     </com.google.android.material.chip.ChipGroup>
 
-    <Spinner
-        android:id="@+id/yearSelector"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:paddingBottom="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/mandiChart" />
+     <Spinner
+         android:id="@+id/yearSelector"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_marginStart="8dp"
+         android:layout_marginTop="16dp"
+         android:layout_marginEnd="8dp"
+         android:paddingBottom="8dp"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintTop_toBottomOf="@id/mandiChart" />
+
+     <TextView
+         android:id="@+id/trends"
+         android:layout_width="0dp"
+         android:layout_height="wrap_content"
+         android:layout_marginStart="16dp"
+         android:layout_marginTop="16dp"
+         android:layout_marginEnd="16dp"
+         android:text="@string/trends"
+         android:textSize="16sp"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintTop_toBottomOf="@+id/price_view1" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+ </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

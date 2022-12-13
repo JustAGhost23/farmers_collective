@@ -19,6 +19,20 @@
     android:layout_height="match_parent"
     tools:context=".prediction.CropPastPredictedFragment">
 
+    <Button
+        android:id="@+id/pastRecommShare"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:backgroundTint="#FFEB3B"
+        android:text="@string/share"
+        android:textColor="@android:color/primary_text_light"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/past_predict_guideline"
         android:layout_width="wrap_content"
@@ -191,12 +205,13 @@
         android:id="@+id/textView11"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:padding="8dp"
         android:text="@string/past_recommendation"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/pastRecommShare" />
 
     <LinearLayout
         android:id="@+id/past_recomm"

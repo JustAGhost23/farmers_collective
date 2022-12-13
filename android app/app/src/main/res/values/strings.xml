@@ -48,5 +48,7 @@
     <string name="today_price">Price for today is Rs %1$.1f.\n<b>Top 3 days to sell: </b></string>
     <string name="actual">Nagpur</string>
     <string name="predicted">Predicted</string>
+    <string name="share">Share</string>
+    <string name="trends">Price trends in %11$s for last two years: \n1. Lowest price in %1$d was in <b>%2$s</b> (%3$.1f)\nHighest price in %1$d was in <b>%4$s</b> (%5$.1f)\n2. Lowest price in %6$d was in <b>%7$s</b> (%8$.1f)\nHighest price in %6$d was in <b>%9$s</b> (%10$.1f)</string>
 
 </resources>
