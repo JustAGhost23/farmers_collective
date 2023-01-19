@@ -16,20 +16,19 @@ import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.example.farmerscollective.R
 import com.example.farmerscollective.databinding.CropPricesFragmentBinding
 import com.example.farmerscollective.utils.FirstDrawListener
 import com.example.farmerscollective.utils.Utils
+import com.example.farmerscollective.utils.Utils.Companion.dates
 import com.example.farmerscollective.utils.Utils.Companion.ready
 import com.github.mikephil.charting.components.LimitLine
-import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
-import com.github.mikephil.charting.utils.EntryXComparator
 import com.google.android.material.chip.Chip
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.perf.FirebasePerformance
@@ -38,14 +37,12 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.time.LocalDate
-import java.time.temporal.ChronoUnit
-import java.util.*
 import java.util.stream.Stream
 
 
 class CropPricesFragment : Fragment() {
 
-    private val viewModel by viewModels<CropPricesViewModel>()
+    private val viewModel by activityViewModels<CropPricesViewModel>()
     private lateinit var binding: CropPricesFragmentBinding
     private lateinit var loadTrace: Trace
     private lateinit var analytics: FirebaseAnalytics
@@ -77,17 +74,6 @@ class CropPricesFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.crop_prices_fragment, container, false)
         analytics = FirebaseAnalytics.getInstance(requireContext())
 
-        val dataByYear = ArrayList<ILineDataSet>()
-        val dataByMandi = ArrayList<ILineDataSet>()
-        val colors = listOf("#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#00FFFF", "#FF00FF", "#000000", "#DDFFDD")
-
-        val mandiColors = mutableMapOf<String, Int>()
-
-        val yearColors = mutableMapOf<Int, Int>()
-        resources.getStringArray(R.array.mandi).forEachIndexed { i, str ->
-            mandiColors[str] = Color.parseColor(colors[i])
-        }
-
         val sharedPref =
             requireContext().getSharedPreferences(
                 "prefs",
@@ -96,8 +82,18 @@ class CropPricesFragment : Fragment() {
 
         with(binding) {
 
+            yearZoom.setOnClickListener {
+                val action = CropPricesFragmentDirections.actionCropPricesFragmentToZoomedInFragment(0)
+                findNavController().navigate(action)
+            }
+
+            mandiZoom.setOnClickListener {
+                val action = CropPricesFragmentDirections.actionCropPricesFragmentToZoomedInFragment(1)
+                findNavController().navigate(action)
+            }
+
             priceView2.setOnClickListener {
-                it.findNavController().navigateUp()
+                findNavController().navigateUp()
             }
 
             val adap1 = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, resources.getStringArray(
@@ -163,18 +159,11 @@ class CropPricesFragment : Fragment() {
 
             arr.forEachIndexed { i, item ->
                 val year = item.substring(0, 4).toInt()
-                yearColors[year] = Color.parseColor(colors[i])
 
                 val chip = Chip(context)
                 chip.text = item
                 chip.isCheckable = true
-//                val chipDrawable = ChipDrawable.createFromAttributes(
-//                    requireContext(),
-//                    null,
-//                    0,
-//                    R.style.Widget_Material3_Chip_Filter
-//                )
-//                chip.setChipDrawable(chipDrawable)
+
                 if(year == current) chip.isChecked = true
 
                 chip.setOnCheckedChangeListener { button, b ->
@@ -227,92 +216,30 @@ class CropPricesFragment : Fragment() {
             ready(yearChart)
             ready(mandiChart)
 
-            val dates = ArrayList<String>()
-
-            val start = LocalDate.of(2001, 7, 1)
-            val end = LocalDate.of(2002, 6, 30)
-
-            Stream.iterate(start) { d ->
-                d.plusDays(1)
-            }
-                .limit(start.until(end, ChronoUnit.DAYS))
-                .forEach { date ->
-                    val dt = date.toString()
-                    dates.add(dt.substring(8) + dt.substring(4, 7))
+            viewModel.trends.observe(viewLifecycleOwner) {
+                var s = ""
+                Log.d("trends", " has been changed")
+                for(year in it.keys.sorted()) {
+                    s += this@CropPricesFragment.getString(R.string.trends,
+                    year,
+                    (year + 1) % 100,
+                    it[year]!![0].first,
+                    it[year]!![0].second,
+                    it[year]!![1].first,
+                    it[year]!![1].second
+                    )
                 }
 
-            viewModel.trends.observe(viewLifecycleOwner) {
-                trends.text = this@CropPricesFragment.getString(R.string.trends,
-                    it.getInt("0"),
-                    it.getString("1"),
-                    it.getFloat("2"),
-                    it.getString("3"),
-                    it.getFloat("4"),
-                    it.getInt("5"),
-                    it.getString("6"),
-                    it.getFloat("7"),
-                    it.getString("8"),
-                    it.getFloat("9"),
-                    mandiSelector.selectedItem.toString())
+                trends.text = s
+
             }
 
 
             viewModel.dataByYear.observe(viewLifecycleOwner) {
-                Log.d("observer", "dataByYear")
 
                 yearChart.clear()
-                dataByYear.clear()
-
-                if (it.isNotEmpty()) {
-
-                    for (year in it) {
-
-                        val values1 = ArrayList<Entry>()
-                        val maxMap = mutableMapOf<Int, Pair<String, Float>>()
-
-                        for (date in dates) {
-                            val i = dates.indexOf(date)
-
-                            if (year.value.containsKey(date) && !year.value[date]!!.equals(0f)) {
-                                values1.add(Entry(i.toFloat(), year.value[date]!!))
-
-                                val m = date.substring(3).toInt()
-                                if(!maxMap.containsKey(m)) maxMap[m] = Pair(date, year.value[date]!!)
-                                else if(maxMap[m]!!.second < year.value[date]!!) maxMap[m] = Pair(date, year.value[date]!!)
-
-                            }
-
-                        }
-
-                        val values2 = ArrayList<Entry>()
-
-                        for(pair in maxMap.values) {
-                            values2.add(Entry(dates.indexOf(pair.first).toFloat(), pair.second))
-                        }
-
-                        val dataset1 = LineDataSet(values1, year.key.toString())
-                        dataset1.setDrawCircles(false)
-                        dataset1.color = yearColors[year.key]!!
-                        dataset1.lineWidth = 2f
-
-                        val dataset2 = LineDataSet(values2, "")
-                        dataset2.color = Color.TRANSPARENT
-                        dataset2.setDrawValues(false)
-                        dataset2.circleRadius = 5f
-                        dataset2.circleHoleRadius = 3f
-                        dataset2.setCircleColor(yearColors[year.key]!!)
-
-                        dataByYear.add(dataset1)
-                        dataByYear.add(dataset2)
-
-                    }
-
-
-
-                    yearChart.xAxis.valueFormatter = IndexAxisValueFormatter(dates)
-                    // enable scaling and dragging
-                    yearChart.data = LineData(dataByYear)
-                }
+                yearChart.xAxis.valueFormatter = IndexAxisValueFormatter(dates)
+                yearChart.data = LineData(it)
 
                 yearChart.onChartGestureListener =
                     Utils.Companion.CustomChartListener(requireContext(), yearChart, dates)
@@ -320,7 +247,6 @@ class CropPricesFragment : Fragment() {
                 if(!sharedPref.getBoolean("compress", false)) {
                     yearChart.setVisibleXRangeMaximum(10.0f)
                 }
-
 
                 yearChart.moveViewToX(dates.size - 30f)
                 yearChart.invalidate()
@@ -330,8 +256,6 @@ class CropPricesFragment : Fragment() {
             viewModel.dataByMandi.observe(viewLifecycleOwner) {
 
                 mandiChart.clear()
-                dataByMandi.clear()
-
                 val axis = mandiChart.axisRight
                 val axis2 = mandiChart.axisLeft
 
@@ -346,59 +270,8 @@ class CropPricesFragment : Fragment() {
                 axis2.axisMinimum = 0f
                 axis.addLimitLine(mspLine)
 
-                if (it.isNotEmpty()) {
-
-                    for (mandi in it) {
-
-
-
-                        val values1 = ArrayList<Entry>()
-                        val maxList = MutableList(12) { Pair("", 0.0f) }
-
-                        for (date in dates) {
-                            val i = dates.indexOf(date)
-
-                            if (mandi.value.containsKey(date) && mandi.value[date] != 0f) {
-                                values1.add(Entry(i.toFloat(), mandi.value[date]!!))
-
-                                val m = date.substring(3).toInt() - 1
-                                if(maxList[m].second < mandi.value[date]!!) maxList[m] = Pair(date, mandi.value[date]!!)
-
-                            }
-
-                        }
-
-                        val values2 = ArrayList<Entry>()
-
-                        for(pair in maxList) {
-                            if(pair.second != 0f) values2.add(Entry(dates.indexOf(pair.first).toFloat(), pair.second))
-                        }
-
-                        Collections.sort(values1, EntryXComparator())
-                        Collections.sort(values2, EntryXComparator())
-
-                        val dataset1 = LineDataSet(values1, mandi.key)
-                        dataset1.setDrawCircles(false)
-                        dataset1.color = mandiColors[mandi.key]!!
-                        dataset1.lineWidth = 2f
-
-                        dataByMandi.add(dataset1)
-
-                        val dataset2 = LineDataSet(values2, "")
-                        dataset2.color = Color.TRANSPARENT
-                        dataset2.setDrawValues(false)
-                        dataset2.circleRadius = 5f
-                        dataset2.circleHoleRadius = 3f
-                        dataset2.setCircleColor(mandiColors[mandi.key]!!)
-
-                        dataByMandi.add(dataset2)
-
-                    }
-
-                    mandiChart.xAxis.valueFormatter = IndexAxisValueFormatter(dates)
-                    // enable scaling and dragging
-                    mandiChart.data = LineData(dataByMandi)
-                }
+                mandiChart.xAxis.valueFormatter = IndexAxisValueFormatter(dates)
+                mandiChart.data = LineData(it)
 
                 mandiChart.onChartGestureListener =
                     Utils.Companion.CustomChartListener(requireContext(), mandiChart, dates)
@@ -409,6 +282,7 @@ class CropPricesFragment : Fragment() {
 
                 mandiChart.moveViewToX(dates.size - 30f)
                 mandiChart.invalidate()
+
             }
 
 //            sharedPref.registerOnSharedPreferenceChangeListener { sharedPreferences, s ->
@@ -493,7 +367,5 @@ class CropPricesFragment : Fragment() {
 
         return binding.root
     }
-
-
 
 }

@@ -49,6 +49,8 @@
     <string name="actual">Nagpur</string>
     <string name="predicted">Predicted</string>
     <string name="share">Share</string>
-    <string name="trends">Price trends in %11$s for last two years: \n1. Lowest price in %1$d was in <b>%2$s</b> (%3$.1f)\nHighest price in %1$d was in <b>%4$s</b> (%5$.1f)\n2. Lowest price in %6$d was in <b>%7$s</b> (%8$.1f)\nHighest price in %6$d was in <b>%9$s</b> (%10$.1f)</string>
+    <string name="trends">Lowest price in %1$d-%2$d was in <b>%3$s</b>: %4$.1f\nHighest price in %1$d-%2$d was in <b>%5$s</b>: %6$.1f\n</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

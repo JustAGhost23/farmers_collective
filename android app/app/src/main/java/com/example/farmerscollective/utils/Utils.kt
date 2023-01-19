@@ -1,12 +1,16 @@
 package com.example.farmerscollective.utils
 
 import android.content.Context
+import android.graphics.Color
 import android.view.MotionEvent
 import android.widget.Toast
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.listener.ChartTouchListener
 import com.github.mikephil.charting.listener.OnChartGestureListener
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
+import java.util.stream.Stream
 import kotlin.math.pow
 import kotlin.math.roundToInt
 
@@ -14,6 +18,33 @@ class Utils {
 
     companion object {
         val MSP = mapOf(Pair(2015, 2600f), Pair(2016, 2775f), Pair(2017, 3050f), Pair(2018, 3399f), Pair(2019, 3710f), Pair(2020, 3880f), Pair(2021, 3950f), Pair(2022, 4300f))
+
+        val dates = ArrayList<String>()
+        val yearColors = mutableMapOf<Int, Int>()
+        val colors = listOf("#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#00FFFF", "#FF00FF", "#000000", "#DDFFDD")
+
+        init {
+
+            val start = LocalDate.of(2001, 7, 1)
+            val end = LocalDate.of(2002, 6, 30)
+
+            Stream.iterate(start) { d ->
+                d.plusDays(1)
+            }
+                .limit(start.until(end, ChronoUnit.DAYS))
+                .forEach { date ->
+                    val dt = date.toString()
+                    dates.add(dt.substring(8) + dt.substring(4, 7))
+                }
+
+            val current = if (LocalDate.now().isBefore(LocalDate.of(LocalDate.now().year, 6, 30)))
+                LocalDate.now().year - 1
+            else LocalDate.now().year
+
+            (current - 7..current).forEachIndexed { i, item ->
+                yearColors[item] = Color.parseColor(colors[i])
+            }
+        }
 
         fun ready(chart: LineChart) {
 

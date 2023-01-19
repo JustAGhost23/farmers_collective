@@ -1,6 +1,7 @@
 package com.example.farmerscollective
 
 import android.content.Context
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -22,6 +23,11 @@ class MainActivity : AppCompatActivity(), ChartRangeDialog.DialogListener {
     private lateinit var controller: NavController
     private lateinit var refresh: FloatingActionButton
     private lateinit var settings: FloatingActionButton
+
+    override fun onSupportNavigateUp(): Boolean {
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+        return super.onSupportNavigateUp()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -79,7 +79,7 @@ class CropPredictedFragment : Fragment() {
         analytics = FirebaseAnalytics.getInstance(requireContext())
 
         with(binding) {
-
+            predictChart.tag = "2"
             predictView2.setOnClickListener {
                 it.findNavController().navigateUp()
             }

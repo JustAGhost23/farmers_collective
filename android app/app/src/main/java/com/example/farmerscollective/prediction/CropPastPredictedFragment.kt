@@ -87,6 +87,7 @@ class CropPastPredictedFragment : Fragment() {
         binding.lifecycleOwner = this
 
         with (binding) {
+            pastPredictChart.tag = "3"
 
             pastPredictView2.setOnClickListener {
                 it.findNavController().navigateUp()

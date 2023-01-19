@@ -30,6 +30,9 @@
         <action
             android:id="@+id/action_cropPricesFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
+        <action
+            android:id="@+id/action_cropPricesFragment_to_zoomedInFragment"
+            app:destination="@id/zoomedInFragment" />
     </fragment>
     <fragment
         android:id="@+id/cropPredictedFragment"
@@ -55,5 +58,17 @@
         <action
             android:id="@+id/action_cropPastPredictedFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/zoomedInFragment"
+        android:name="com.example.farmerscollective.realtime.ZoomedInFragment"
+        android:label="ZoomedInFragment" >
+        <action
+            android:id="@+id/action_zoomedInFragment_to_cropPricesFragment"
+            app:destination="@id/cropPricesFragment" />
+        <argument
+            android:name="chart"
+            app:argType="integer"
+            android:defaultValue="0" />
     </fragment>
 </navigation>
