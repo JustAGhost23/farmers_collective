@@ -126,6 +126,7 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="258dp" />
 
+
      <com.github.mikephil.charting.charts.LineChart
          android:id="@+id/yearChart"
          android:layout_width="0dp"
@@ -135,13 +136,13 @@
          android:layout_marginEnd="8dp"
          android:minHeight="200dp"
          app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintHorizontal_bias="0.0"
          app:layout_constraintStart_toStartOf="parent"
          app:layout_constraintTop_toBottomOf="@+id/chipGroup">
 
      </com.github.mikephil.charting.charts.LineChart>
 
-
-    <com.github.mikephil.charting.charts.LineChart
+     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/mandiChart"
         android:layout_width="0dp"
         android:layout_height="300dp"
@@ -158,7 +159,7 @@
          android:layout_height="48dp"
          android:layout_marginStart="8dp"
          app:layout_constraintStart_toStartOf="parent"
-         app:layout_constraintTop_toBottomOf="@+id/trends" />
+         app:layout_constraintTop_toBottomOf="@+id/tableTrends" />
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/chipGroup"
@@ -198,17 +199,79 @@
          app:layout_constraintStart_toStartOf="parent"
          app:layout_constraintTop_toBottomOf="@id/mandiChart" />
 
-     <TextView
-         android:id="@+id/trends"
-         android:layout_width="0dp"
+     <TableLayout
+         android:id="@+id/tableTrends"
+         android:visibility="gone"
+         android:layout_width="match_parent"
          android:layout_height="wrap_content"
          android:layout_marginStart="16dp"
          android:layout_marginTop="16dp"
          android:layout_marginEnd="16dp"
-         android:textSize="16sp"
          app:layout_constraintEnd_toEndOf="parent"
          app:layout_constraintStart_toStartOf="parent"
-         app:layout_constraintTop_toBottomOf="@+id/price_view1" />
+         app:layout_constraintTop_toBottomOf="@+id/price_view1"
+         android:stretchColumns="*">
+
+         <TableRow
+             android:id="@+id/tbrow1"
+             android:background="@drawable/table_row_bg"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+
+             <TextView
+                 android:id="@+id/t1"
+                 android:background="@drawable/table_cell_bg"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:textSize="16sp"
+                 android:text="" />
+
+             <TextView
+                 android:id="@+id/t2"
+                 android:background="@drawable/table_cell_bg"
+                 android:gravity="center_horizontal"
+                 android:textStyle="bold"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:textSize="16sp"
+                 android:text="Year" />
+
+             <TextView
+                 android:id="@+id/t3"
+                 android:background="@drawable/table_cell_bg"
+                 android:gravity="center_horizontal"
+                 android:textStyle="bold"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:textSize="16sp"
+                 android:text="Month" />
+
+             <TextView
+                 android:id="@+id/t4"
+                 android:background="@drawable/table_cell_bg"
+                 android:gravity="center_horizontal"
+                 android:textStyle="bold"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:textSize="16sp"
+                 android:text="Price" />
+
+
+         </TableRow>
+
+     </TableLayout>
+
+<!--     <TextView-->
+<!--         android:id="@+id/trends"-->
+<!--         android:layout_width="0dp"-->
+<!--         android:layout_height="wrap_content"-->
+<!--         android:layout_marginStart="16dp"-->
+<!--         android:layout_marginTop="16dp"-->
+<!--         android:layout_marginEnd="16dp"-->
+<!--         android:textSize="16sp"-->
+<!--         app:layout_constraintEnd_toEndOf="parent"-->
+<!--         app:layout_constraintStart_toStartOf="parent"-->
+<!--         app:layout_constraintTop_toBottomOf="@+id/tableTrends" />-->
 
      <androidx.constraintlayout.widget.Guideline
          android:id="@+id/guideline7"

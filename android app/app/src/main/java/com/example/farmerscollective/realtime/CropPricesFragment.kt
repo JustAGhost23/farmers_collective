@@ -5,21 +5,23 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Bitmap.CompressFormat
 import android.graphics.Color
+import android.graphics.Typeface
+import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Toast
+import android.widget.*
 import androidx.core.content.FileProvider
+import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import com.anychart.data.Table
 import com.example.farmerscollective.R
 import com.example.farmerscollective.databinding.CropPricesFragmentBinding
 import com.example.farmerscollective.utils.FirstDrawListener
@@ -217,21 +219,55 @@ class CropPricesFragment : Fragment() {
             ready(mandiChart)
 
             viewModel.trends.observe(viewLifecycleOwner) {
-                var s = ""
+//                var s = ""
                 Log.d("trends", " has been changed")
-                for(year in it.keys.sorted()) {
-                    s += this@CropPricesFragment.getString(R.string.trends,
-                    year,
-                    (year + 1) % 100,
-                    it[year]!![0].first,
-                    it[year]!![0].second,
-                    it[year]!![1].first,
-                    it[year]!![1].second
-                    )
+                if(it.isNotEmpty()) {
+                    tableTrends.visibility = View.VISIBLE
                 }
-
-                trends.text = s
-
+                else {
+                    tableTrends.visibility = View.GONE
+                }
+                tableTrends.removeViews(1, tableTrends.childCount - 1)
+                for(year in it.keys.sorted()) {
+                    val row: TableRow = TableRow(context)
+                    val t1: TextView = TextView(context)
+                    val t2: TextView = TextView(context)
+                    val t3: TextView = TextView(context)
+                    val t4: TextView = TextView(context)
+                    row.removeViews(0, row.childCount)
+                    row.background = ResourcesCompat.getDrawable(resources, R.drawable.table_row_bg, null)
+//                    s += this@CropPricesFragment.getString(R.string.trends,
+//                    year,
+//                    (year + 1) % 100,
+//                    it[year]!![0].first,
+//                    it[year]!![0].second,
+//                    it[year]!![1].first,
+//                    it[year]!![1].second
+//                    )
+                    t1.text = "Highest\nLowest"
+                    t1.setTypeface(null, Typeface.BOLD)
+                    t1.textSize = 16f
+                    t1.gravity = 1 //CENTER_HORIZONTAL
+                    t1.background = ResourcesCompat.getDrawable(resources, R.drawable.table_cell_bg, null)
+                    t2.text = "${year}-${(year+1)%100}\n"
+                    t2.textSize = 16f
+                    t2.gravity = 1 //CENTER_HORIZONTAL
+                    t2.background = ResourcesCompat.getDrawable(resources, R.drawable.table_cell_bg, null)
+                    t3.text = "${it[year]!![0].first}\n${it[year]!![1].first}"
+                    t3.textSize = 16f
+                    t3.gravity = 1 //CENTER_HORIZONTAL
+                    t3.background = ResourcesCompat.getDrawable(resources, R.drawable.table_cell_bg, null)
+                    t4.text = "${it[year]!![0].second}\n${it[year]!![1].second}"
+                    t4.textSize = 16f
+                    t4.gravity = 1 //CENTER_HORIZONTAL
+                    t4.background = ResourcesCompat.getDrawable(resources, R.drawable.table_cell_bg, null)
+                    row.addView(t1)
+                    row.addView(t2)
+                    row.addView(t3)
+                    row.addView(t4)
+                    tableTrends.addView(row)
+                }
+//                trends.text = s
             }
 
 
