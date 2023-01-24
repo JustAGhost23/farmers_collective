@@ -4,6 +4,8 @@ import android.app.Application
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -318,7 +320,12 @@ class CropPricesViewModel(application: Application) : AndroidViewModel(applicati
 
         _selectedYears.value = newList
 
-        getDataByYear()
+        if(newList.isNotEmpty()) {
+                getDataByYear()
+        }
+        else {
+            Toast.makeText(context, "Atleast one year must be selected", Toast.LENGTH_SHORT).show()
+        }
     }
 
     fun selectMandi(mandi: String, check: Boolean) {
@@ -330,7 +337,12 @@ class CropPricesViewModel(application: Application) : AndroidViewModel(applicati
         Log.d("debugging $mandi", newList.toString())
         _selectedMandis.value = newList
 
-        getDataByMandi()
+        if(newList.isNotEmpty()) {
+            getDataByMandi()
+        }
+        else {
+            Toast.makeText(context, "Atleast one mandi must be selected", Toast.LENGTH_SHORT).show()
+        }
     }
 
     fun changeMandi(mandi: String) {
