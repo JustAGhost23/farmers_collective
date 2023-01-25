@@ -2,10 +2,18 @@ package com.example.farmerscollective
 
 import android.content.Context
 import android.content.pm.ActivityInfo
+import android.content.res.Configuration.ORIENTATION_LANDSCAPE
+import android.content.res.Configuration.ORIENTATION_PORTRAIT
+import android.graphics.drawable.GradientDrawable.Orientation
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.View
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -23,6 +31,7 @@ class MainActivity : AppCompatActivity(), ChartRangeDialog.DialogListener {
     private lateinit var controller: NavController
     private lateinit var refresh: FloatingActionButton
     private lateinit var settings: FloatingActionButton
+    private lateinit var textView: TextView
 
     override fun onSupportNavigateUp(): Boolean {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
@@ -36,6 +45,54 @@ class MainActivity : AppCompatActivity(), ChartRangeDialog.DialogListener {
         controller = Navigation.findNavController(this, R.id.nav_host_fragment_container)
         refresh = findViewById(R.id.refresh)
         settings = findViewById(R.id.settings)
+        textView = findViewById(R.id.textView)
+
+        if(resources.configuration.orientation == ORIENTATION_LANDSCAPE) {
+            textView.setSingleLine()
+            settings.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                endToStart = refresh.id
+                topToTop = R.id.container
+            }
+            (settings.layoutParams as ConstraintLayout.LayoutParams).apply {
+                val scale = applicationContext.resources.displayMetrics.density;
+                setMargins(0, (16 * scale + 0.5f).toInt(), (16 * scale + 0.5f).toInt(), 0)
+            }
+        }
+        if(resources.configuration.orientation == ORIENTATION_PORTRAIT) {
+            textView.setLines(2)
+            settings.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                topToBottom = refresh.id
+                endToEnd = R.id.container
+            }
+//            val constraintLayout = findViewById<ConstraintLayout>(R.id.zoomedInFragment)
+//            val constraintSet = ConstraintSet()
+//            constraintSet.clone(constraintLayout)
+//            constraintSet.connect(
+//                R.id.settings,
+//                ConstraintSet.END,
+//                R.id.parent,
+//                ConstraintSet.END,
+//                0
+//            )
+//            constraintSet.connect(
+//                R.id.settings,
+//                ConstraintSet.TOP,
+//                R.id.refresh,
+//                ConstraintSet.BOTTOM,
+//                0
+//            )
+//            constraintSet.applyTo(constraintLayout)
+            (settings.layoutParams as ConstraintLayout.LayoutParams).apply {
+                topMargin = TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, 16F, resources
+                        .displayMetrics
+                ).toInt()
+                marginEnd = TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, 16F, resources
+                        .displayMetrics
+                ).toInt()
+            }
+        }
 
 
         val constraints = Constraints.Builder()
