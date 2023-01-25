@@ -166,7 +166,9 @@ class CropPricesFragment : Fragment() {
                 chip.text = item
                 chip.isCheckable = true
 
-                if(year == current) chip.isChecked = true
+                if(viewModel.checkYear(year)) {
+                    chip.isChecked = true
+                }
 
                 chip.setOnCheckedChangeListener { button, b ->
 
@@ -195,7 +197,9 @@ class CropPricesFragment : Fragment() {
                 mChip.text = mandi
                 mChip.isCheckable = true
 
-                if(mandi == "MAHARASHTRA_NAGPUR_Price") mChip.isChecked = true
+                if(viewModel.checkMandi(mandi)) {
+                    mChip.isChecked = true
+                }
 
                 mChip.setOnCheckedChangeListener { button, b ->
 

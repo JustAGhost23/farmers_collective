@@ -315,34 +315,46 @@ class CropPricesViewModel(application: Application) : AndroidViewModel(applicati
     fun selectYear(year: Int, check: Boolean) {
         val newList = _selectedYears.value!!
 
-        if(check) newList.add(year)
-        else newList.remove(year)
+        if(check) {
+            if(!newList.contains(year)) {
+                newList.add(year)
+            }
+        }
+        else {
+            if(newList.size > 1) {
+                newList.remove(year)
+            }
+            else {
+                Toast.makeText(context, "Atleast one year must be selected", Toast.LENGTH_SHORT).show()
+            }
+        }
 
         _selectedYears.value = newList
 
-        if(newList.isNotEmpty()) {
-                getDataByYear()
-        }
-        else {
-            Toast.makeText(context, "Atleast one year must be selected", Toast.LENGTH_SHORT).show()
-        }
+        getDataByYear()
     }
 
     fun selectMandi(mandi: String, check: Boolean) {
         val newList = _selectedMandis.value!!
 
-        if(check) newList.add(mandi)
-        else newList.remove(mandi)
+        if(check) {
+            if(!newList.contains(mandi)) {
+                newList.add(mandi)
+            }
+        }
+        else {
+            if(newList.size > 1) {
+                newList.remove(mandi)
+            }
+            else {
+                Toast.makeText(context, "Atleast one mandi must be selected", Toast.LENGTH_SHORT).show()
+            }
+        }
 
         Log.d("debugging $mandi", newList.toString())
         _selectedMandis.value = newList
 
-        if(newList.isNotEmpty()) {
-            getDataByMandi()
-        }
-        else {
-            Toast.makeText(context, "Atleast one mandi must be selected", Toast.LENGTH_SHORT).show()
-        }
+        getDataByMandi()
     }
 
     fun changeMandi(mandi: String) {
@@ -353,6 +365,20 @@ class CropPricesViewModel(application: Application) : AndroidViewModel(applicati
     fun changeYear(year: Int) {
         _year.value = year
         getDataByMandi()
+    }
+
+    fun checkYear(year: Int): Boolean {
+        if(_selectedYears.value!!.contains(year)) {
+            return true
+        }
+        return false
+    }
+
+    fun checkMandi(mandi: String): Boolean {
+        if(_selectedMandis.value!!.contains(mandi)) {
+            return true
+        }
+        return false
     }
 
 }
