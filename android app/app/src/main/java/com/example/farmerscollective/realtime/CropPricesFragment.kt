@@ -2,10 +2,13 @@ package com.example.farmerscollective.realtime
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Bitmap.CompressFormat
 import android.graphics.Color
+import android.graphics.PorterDuff
 import android.graphics.Typeface
+import android.graphics.drawable.ShapeDrawable
 import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
@@ -15,6 +18,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.core.content.FileProvider
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.allViews
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -224,6 +228,14 @@ class CropPricesFragment : Fragment() {
 
             viewModel.trends.observe(viewLifecycleOwner) {
 //                var s = ""
+//                    s += this@CropPricesFragment.getString(R.string.trends,
+//                    year,
+//                    (year + 1) % 100,
+//                    it[year]!![0].first,
+//                    it[year]!![0].second,
+//                    it[year]!![1].first,
+//                    it[year]!![1].second
+//                    )
                 Log.d("trends", " has been changed")
                 if(it.isNotEmpty()) {
                     tableTrends.visibility = View.VISIBLE
@@ -240,14 +252,6 @@ class CropPricesFragment : Fragment() {
                     val t4: TextView = TextView(context)
                     row.removeViews(0, row.childCount)
                     row.background = ResourcesCompat.getDrawable(resources, R.drawable.table_row_bg, null)
-//                    s += this@CropPricesFragment.getString(R.string.trends,
-//                    year,
-//                    (year + 1) % 100,
-//                    it[year]!![0].first,
-//                    it[year]!![0].second,
-//                    it[year]!![1].first,
-//                    it[year]!![1].second
-//                    )
                     t1.text = "Highest\nLowest"
                     t1.setTypeface(null, Typeface.BOLD)
                     t1.textSize = 16f
@@ -288,6 +292,23 @@ class CropPricesFragment : Fragment() {
                     yearChart.setVisibleXRangeMaximum(10.0f)
                 }
 
+                when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+                    Configuration.UI_MODE_NIGHT_NO -> {
+                        yearChart.xAxis.textColor = Color.BLACK
+                        yearChart.legend.textColor = Color.WHITE
+                        yearChart.data.setValueTextColor(Color.BLACK)
+                        yearChart.axisRight.textColor = Color.BLACK
+                        yearChart.axisLeft.textColor = Color.BLACK
+                    }
+                    Configuration.UI_MODE_NIGHT_YES -> {
+                        yearChart.xAxis.textColor = Color.WHITE
+                        yearChart.legend.textColor = Color.WHITE
+                        yearChart.data.setValueTextColor(Color.WHITE)
+                        yearChart.axisRight.textColor = Color.WHITE
+                        yearChart.axisLeft.textColor = Color.WHITE
+                    }
+                }
+
                 yearChart.moveViewToX(dates.size - 30f)
                 yearChart.invalidate()
 
@@ -300,9 +321,7 @@ class CropPricesFragment : Fragment() {
                 val axis2 = mandiChart.axisLeft
 
                 val mspLine = LimitLine(Utils.MSP[2015 + yearSelector.selectedItemPosition]!!, "Minimum Support Price")
-                mspLine.lineColor = Color.GRAY
                 mspLine.lineWidth = 2f
-                mspLine.textColor = Color.BLACK
                 mspLine.textSize = 8f
 
                 axis.removeAllLimitLines()
@@ -318,6 +337,27 @@ class CropPricesFragment : Fragment() {
 
                 if(!sharedPref.getBoolean("compress", false)) {
                     mandiChart.setVisibleXRangeMaximum(10.0f)
+                }
+
+                when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+                    Configuration.UI_MODE_NIGHT_NO -> {
+                        mandiChart.xAxis.textColor = Color.BLACK
+                        mandiChart.legend.textColor = Color.WHITE
+                        mandiChart.data.setValueTextColor(Color.BLACK)
+                        axis.textColor = Color.BLACK
+                        axis2.textColor = Color.BLACK
+                        mspLine.lineColor = Color.BLACK
+                        mspLine.textColor = Color.BLACK
+                    }
+                    Configuration.UI_MODE_NIGHT_YES -> {
+                        mandiChart.xAxis.textColor = Color.WHITE
+                        mandiChart.legend.textColor = Color.WHITE
+                        mandiChart.data.setValueTextColor(Color.WHITE)
+                        axis.textColor = Color.WHITE
+                        axis2.textColor = Color.WHITE
+                        mspLine.lineColor = Color.WHITE
+                        mspLine.textColor = Color.WHITE
+                    }
                 }
 
                 mandiChart.moveViewToX(dates.size - 30f)

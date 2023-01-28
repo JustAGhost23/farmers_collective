@@ -2,13 +2,12 @@ package com.example.farmerscollective
 
 import android.content.Context
 import android.content.pm.ActivityInfo
-import android.content.res.Configuration.ORIENTATION_LANDSCAPE
-import android.content.res.Configuration.ORIENTATION_PORTRAIT
-import android.graphics.drawable.GradientDrawable.Orientation
+import android.content.res.*
+import android.content.res.Configuration
+import android.graphics.Color
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.View
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -47,7 +46,7 @@ class MainActivity : AppCompatActivity(), ChartRangeDialog.DialogListener {
         settings = findViewById(R.id.settings)
         textView = findViewById(R.id.textView)
 
-        if(resources.configuration.orientation == ORIENTATION_LANDSCAPE) {
+        if(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             textView.setSingleLine()
             settings.updateLayoutParams<ConstraintLayout.LayoutParams> {
                 endToStart = refresh.id
@@ -58,30 +57,12 @@ class MainActivity : AppCompatActivity(), ChartRangeDialog.DialogListener {
                 setMargins(0, (16 * scale + 0.5f).toInt(), (16 * scale + 0.5f).toInt(), 0)
             }
         }
-        if(resources.configuration.orientation == ORIENTATION_PORTRAIT) {
+        if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             textView.setLines(2)
             settings.updateLayoutParams<ConstraintLayout.LayoutParams> {
                 topToBottom = refresh.id
                 endToEnd = R.id.container
             }
-//            val constraintLayout = findViewById<ConstraintLayout>(R.id.zoomedInFragment)
-//            val constraintSet = ConstraintSet()
-//            constraintSet.clone(constraintLayout)
-//            constraintSet.connect(
-//                R.id.settings,
-//                ConstraintSet.END,
-//                R.id.parent,
-//                ConstraintSet.END,
-//                0
-//            )
-//            constraintSet.connect(
-//                R.id.settings,
-//                ConstraintSet.TOP,
-//                R.id.refresh,
-//                ConstraintSet.BOTTOM,
-//                0
-//            )
-//            constraintSet.applyTo(constraintLayout)
             (settings.layoutParams as ConstraintLayout.LayoutParams).apply {
                 topMargin = TypedValue.applyDimension(
                     TypedValue.COMPLEX_UNIT_DIP, 16F, resources
@@ -91,6 +72,15 @@ class MainActivity : AppCompatActivity(), ChartRangeDialog.DialogListener {
                     TypedValue.COMPLEX_UNIT_DIP, 16F, resources
                         .displayMetrics
                 ).toInt()
+            }
+        }
+
+        when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+            Configuration.UI_MODE_NIGHT_NO -> {
+                textView.setTextColor(Color.BLACK)
+            }
+            Configuration.UI_MODE_NIGHT_YES -> {
+                textView.setTextColor(Color.WHITE)
             }
         }
 

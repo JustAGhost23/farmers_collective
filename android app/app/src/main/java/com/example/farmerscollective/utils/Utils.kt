@@ -1,6 +1,7 @@
 package com.example.farmerscollective.utils
 
 import android.content.Context
+import android.content.res.Configuration
 import android.graphics.Color
 import android.view.MotionEvent
 import android.widget.Toast
@@ -21,7 +22,7 @@ class Utils {
 
         val dates = ArrayList<String>()
         val yearColors = mutableMapOf<Int, Int>()
-        val colors = listOf("#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#00FFFF", "#FF00FF", "#000000", "#DDFFDD")
+        val colors = listOf("#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#00FFFF", "#FF00FF", "#FBCEB1", "#DDFFDD")
 
         init {
 
