@@ -2,6 +2,7 @@ package com.example.farmerscollective.prediction
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
@@ -72,7 +73,7 @@ class CropPredictedFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = CropPredictedFragmentBinding.inflate(layoutInflater)
         viewModel = ViewModelProvider(this)[CropPredictedViewModel::class.java]
         binding.viewmodel = viewModel
@@ -125,6 +126,17 @@ class CropPredictedFragment : Fragment() {
 
                     loss.text = roundToString(item.loss)
                     gain.text = roundToString(item.gain)
+                    loss.setTextColor(Color.DKGRAY)
+                    gain.setTextColor(Color.DKGRAY)
+
+                    when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+                        Configuration.UI_MODE_NIGHT_NO -> {
+                            date.setTextColor(Color.BLACK)
+                        }
+                        Configuration.UI_MODE_NIGHT_YES -> {
+                            date.setTextColor(Color.WHITE)
+                        }
+                    }
 
                     recomm.addView(row)
 
@@ -207,6 +219,20 @@ class CropPredictedFragment : Fragment() {
                 predictChart.setVisibleXRangeMaximum(30.0f)
                 predictChart.moveViewToX((dates.size - 45).toFloat())
 
+                when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+                    Configuration.UI_MODE_NIGHT_NO -> {
+                        predictChart.xAxis.textColor = Color.BLACK
+                        predictChart.data.setValueTextColor(Color.BLACK)
+                        predictChart.axisRight.textColor = Color.BLACK
+                        predictChart.axisLeft.textColor = Color.BLACK
+                    }
+                    Configuration.UI_MODE_NIGHT_YES -> {
+                        predictChart.xAxis.textColor = Color.WHITE
+                        predictChart.data.setValueTextColor(Color.WHITE)
+                        predictChart.axisRight.textColor = Color.WHITE
+                        predictChart.axisLeft.textColor = Color.WHITE
+                    }
+                }
 
                 predictChart.invalidate()
             }

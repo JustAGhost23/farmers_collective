@@ -295,7 +295,7 @@ class CropPricesFragment : Fragment() {
                 when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
                     Configuration.UI_MODE_NIGHT_NO -> {
                         yearChart.xAxis.textColor = Color.BLACK
-                        yearChart.legend.textColor = Color.WHITE
+                        yearChart.legend.textColor = Color.BLACK
                         yearChart.data.setValueTextColor(Color.BLACK)
                         yearChart.axisRight.textColor = Color.BLACK
                         yearChart.axisLeft.textColor = Color.BLACK

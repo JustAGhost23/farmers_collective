@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity(), ChartRangeDialog.DialogListener {
                 topToTop = R.id.container
             }
             (settings.layoutParams as ConstraintLayout.LayoutParams).apply {
-                val scale = applicationContext.resources.displayMetrics.density;
+                val scale = applicationContext.resources.displayMetrics.density
                 setMargins(0, (16 * scale + 0.5f).toInt(), (16 * scale + 0.5f).toInt(), 0)
             }
         }

@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.farmerscollective.R
+import com.example.farmerscollective.data.OdkSubmission
 import com.example.farmerscollective.data.Prediction
 import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -154,6 +155,16 @@ class DailyWorker(appContext: Context, workerParams: WorkerParameters) :
                     }
 
             }
+
+
+            db.collection("TELANGANA_ADILABAD_ODK")
+                .get()
+                .addOnSuccessListener {
+                    val t: ArrayList<OdkSubmission> = arrayListOf()
+                    it.documents.forEach {doc ->
+                        println(doc.data.toString())
+                        }
+                    }
 
 //            Toast.makeText(applicationContext, "Data loaded!", Toast.LENGTH_SHORT).show()
             // Indicate whether the work finished successfully with the Result

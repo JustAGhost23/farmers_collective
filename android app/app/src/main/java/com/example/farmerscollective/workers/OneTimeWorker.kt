@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.farmerscollective.R
+import com.example.farmerscollective.data.OdkSubmission
 import com.example.farmerscollective.data.Prediction
 import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -13,6 +14,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 
 class OneTimeWorker(appContext: Context, workerParams: WorkerParameters) :
@@ -161,6 +164,34 @@ class OneTimeWorker(appContext: Context, workerParams: WorkerParameters) :
                 }
                 .addOnFailureListener {
                     logWorkerEvent("failure", "WorkerFailure")
+                }
+
+            db.collection("TELANGANA_ADILABAD_ODK")
+                .get()
+                .addOnSuccessListener {
+                    val t: ArrayList<OdkSubmission> = arrayListOf()
+                    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                    it.documents.forEach {doc ->
+                        doc.data?.forEach {
+                            val mapArray: ArrayList<HashMap<String, Any>> = it.value as ArrayList<HashMap<String, Any>>
+                            for(map in mapArray) {
+                                if(map.containsKey("CROP_NAME")) {
+                                    val m: HashMap<String, Any> = map["CROP_NAME"] as HashMap<String, Any>
+                                    t.add(
+                                        OdkSubmission(
+                                            if(m["LOCAL_TRADER_ID"].toString() != "null") Integer.parseInt(m["LOCAL_TRADER_ID"].toString()) else null,
+                                            m["MANDAL_ID"] as String?,
+                                            if(m["LOCAL_TRADER_ID"].toString() != "null") Integer.parseInt(m["MARKET_ID"].toString()) else null,
+                                            m["PERSON_FILLING_DATA_ID"] as String?,
+                                            m["RATE_OFFERED_ID"] as Long,
+                                            LocalDate.parse(map["DATE_CT_ID"].toString(), formatter),
+                                        )
+                                    )
+                                }
+                            }
+                            Log.e("debugging", t.toString())
+                        }
+                    }
                 }
 
         }

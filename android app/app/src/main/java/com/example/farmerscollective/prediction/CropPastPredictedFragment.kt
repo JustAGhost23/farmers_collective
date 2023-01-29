@@ -2,6 +2,7 @@ package com.example.farmerscollective.prediction
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
@@ -16,6 +17,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.Guideline
 import androidx.core.content.FileProvider
 import androidx.core.text.bold
+import androidx.core.view.marginLeft
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
@@ -76,7 +78,7 @@ class CropPastPredictedFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
 
         val binding = DataBindingUtil.inflate<CropPastPredictedFragmentBinding>(inflater, R.layout.crop_past_predicted_fragment, container, false)
@@ -85,6 +87,8 @@ class CropPastPredictedFragment : Fragment() {
         binding.viewmodel = viewModel
         binding.frag = this
         binding.lifecycleOwner = this
+
+        val scale = resources.displayMetrics.density
 
         with (binding) {
             pastPredictChart.tag = "3"
@@ -121,6 +125,7 @@ class CropPastPredictedFragment : Fragment() {
                             .bold {
                                 append(format.format(g))
                             }
+                        date.setPadding((32 * scale + 0.5f).toInt(), 0, 0, 0)
 
                         val left: Guideline = prediction.findViewById(R.id.left)
                         val right: Guideline = prediction.findViewById(R.id.right)
@@ -138,6 +143,8 @@ class CropPastPredictedFragment : Fragment() {
 
                         loss.text = roundToString(item[3].toFloat())
                         gain.text = roundToString(item[4].toFloat())
+                        loss.setTextColor(Color.DKGRAY)
+                        gain.setTextColor(Color.DKGRAY)
 
                         actual.text = profit
 
@@ -146,6 +153,15 @@ class CropPastPredictedFragment : Fragment() {
 
                             if (profit.toFloat() > 0) actual.setTextColor(Color.parseColor("#00DD00"))
                             else actual.setTextColor(Color.parseColor("#DD0000"))
+                        }
+
+                        when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+                            Configuration.UI_MODE_NIGHT_NO -> {
+                                date.setTextColor(Color.BLACK)
+                            }
+                            Configuration.UI_MODE_NIGHT_YES -> {
+                                date.setTextColor(Color.WHITE)
+                            }
                         }
                     }
 
@@ -233,6 +249,22 @@ class CropPastPredictedFragment : Fragment() {
 
                 pastPredictChart.data = LineData(data)
                 pastPredictChart.onChartGestureListener = Utils.Companion.CustomChartListener(requireContext(), pastPredictChart, dates)
+
+                when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+                    Configuration.UI_MODE_NIGHT_NO -> {
+                        pastPredictChart.xAxis.textColor = Color.BLACK
+                        pastPredictChart.data.setValueTextColor(Color.BLACK)
+                        pastPredictChart.axisRight.textColor = Color.BLACK
+                        pastPredictChart.axisLeft.textColor = Color.BLACK
+                    }
+                    Configuration.UI_MODE_NIGHT_YES -> {
+                        pastPredictChart.xAxis.textColor = Color.WHITE
+                        pastPredictChart.data.setValueTextColor(Color.WHITE)
+                        pastPredictChart.axisRight.textColor = Color.WHITE
+                        pastPredictChart.axisLeft.textColor = Color.WHITE
+                    }
+                }
+
                 pastPredictChart.invalidate()
 
             }
