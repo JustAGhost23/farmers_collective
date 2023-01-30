@@ -14,6 +14,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 
 class DailyWorker(appContext: Context, workerParams: WorkerParameters) :
@@ -161,10 +163,29 @@ class DailyWorker(appContext: Context, workerParams: WorkerParameters) :
                 .get()
                 .addOnSuccessListener {
                     val t: ArrayList<OdkSubmission> = arrayListOf()
+                    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
                     it.documents.forEach {doc ->
-                        println(doc.data.toString())
+                        doc.data?.forEach {
+                            val mapArray: ArrayList<HashMap<String, Any>> = it.value as ArrayList<HashMap<String, Any>>
+                            for(map in mapArray) {
+                                if(map.containsKey("CROP_NAME")) {
+                                    val m: HashMap<String, Any> = map["CROP_NAME"] as HashMap<String, Any>
+                                    t.add(
+                                        OdkSubmission(
+                                            if(m["LOCAL_TRADER_ID"].toString() != "null") Integer.parseInt(m["LOCAL_TRADER_ID"].toString()) else null,
+                                            m["MANDAL_ID"] as String?,
+                                            if(m["LOCAL_TRADER_ID"].toString() != "null") Integer.parseInt(m["MARKET_ID"].toString()) else null,
+                                            m["PERSON_FILLING_DATA_ID"] as String?,
+                                            m["RATE_OFFERED_ID"] as Long,
+                                            LocalDate.parse(map["DATE_CT_ID"].toString(), formatter),
+                                        )
+                                    )
+                                }
+                            }
+                            Log.e("debugging", t.toString())
                         }
                     }
+                }
 
 //            Toast.makeText(applicationContext, "Data loaded!", Toast.LENGTH_SHORT).show()
             // Indicate whether the work finished successfully with the Result
