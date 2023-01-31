@@ -189,26 +189,27 @@ class OneTimeWorker(appContext: Context, workerParams: WorkerParameters) :
                                     )
                                 }
                             }
-                            val file = File(
-                                applicationContext.filesDir,
-                                "${doc.id}.csv"
-                            )
-                            csvWriter().open(file) {
-                                for (row in t) {
-
-                                    writeRow(
-                                        row.localTraderId,
-                                        row.mandalId,
-                                        row.marketId,
-                                        row.personFillingId,
-                                        row.price,
-                                        row.date,
-                                    )
-                                }
-                            }
-                            Log.e("debugging", t.toString())
                         }
                     }
+
+                    val file = File(
+                        applicationContext.filesDir,
+                        "TELANGANA_ADILABAD_ODK.csv"
+                    )
+                    csvWriter().open(file) {
+                        for (row in t) {
+
+                            writeRow(
+                                row.localTraderId,
+                                row.mandalId,
+                                row.marketId,
+                                row.personFillingId,
+                                row.price,
+                                row.date,
+                            )
+                        }
+                    }
+                    Log.e("debugging", t.toString())
                 }
 
         }
