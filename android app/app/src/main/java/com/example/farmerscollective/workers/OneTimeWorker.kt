@@ -181,11 +181,28 @@ class OneTimeWorker(appContext: Context, workerParams: WorkerParameters) :
                                         OdkSubmission(
                                             if(m["LOCAL_TRADER_ID"].toString() != "null") Integer.parseInt(m["LOCAL_TRADER_ID"].toString()) else null,
                                             m["MANDAL_ID"] as String?,
-                                            if(m["LOCAL_TRADER_ID"].toString() != "null") Integer.parseInt(m["MARKET_ID"].toString()) else null,
+                                            if(m["MARKET_ID"].toString() != "null") Integer.parseInt(m["MARKET_ID"].toString()) else null,
                                             m["PERSON_FILLING_DATA_ID"] as String?,
                                             m["RATE_OFFERED_ID"] as Long,
                                             LocalDate.parse(map["DATE_CT_ID"].toString(), formatter),
                                         )
+                                    )
+                                }
+                            }
+                            val file = File(
+                                applicationContext.filesDir,
+                                "${doc.id}.csv"
+                            )
+                            csvWriter().open(file) {
+                                for (row in t) {
+
+                                    writeRow(
+                                        row.localTraderId,
+                                        row.mandalId,
+                                        row.marketId,
+                                        row.personFillingId,
+                                        row.price,
+                                        row.date,
                                     )
                                 }
                             }
