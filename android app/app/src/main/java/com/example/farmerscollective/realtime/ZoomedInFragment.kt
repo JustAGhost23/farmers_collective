@@ -2,6 +2,7 @@ package com.example.farmerscollective.realtime
 
 import android.content.Context
 import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -46,16 +47,14 @@ class ZoomedInFragment : Fragment() {
 
         with(binding) {
             zoomChart.clear()
-
             zoom.setOnClickListener {
                 requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
                 findNavController().navigateUp()
             }
-            
+
             when(args.chart) {
                 0 ->
                     viewModel.dataByYear.observe(viewLifecycleOwner) {
-
                         zoomChart.clear()
                         zoomChart.xAxis.valueFormatter = IndexAxisValueFormatter(Utils.dates)
                         zoomChart.data = LineData(it)
@@ -71,6 +70,25 @@ class ZoomedInFragment : Fragment() {
 
                         adjustAxis(zoomChart)
                         zoomChart.invalidate()
+
+                        when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+                            Configuration.UI_MODE_NIGHT_NO -> {
+                                binding.zoomedInFragment.setBackgroundColor(Color.WHITE)
+                                zoomChart.xAxis.textColor = Color.BLACK
+                                zoomChart.legend.textColor = Color.BLACK
+                                zoomChart.data.setValueTextColor(Color.BLACK)
+                                zoomChart.axisRight.textColor = Color.BLACK
+                                zoomChart.axisLeft.textColor = Color.BLACK
+                            }
+                            Configuration.UI_MODE_NIGHT_YES -> {
+                                binding.zoomedInFragment.setBackgroundColor(Color.BLACK)
+                                zoomChart.xAxis.textColor = Color.WHITE
+                                zoomChart.legend.textColor = Color.WHITE
+                                zoomChart.data.setValueTextColor(Color.WHITE)
+                                zoomChart.axisRight.textColor = Color.WHITE
+                                zoomChart.axisLeft.textColor = Color.WHITE
+                            }
+                        }
 
                     }
                 
@@ -106,7 +124,31 @@ class ZoomedInFragment : Fragment() {
                         zoomChart.moveViewToX(Utils.dates.size - 30f)
                         zoomChart.invalidate()
 
+                        when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+                            Configuration.UI_MODE_NIGHT_NO -> {
+                                mspLine.textColor = Color.BLACK
+                                binding.zoomedInFragment.setBackgroundColor(Color.WHITE)
+                                zoomChart.xAxis.textColor = Color.BLACK
+                                zoomChart.legend.textColor = Color.BLACK
+                                zoomChart.data.setValueTextColor(Color.BLACK)
+                                zoomChart.axisRight.textColor = Color.BLACK
+                                zoomChart.axisLeft.textColor = Color.BLACK
+                            }
+                            Configuration.UI_MODE_NIGHT_YES -> {
+                                mspLine.textColor = Color.WHITE
+                                binding.zoomedInFragment.setBackgroundColor(Color.BLACK)
+                                zoomChart.xAxis.textColor = Color.WHITE
+                                zoomChart.legend.textColor = Color.WHITE
+                                zoomChart.data.setValueTextColor(Color.WHITE)
+                                zoomChart.axisRight.textColor = Color.WHITE
+                                zoomChart.axisLeft.textColor = Color.WHITE
+                            }
+                        }
+
                     }
+
+
+
             }
         }
         return binding.root
