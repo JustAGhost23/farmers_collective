@@ -23,6 +23,16 @@ class Utils {
         val dates = ArrayList<String>()
         val yearColors = mutableMapOf<Int, Int>()
         val colors = listOf("#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#00FFFF", "#FF00FF", "#FBCEB1", "#DDFFDD")
+        val traders = listOf("PMRSS, DALLMILL",
+                "Ankush-Utnoor",
+                "Santhosh-Indravelly",
+                "Bhiva-Jainoor",
+                "Kamdhenu Trader",
+                "Raju Trader",
+                "KK Solvents",
+                "Mahesh",
+                "Others",
+        )
 
         init {
 
@@ -45,6 +55,14 @@ class Utils {
             (current - 7..current).forEachIndexed { i, item ->
                 yearColors[item] = Color.parseColor(colors[i])
             }
+        }
+
+        fun adjustAxis(chart: LineChart) {
+            var today = LocalDate.now().toString()
+            today = today.substring(8) + today.substring(4, 7)
+            var index = dates.indexOf(today)
+            index = if (index != -1) index - 5 else dates.size - 30
+            chart.moveViewToX(index.toFloat())
         }
 
         fun ready(chart: LineChart) {

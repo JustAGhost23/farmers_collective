@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_mainFragment_to_cropPastPredictedFragment"
             app:destination="@id/cropPastPredictedFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_odkFragment"
+            app:destination="@id/odkFragment" />
     </fragment>
     <fragment
         android:id="@+id/cropPricesFragment"
@@ -70,5 +73,13 @@
             android:name="chart"
             app:argType="integer"
             android:defaultValue="0" />
+    </fragment>
+    <fragment
+        android:id="@+id/odkFragment"
+        android:name="com.example.farmerscollective.realtime.OdkFragment"
+        android:label="OdkFragment" >
+        <action
+            android:id="@+id/action_odkFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
     </fragment>
 </navigation>

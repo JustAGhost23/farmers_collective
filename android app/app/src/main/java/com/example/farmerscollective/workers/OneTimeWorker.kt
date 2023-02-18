@@ -179,9 +179,9 @@ class OneTimeWorker(appContext: Context, workerParams: WorkerParameters) :
                                     val m: HashMap<String, Any> = map["CROP_NAME"] as HashMap<String, Any>
                                     t.add(
                                         OdkSubmission(
-                                            if(m["LOCAL_TRADER_ID"].toString() != "null") Integer.parseInt(m["LOCAL_TRADER_ID"].toString()) else null,
+                                            if(m["LOCAL_TRADER_ID"].toString() != "null") Integer.parseInt(m["LOCAL_TRADER_ID"].toString()) else -1,
                                             m["MANDAL_ID"] as String?,
-                                            if(m["MARKET_ID"].toString() != "null") Integer.parseInt(m["MARKET_ID"].toString()) else null,
+                                            if(m["MARKET_ID"].toString() != "null") Integer.parseInt(m["MARKET_ID"].toString()) else -1,
                                             m["PERSON_FILLING_DATA_ID"] as String?,
                                             m["RATE_OFFERED_ID"] as Long,
                                             LocalDate.parse(map["DATE_CT_ID"].toString(), formatter),

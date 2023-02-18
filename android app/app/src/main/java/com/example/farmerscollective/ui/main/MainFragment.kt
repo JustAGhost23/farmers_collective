@@ -60,6 +60,13 @@ class MainFragment : Fragment() {
                 it.findNavController().navigate(R.id.action_mainFragment_to_aboutFragment)
             }
 
+            btn5.setOnClickListener {
+                val click = activity?.getSharedPreferences("prefs", Context.MODE_PRIVATE)?.getBoolean("isDataAvailable", false)
+                Log.d("TESTING", click.toString())
+                if(click == true) it.findNavController().navigate(R.id.action_mainFragment_to_odkFragment)
+                else Toast.makeText(activity, "Please wait! Still loading data", Toast.LENGTH_SHORT).show()
+            }
+
         }
 
 

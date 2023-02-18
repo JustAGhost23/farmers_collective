@@ -15,9 +15,12 @@ import androidx.navigation.fragment.navArgs
 import com.example.farmerscollective.R
 import com.example.farmerscollective.databinding.FragmentZoomedInBinding
 import com.example.farmerscollective.utils.Utils
+import com.example.farmerscollective.utils.Utils.Companion.adjustAxis
+import com.example.farmerscollective.utils.Utils.Companion.dates
 import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import java.time.LocalDate
 
 
 class ZoomedInFragment : Fragment() {
@@ -66,7 +69,7 @@ class ZoomedInFragment : Fragment() {
                             zoomChart.setVisibleXRangeMaximum(10.0f)
                         }
 
-                        zoomChart.moveViewToX(Utils.dates.size - 30f)
+                        adjustAxis(zoomChart)
                         zoomChart.invalidate()
 
                     }

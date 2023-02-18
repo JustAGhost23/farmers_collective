@@ -30,6 +30,7 @@ import com.example.farmerscollective.R
 import com.example.farmerscollective.databinding.CropPricesFragmentBinding
 import com.example.farmerscollective.utils.FirstDrawListener
 import com.example.farmerscollective.utils.Utils
+import com.example.farmerscollective.utils.Utils.Companion.adjustAxis
 import com.example.farmerscollective.utils.Utils.Companion.dates
 import com.example.farmerscollective.utils.Utils.Companion.ready
 import com.github.mikephil.charting.components.LimitLine
@@ -309,7 +310,7 @@ class CropPricesFragment : Fragment() {
                     }
                 }
 
-                yearChart.moveViewToX(dates.size - 30f)
+                adjustAxis(yearChart)
                 yearChart.invalidate()
 
             }
@@ -342,7 +343,7 @@ class CropPricesFragment : Fragment() {
                 when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
                     Configuration.UI_MODE_NIGHT_NO -> {
                         mandiChart.xAxis.textColor = Color.BLACK
-                        mandiChart.legend.textColor = Color.WHITE
+                        mandiChart.legend.textColor = Color.BLACK
                         mandiChart.data.setValueTextColor(Color.BLACK)
                         axis.textColor = Color.BLACK
                         axis2.textColor = Color.BLACK
@@ -359,8 +360,7 @@ class CropPricesFragment : Fragment() {
                         mspLine.textColor = Color.WHITE
                     }
                 }
-
-                mandiChart.moveViewToX(dates.size - 30f)
+                adjustAxis(mandiChart)
                 mandiChart.invalidate()
 
             }

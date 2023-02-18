@@ -38,6 +38,17 @@
         <item>Monthly</item>
     </string-array>
 
+    <string-array name="view">
+        <item>List View</item>
+        <item>Combined Bar Chart View</item>
+    </string-array>
+
+    <string-array name="odk_filter">
+        <item>This week</item>
+        <item>This month</item>
+        <item>All</item>
+    </string-array>
+
     <string name="about_text">This app informs you about the current prices in Adilabad, our recommendations for selling produce and prices offered by competitors.</string>
     <string name="top_3_days_to_sell" translatable="false">The relative size of the green and red bars represents the probability that the day\'s price is higher or lower than today\'s. The expected gain or loss in the respective scenarios is given within the bars.</string>
     <string name="title">Rythu\nVaani</string>
@@ -52,5 +63,6 @@
     <string name="trends">Lowest price in %1$d-%2$d was in <b>%3$s</b>: %4$.1f\nHighest price in %1$d-%2$d was in <b>%5$s</b>: %6$.1f\n</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="main_5">ODK Submissions</string>
 
 </resources>
