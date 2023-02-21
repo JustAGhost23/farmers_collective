@@ -104,7 +104,7 @@ class MainActivity : AppCompatActivity(), ChartRangeDialog.DialogListener {
                 Context.MODE_PRIVATE
             )
 
-        if(!sharedPref.getBoolean("isDataAvailable", false))
+        if(!sharedPref.getBoolean("isDailyDataAvailable", false) || !sharedPref.getBoolean("isWeeklyDataAvailable", false))
             WorkManager
                 .getInstance(applicationContext)
                 .enqueueUniqueWork("one-time", ExistingWorkPolicy.KEEP, worker1)
@@ -115,7 +115,7 @@ class MainActivity : AppCompatActivity(), ChartRangeDialog.DialogListener {
 
         refresh.setOnClickListener {
 
-            if(!sharedPref.getBoolean("isDataAvailable", false)) {
+            if(!sharedPref.getBoolean("isDailyDataAvailable", false) || !sharedPref.getBoolean("isWeeklyDataAvailable", false)) {
                 Toast.makeText(this, "Please wait! Still loading data", Toast.LENGTH_SHORT).show()
             }
 
@@ -125,7 +125,11 @@ class MainActivity : AppCompatActivity(), ChartRangeDialog.DialogListener {
                     .enqueueUniqueWork("one-time", ExistingWorkPolicy.KEEP, worker1)
 
                 with(sharedPref.edit()) {
-                    putBoolean("isDataAvailable", false)
+                    putBoolean("isDailyDataAvailable", false)
+                    apply()
+                }
+                with(sharedPref.edit()) {
+                    putBoolean("isWeeklyDataAvailable", false)
                     apply()
                 }
 

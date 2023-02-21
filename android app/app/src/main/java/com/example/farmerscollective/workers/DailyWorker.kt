@@ -61,92 +61,6 @@ class DailyWorker(appContext: Context, workerParams: WorkerParameters) :
                                 }
                             }
 
-
-                            if (array.indexOf(mandi) == array.size - 1) {
-                                db.collection("MAHARASHTRA_NAGPUR_Recommendation")
-                                    .get()
-                                    .addOnSuccessListener { res ->
-                                        val last = res.last()
-                                        val list = res.toList()
-                                        for (document in list.subList(list.size - 731, list.size)) {
-                                            val data =
-                                                document.data["data"] as ArrayList<HashMap<String, Any>>
-                                            val t = ArrayList<Prediction>()
-                                            for (row in data) {
-                                                t.add(
-                                                    Prediction(
-                                                        row["DATE"]!!.toString(),
-                                                        row["CONFIDENCE"]!!.toString().toFloat(),
-                                                        row["MEAN_PRICE"]!!.toString().toFloat(),
-                                                        row["PREDICTED"]!!.toString().toFloat(),
-                                                        row["MEAN_GAIN"]!!.toString().toFloat(),
-                                                        row["MEAN_LOSS"]!!.toString().toFloat()
-                                                    )
-                                                )
-                                            }
-
-                                            val file2 = File(
-                                                applicationContext.filesDir,
-                                                "predict_${document.id}.csv"
-                                            )
-
-
-                                            csvWriter().open(file2) {
-                                                for (row in t) {
-
-                                                    writeRow(
-                                                        row.date,
-                                                        row.confidence,
-                                                        row.predicted,
-                                                        row.output,
-                                                        row.gain,
-                                                        row.loss
-                                                    )
-                                                }
-                                            }
-
-                                            if (document == last) {
-
-                                                val today =
-                                                    File(applicationContext.filesDir, "predict.csv")
-
-
-                                                csvWriter().open(today) {
-                                                    for (row in t) {
-
-                                                        writeRow(
-                                                            row.date,
-                                                            row.confidence,
-                                                            row.predicted,
-                                                            row.output,
-                                                            row.gain,
-                                                            row.loss
-                                                        )
-                                                    }
-                                                }
-
-                                                val sharedPref =
-                                                    applicationContext.getSharedPreferences(
-                                                        "prefs",
-                                                        Context.MODE_PRIVATE
-                                                    )
-                                                with(sharedPref.edit()) {
-                                                    putBoolean("isDataAvailable", true)
-                                                    apply()
-                                                }
-
-                                                logWorkerEvent(doc.id, "WorkerSuccess")
-                                            }
-
-                                        }
-
-
-                                    }
-                                    .addOnFailureListener {
-                                        logWorkerEvent(doc.id, "WorkerFailure")
-                                    }
-                            }
-
                         } catch (e: Exception) {
                             logWorkerEvent(doc.id, "WorkerFailure")
                         }
@@ -157,6 +71,172 @@ class DailyWorker(appContext: Context, workerParams: WorkerParameters) :
                     }
 
             }
+
+            db.collection("MAHARASHTRA_NAGPUR_Recommendation")
+                .get()
+                .addOnSuccessListener { res ->
+                    val last = res.last()
+                    val list = res.toList()
+                    for (document in list.subList(list.size - 731, list.size)) {
+                        val data =
+                            document.data["data"] as ArrayList<HashMap<String, Any>>
+                        val t = ArrayList<Prediction>()
+                        for (row in data) {
+                            t.add(
+                                Prediction(
+                                    row["DATE"]!!.toString(),
+                                    row["CONFIDENCE"]!!.toString().toFloat(),
+                                    row["MEAN_PRICE"]!!.toString().toFloat(),
+                                    row["PREDICTED"]!!.toString().toFloat(),
+                                    row["MEAN_GAIN"]!!.toString().toFloat(),
+                                    row["MEAN_LOSS"]!!.toString().toFloat()
+                                )
+                            )
+                        }
+                        val file2 = File(
+                            applicationContext.filesDir,
+                            "predict_${document.id}.csv"
+                        )
+
+
+                        csvWriter().open(file2) {
+                            for (row in t) {
+
+                                writeRow(
+                                    row.date,
+                                    row.confidence,
+                                    row.predicted,
+                                    row.output,
+                                    row.gain,
+                                    row.loss
+                                )
+                            }
+                        }
+
+                        if (document == last) {
+
+                            val today =
+                                File(applicationContext.filesDir, "dailyPredict.csv")
+
+
+                            csvWriter().open(today) {
+                                for (row in t) {
+
+                                    writeRow(
+                                        row.date,
+                                        row.confidence,
+                                        row.predicted,
+                                        row.output,
+                                        row.gain,
+                                        row.loss
+                                    )
+                                }
+                            }
+
+                            val sharedPref =
+                                applicationContext.getSharedPreferences(
+                                    "prefs",
+                                    Context.MODE_PRIVATE
+                                )
+                            with(sharedPref.edit()) {
+                                putBoolean("isDailyDataAvailable", true)
+                                apply()
+                            }
+
+                            logWorkerEvent("daily", "WorkerSuccess")
+                        }
+
+                    }
+
+
+                }
+                .addOnFailureListener {
+                    logWorkerEvent("daily", "WorkerFailure")
+                }
+
+            db.collection("weekly_MAHARASHTRA_NAGPUR_Recommendation")
+                .get()
+                .addOnSuccessListener { res ->
+                    val last = res.last()
+                    val list = res.toList()
+                    for (document in list.subList(0, list.size)) {
+                        if(document.id.substring(0,3).toInt() < LocalDate.now().year && document.id.substring(0,3).toInt() >= LocalDate.now().year - 2) {
+                            val data =
+                                document.data["data"] as ArrayList<HashMap<String, Any>>
+                            val t = ArrayList<Prediction>()
+                            for (row in data) {
+                                t.add(
+                                    Prediction(
+                                        row["DATE"]!!.toString(),
+                                        row["CONFIDENCE"]!!.toString().toFloat(),
+                                        row["MEAN_PRICE"]!!.toString().toFloat(),
+                                        row["PREDICTED"]!!.toString().toFloat(),
+                                        row["MEAN_GAIN"]!!.toString().toFloat(),
+                                        row["MEAN_LOSS"]!!.toString().toFloat()
+                                    )
+                                )
+                            }
+                            Log.e("TAG", t.toString())
+
+                            val file2 = File(
+                                applicationContext.filesDir,
+                                "weekly_predict_${document.id}.csv"
+                            )
+
+
+                            csvWriter().open(file2) {
+                                for (row in t) {
+
+                                    writeRow(
+                                        row.date,
+                                        row.confidence,
+                                        row.predicted,
+                                        row.output,
+                                        row.gain,
+                                        row.loss
+                                    )
+                                }
+                            }
+
+                            if (document == last) {
+
+                                val thisWeek =
+                                    File(applicationContext.filesDir, "weeklyPredict.csv")
+
+
+                                csvWriter().open(thisWeek) {
+                                    for (row in t) {
+
+                                        writeRow(
+                                            row.date,
+                                            row.confidence,
+                                            row.predicted,
+                                            row.output,
+                                            row.gain,
+                                            row.loss
+                                        )
+                                    }
+                                }
+
+                                val sharedPref =
+                                    applicationContext.getSharedPreferences(
+                                        "prefs",
+                                        Context.MODE_PRIVATE
+                                    )
+                                with(sharedPref.edit()) {
+                                    putBoolean("isWeeklyDataAvailable", true)
+                                    apply()
+                                }
+
+                                logWorkerEvent("weekly", "WorkerSuccess")
+                            }
+                        }
+
+                    }
+                }
+                .addOnFailureListener {
+                    logWorkerEvent("weekly", "WorkerFailure")
+                }
 
 
             db.collection("TELANGANA_ADILABAD_ODK")

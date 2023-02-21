@@ -11,6 +11,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -80,6 +82,26 @@ class CropPredictedFragment : Fragment() {
         analytics = FirebaseAnalytics.getInstance(requireContext())
 
         with(binding) {
+
+            val adap1 = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, resources.getStringArray(
+                R.array.dailyOrWeekly
+            ))
+            adap1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+            dailyOrWeeklySelector.adapter = adap1
+
+            dailyOrWeeklySelector.setSelection(adap1.getPosition("Daily"))
+
+            dailyOrWeeklySelector.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                    viewModel.changeSelection(resources.getStringArray(R.array.dailyOrWeekly)[p2])
+                }
+
+                override fun onNothingSelected(p0: AdapterView<*>?) {
+                    //do nothing
+                }
+            }
+
             predictChart.tag = "2"
             predictView2.setOnClickListener {
                 it.findNavController().navigateUp()
@@ -94,6 +116,7 @@ class CropPredictedFragment : Fragment() {
 
                 val format = NumberFormat.getPercentInstance()
                 format.minimumFractionDigits = 0
+                recomm.removeAllViews()
 
                 for (item in it) {
                     val row = LayoutInflater.from(context).inflate(R.layout.recomm, recomm, false)
@@ -160,8 +183,13 @@ class CropPredictedFragment : Fragment() {
                     d1.compareTo(d2)
                 }
 
-                val pred_dates = dates.subList(dates.size - 30, dates.size)
-                val real_dates = dates.subList(0, dates.size - 30)
+                var pred_dates = dates.subList(dates.size - 30, dates.size)
+                var real_dates = dates.subList(0, dates.size - 30)
+
+                if(viewModel.dailyOrWeekly.value == "Weekly") {
+                    pred_dates = dates.subList(dates.size - 12, dates.size)
+                    real_dates = dates.subList(0, dates.size - 12)
+                }
 
                 Log.d("k", dates.toString())
 
@@ -185,7 +213,9 @@ class CropPredictedFragment : Fragment() {
                     val date = pred.date
 
                     val i = dates.indexOf(date)
-                    values3.add(Entry(i.toFloat(), it[date]!!))
+                    if(it[date] != null) {
+                        values3.add(Entry(i.toFloat(), it[date]!!))
+                    }
                 }
 
                 Collections.sort(values3, EntryXComparator())

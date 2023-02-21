@@ -89,9 +89,18 @@
         android:layout_height="300dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/predict_view1">
+        app:layout_constraintTop_toBottomOf="@+id/dailyOrWeeklySelector">
 
     </com.github.mikephil.charting.charts.LineChart>
+
+    <Spinner
+        android:id="@+id/dailyOrWeeklySelector"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/predict_view1" />
 
     <TextView
         android:id="@+id/textView4"
