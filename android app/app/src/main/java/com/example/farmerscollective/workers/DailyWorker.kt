@@ -160,7 +160,8 @@ class DailyWorker(appContext: Context, workerParams: WorkerParameters) :
                     val last = res.last()
                     val list = res.toList()
                     for (document in list.subList(0, list.size)) {
-                        if(document.id.substring(0,3).toInt() < LocalDate.now().year && document.id.substring(0,3).toInt() >= LocalDate.now().year - 2) {
+                        if(document.id.substring(0,4).toInt() <= LocalDate.now().year && document.id.substring(0,4).toInt() >= LocalDate.now().year - 2) {
+                            Log.e("TAG", document.id.substring(0,4).toInt().toString())
                             val data =
                                 document.data["data"] as ArrayList<HashMap<String, Any>>
                             val t = ArrayList<Prediction>()
@@ -228,14 +229,14 @@ class DailyWorker(appContext: Context, workerParams: WorkerParameters) :
                                     apply()
                                 }
 
-                                logWorkerEvent("weekly", "WorkerSuccess")
+                                logWorkerEvent("refresh", "WorkerSuccess")
                             }
                         }
 
                     }
                 }
                 .addOnFailureListener {
-                    logWorkerEvent("weekly", "WorkerFailure")
+                    logWorkerEvent("failure", "WorkerFailure")
                 }
 
 
