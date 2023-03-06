@@ -129,7 +129,9 @@ class OdkFragment : Fragment() {
                             AlertDialog.Builder(fragmentActivity)
                         }
                         val selectedOdkSubmission = it[selectedXAxisCount.toInt()]
-                        dataDialogBuilder?.setMessage("Trader Name: ${traders[selectedOdkSubmission?.localTraderId!! - 1]}\nMandal: ${selectedOdkSubmission.mandalId}\nPrice: Rs ${selectedOdkSubmission.price}\nFilled by: ${selectedOdkSubmission.personFillingId}\nFilled on: ${selectedOdkSubmission.date}")!!
+                        val traderName = if(selectedOdkSubmission?.localTraderId!! == -1) "Not filled" else traders[selectedOdkSubmission.localTraderId - 1]
+                        val mandalId = if(selectedOdkSubmission.mandalId == "") "Not filled" else selectedOdkSubmission.mandalId
+                        dataDialogBuilder?.setMessage("Trader Name: ${traderName}\nMandal: ${mandalId}\nPrice: Rs ${selectedOdkSubmission.price}\nFilled by: ${selectedOdkSubmission.personFillingId}\nFilled on: ${selectedOdkSubmission.date}")!!
                             .setCancelable(false)
                             .setPositiveButton("Dismiss") { dialog, _ ->
                                 barChart.highlightValues(null)
