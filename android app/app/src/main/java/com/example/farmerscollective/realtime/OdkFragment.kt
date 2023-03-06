@@ -1,8 +1,10 @@
 package com.example.farmerscollective.realtime
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
@@ -13,13 +15,16 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.farmerscollective.R
 import com.example.farmerscollective.databinding.FragmentOdkBinding
+import com.example.farmerscollective.utils.ChartRangeDialog
 import com.example.farmerscollective.utils.Utils.Companion.traders
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import com.google.firebase.analytics.FirebaseAnalytics
+import com.github.mikephil.charting.highlight.Highlight
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import java.time.LocalDate
 
 
@@ -113,6 +118,32 @@ class OdkFragment : Fragment() {
                 barChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
                 barChart.xAxis.granularity = 1f
                 barChart.xAxis.valueFormatter = IndexAxisValueFormatter(axis)
+                barChart.isHighlightPerDragEnabled = false
+                barChart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener
+                {
+                    override fun onValueSelected(e: Entry, h: Highlight?) {
+                        val x = e.x.toString()
+//                        val y = e.y.toString()
+                        val selectedXAxisCount = x.substringBefore(".")
+                        val dataDialogBuilder: AlertDialog.Builder? = activity?.let { fragmentActivity ->
+                            AlertDialog.Builder(fragmentActivity)
+                        }
+                        val selectedOdkSubmission = it[selectedXAxisCount.toInt()]
+                        dataDialogBuilder?.setMessage("Trader Name: ${traders[selectedOdkSubmission?.localTraderId!! - 1]}\nMandal: ${selectedOdkSubmission.mandalId}\nPrice: Rs ${selectedOdkSubmission.price}\nFilled by: ${selectedOdkSubmission.personFillingId}\nFilled on: ${selectedOdkSubmission.date}")!!
+                            .setCancelable(false)
+                            .setPositiveButton("Dismiss") { dialog, _ ->
+                                barChart.highlightValues(null)
+                                dialog.dismiss()
+                            }
+                        val dataDialog: AlertDialog = dataDialogBuilder.create()
+                        dataDialog.setTitle("ODK Data")
+                        dataDialog.show()
+                    }
+
+                    override fun onNothingSelected() {
+//                        pass
+                    }
+                })
                 barChart.invalidate()
             }
 
