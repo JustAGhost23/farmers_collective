@@ -98,7 +98,7 @@ class OdkFragment : Fragment() {
                 val axis = ArrayList<String>()
 
                 for(i in it) {
-                    if(i!!.localTraderId!! != -1) axis.add(traders[i.localTraderId!! - 1])
+                    if(i!!.localTraderId!! != -1) axis.add(traders[i.localTraderId!! - 1]) else axis.add("Not filled")
                 }
 
                 Log.d(this.toString(), axis.toString())

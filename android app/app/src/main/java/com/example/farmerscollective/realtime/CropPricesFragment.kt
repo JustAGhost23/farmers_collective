@@ -262,11 +262,11 @@ class CropPricesFragment : Fragment() {
                     t2.textSize = 16f
                     t2.gravity = 1 //CENTER_HORIZONTAL
                     t2.background = ResourcesCompat.getDrawable(resources, R.drawable.table_cell_bg, null)
-                    t3.text = "${it[year]!![0].first}\n${it[year]!![1].first}"
+                    t3.text = "${it[year]!![1].first}\n${it[year]!![0].first}"
                     t3.textSize = 16f
                     t3.gravity = 1 //CENTER_HORIZONTAL
                     t3.background = ResourcesCompat.getDrawable(resources, R.drawable.table_cell_bg, null)
-                    t4.text = "${it[year]!![0].second}\n${it[year]!![1].second}"
+                    t4.text = "${it[year]!![1].second}\n${it[year]!![0].second}"
                     t4.textSize = 16f
                     t4.gravity = 1 //CENTER_HORIZONTAL
                     t4.background = ResourcesCompat.getDrawable(resources, R.drawable.table_cell_bg, null)

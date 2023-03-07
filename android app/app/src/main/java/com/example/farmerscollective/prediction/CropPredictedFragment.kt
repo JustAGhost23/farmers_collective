@@ -112,6 +112,11 @@ class CropPredictedFragment : Fragment() {
             ready(predictChart)
             predictChart.legend.isEnabled = false
 
+            viewModel.today.observe(viewLifecycleOwner) {
+                val todayPrice = SpannableStringBuilder().append(String.format("Price for today is Rs %.1f\n", it)).bold { append("Top 3 days to sell:") }
+                binding.textView3.text = todayPrice
+            }
+
             viewModel.data.observe(viewLifecycleOwner) {
 
                 val format = NumberFormat.getPercentInstance()
@@ -248,6 +253,10 @@ class CropPredictedFragment : Fragment() {
                 predictChart.onChartGestureListener = Utils.Companion.CustomChartListener(requireContext(), predictChart, dates)
                 predictChart.setVisibleXRangeMaximum(30.0f)
                 predictChart.moveViewToX((dates.size - 45).toFloat())
+                if(viewModel.dailyOrWeekly.value == "Weekly") {
+                    predictChart.moveViewToX((dates.size - 15).toFloat())
+                    predictChart.setVisibleXRangeMaximum(365.0f)
+                }
 
                 when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
                     Configuration.UI_MODE_NIGHT_NO -> {

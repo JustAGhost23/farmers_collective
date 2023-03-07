@@ -52,7 +52,6 @@ class CropPredictedViewModel(application: Application) : AndroidViewModel(applic
             if (file.exists()) {
                 csvReader().open(file) {
                     readAllAsSequence().forEachIndexed { i, it ->
-                        if (i == 0) date = it[0]
                         temp.add(
                             Prediction(
                                 it[0],
@@ -68,6 +67,9 @@ class CropPredictedViewModel(application: Application) : AndroidViewModel(applic
                 }
                 csvReader().open(File(context.filesDir, "weeklyPredict.csv")) {
                     weekDate = readAllAsSequence().toList()[0][0]
+                }
+                csvReader().open(File(context.filesDir, "dailyPredict.csv")) {
+                    date = readAllAsSequence().toList()[0][0]
                 }
             }
 
@@ -139,9 +141,20 @@ class CropPredictedViewModel(application: Application) : AndroidViewModel(applic
 
             }
             Log.e("TAG", map.toString())
+            map.toSortedMap()
 
             _graph.value = map
-            _today.value = map[LocalDate.parse(date).minusDays(1).toString()] ?: 0.0f
+            if(dailyOrWeekly.value == "Daily") {
+                _today.value = map[LocalDate.parse(date).toString()] ?: 0.0f
+                Log.e("TAG", LocalDate.parse(date).toString())
+                Log.e("TAG", map[LocalDate.parse(date).toString()].toString())
+            }
+            else if(dailyOrWeekly.value == "Weekly") {
+                _today.value = map[LocalDate.parse(weekDate).toString()] ?: 0.0f
+                Log.e("TAG", LocalDate.parse(weekDate).toString())
+                Log.e("TAG", map[LocalDate.parse(weekDate).toString()].toString())
+            }
+            Log.e("TAG", today.value.toString())
 
             temp.sortBy { value -> value.output }
             temp = ArrayList(temp.map {
