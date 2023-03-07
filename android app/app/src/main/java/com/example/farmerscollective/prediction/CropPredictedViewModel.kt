@@ -145,14 +145,10 @@ class CropPredictedViewModel(application: Application) : AndroidViewModel(applic
 
             _graph.value = map
             if(dailyOrWeekly.value == "Daily") {
-                _today.value = map[LocalDate.parse(date).toString()] ?: 0.0f
-                Log.e("TAG", LocalDate.parse(date).toString())
-                Log.e("TAG", map[LocalDate.parse(date).toString()].toString())
+                _today.value = map[LocalDate.parse(date).minusDays(1).toString()] ?: 0.0f
             }
             else if(dailyOrWeekly.value == "Weekly") {
-                _today.value = map[LocalDate.parse(weekDate).toString()] ?: 0.0f
-                Log.e("TAG", LocalDate.parse(weekDate).toString())
-                Log.e("TAG", map[LocalDate.parse(weekDate).toString()].toString())
+                _today.value = map[LocalDate.parse(weekDate).minusDays(7).toString()] ?: 0.0f
             }
             Log.e("TAG", today.value.toString())
 

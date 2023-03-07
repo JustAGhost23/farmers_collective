@@ -113,7 +113,23 @@ class CropPredictedFragment : Fragment() {
             predictChart.legend.isEnabled = false
 
             viewModel.today.observe(viewLifecycleOwner) {
-                val todayPrice = SpannableStringBuilder().append(String.format("Price for today is Rs %.1f\n", it)).bold { append("Top 3 days to sell:") }
+                var todayPrice: SpannableStringBuilder = SpannableStringBuilder()
+                if(viewModel.dailyOrWeekly.value == "Daily") {
+                    todayPrice = SpannableStringBuilder().append(
+                        String.format(
+                            "Price for today is Rs %.1f\n",
+                            it
+                        )
+                    ).bold { append("Top 3 days to sell:") }
+                }
+                else if(viewModel.dailyOrWeekly.value == "Weekly") {
+                    todayPrice = SpannableStringBuilder().append(
+                        String.format(
+                            "Price for this week is Rs %.1f\n",
+                            it
+                        )
+                    ).bold { append("Top 3 weeks to sell:") }
+                }
                 binding.textView3.text = todayPrice
             }
 
