@@ -10,13 +10,26 @@
         tools:context=".realtime.OdkFragment">
 
         <Spinner
-            android:id="@+id/spinner"
+            android:id="@+id/filterSpinner"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:entries="@array/odk_filter"
+            android:minHeight="54dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cropSpinner" />
+
+        <Spinner
+            android:id="@+id/cropSpinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:entries="@array/cropName"
             android:minHeight="54dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -111,9 +124,10 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:minHeight="54dp"
+            android:entries="@array/view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinner" />
+            app:layout_constraintTop_toBottomOf="@+id/filterSpinner" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

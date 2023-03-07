@@ -4,18 +4,16 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.farmerscollective.R
 import com.example.farmerscollective.databinding.FragmentOdkBinding
-import com.example.farmerscollective.utils.ChartRangeDialog
 import com.example.farmerscollective.utils.Utils.Companion.traders
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
@@ -30,7 +28,7 @@ import java.time.LocalDate
 
 class OdkFragment : Fragment() {
 
-    private val viewModel by viewModels<OdkViewModel>()
+    private val viewModel by activityViewModels<OdkViewModel>()
     private lateinit var binding: FragmentOdkBinding
 
     override fun onCreateView(
@@ -43,10 +41,10 @@ class OdkFragment : Fragment() {
 
             val spinAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, resources.getStringArray(R.array.odk_filter))
             spinAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            spinner.adapter = spinAdapter
-            spinner.setSelection(viewModel.filter.value!!)
+            filterSpinner.adapter = spinAdapter
+            filterSpinner.setSelection(viewModel.filter.value!!)
 
-            spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            filterSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                     viewModel.filter(p2)
                 }
@@ -56,14 +54,29 @@ class OdkFragment : Fragment() {
                 }
             }
 
-            val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, resources.getStringArray(R.array.view))
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            viewSpinner.adapter = adapter
+            val viewAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, resources.getStringArray(R.array.view))
+            viewAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            viewSpinner.adapter = viewAdapter
             viewSpinner.setSelection(viewModel.view.value!!)
 
             viewSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                     viewModel.view(p2)
+                }
+
+                override fun onNothingSelected(p0: AdapterView<*>?) {
+                    //pass
+                }
+            }
+
+            val cropNameAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, resources.getStringArray(R.array.cropName))
+            cropNameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            cropSpinner.adapter = cropNameAdapter
+            cropSpinner.setSelection(viewModel.crop.value!!)
+
+            cropSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                    viewModel.chooseCrop(p2)
                 }
 
                 override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -78,7 +91,8 @@ class OdkFragment : Fragment() {
                         viewModel.selectSubmission(date)
 
                         viewSpinner.visibility = View.GONE
-                        spinner.visibility = View.GONE
+                        filterSpinner.visibility = View.GONE
+                        cropSpinner.visibility = View.GONE
                         list.visibility = View.GONE
 
                         barChart.visibility = View.VISIBLE
@@ -151,7 +165,8 @@ class OdkFragment : Fragment() {
 
             button.setOnClickListener {
                 viewSpinner.visibility = View.VISIBLE
-                spinner.visibility = View.VISIBLE
+                filterSpinner.visibility = View.VISIBLE
+                cropSpinner.visibility = View.VISIBLE
                 list.visibility = View.VISIBLE
 
                 barChart.visibility = View.GONE

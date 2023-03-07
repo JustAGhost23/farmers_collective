@@ -19,6 +19,7 @@ class OdkViewModel(application: Application) : AndroidViewModel(application) {
     )
 
     private val _view = MutableLiveData(0)
+    private val _crop = MutableLiveData(0)
 
     val list: LiveData<MutableMap<LocalDate, ArrayList<OdkSubmission?>>>
     get() = _list
@@ -31,6 +32,9 @@ class OdkViewModel(application: Application) : AndroidViewModel(application) {
 
     val view: LiveData<Int>
     get() = _view
+
+    val crop: LiveData<Int>
+    get() = _crop
 
     init {
         loadList()
@@ -55,17 +59,19 @@ class OdkViewModel(application: Application) : AndroidViewModel(application) {
             if(file.exists()) {
                 csvReader().open(file) {
                     readAllAsSequence().forEachIndexed { i, it ->
-                        val dt = LocalDate.parse(it[5])
+                        Log.i("TAG", it.toString())
+                        val dt = LocalDate.parse(it[6])
                         val odk = OdkSubmission(
-                            it[0]?.toInt(),
-                            it[1],
-                            it[2]?.toInt(),
-                            it[3],
-                            it[4].toLong(),
+                            it[0].toInt(),
+                            it[1]?.toInt(),
+                            it[2],
+                            it[3]?.toInt(),
+                            it[4],
+                            it[5].toLong(),
                             dt
                         )
 
-                        if(condition(odk)) {
+                        if(condition(odk) && odk.cropId == crop.value?.plus(1)) {
                             if(!value.containsKey(dt)) value[dt] = arrayListOf()
                             value[dt]!!.add(odk)
                         }
@@ -79,6 +85,11 @@ class OdkViewModel(application: Application) : AndroidViewModel(application) {
 
     fun filter(selection: Int) {
         _filter.value = selection
+        loadList()
+    }
+
+    fun chooseCrop(selection: Int) {
+        _crop.value = selection
         loadList()
     }
 

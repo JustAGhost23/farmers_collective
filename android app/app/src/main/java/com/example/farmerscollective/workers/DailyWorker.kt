@@ -161,7 +161,6 @@ class DailyWorker(appContext: Context, workerParams: WorkerParameters) :
                     val list = res.toList()
                     for (document in list.subList(0, list.size)) {
                         if(document.id.substring(0,4).toInt() <= LocalDate.now().year && document.id.substring(0,4).toInt() >= LocalDate.now().year - 2) {
-                            Log.e("TAG", document.id.substring(0,4).toInt().toString())
                             val data =
                                 document.data["data"] as ArrayList<HashMap<String, Any>>
                             val t = ArrayList<Prediction>()
@@ -242,7 +241,7 @@ class DailyWorker(appContext: Context, workerParams: WorkerParameters) :
 
             db.collection("TELANGANA_ADILABAD_ODK")
                 .get()
-                .addOnSuccessListener {
+                .addOnSuccessListener {it ->
                     val t: ArrayList<OdkSubmission> = arrayListOf()
                     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
                     it.documents.forEach {doc ->
@@ -251,20 +250,77 @@ class DailyWorker(appContext: Context, workerParams: WorkerParameters) :
                             for(map in mapArray) {
                                 if(map.containsKey("CROP_NAME")) {
                                     val m: HashMap<String, Any> = map["CROP_NAME"] as HashMap<String, Any>
-                                    t.add(
-                                        OdkSubmission(
-                                            if(m["LOCAL_TRADER_ID"].toString() != "null") Integer.parseInt(m["LOCAL_TRADER_ID"].toString()) else null,
-                                            m["MANDAL_ID"] as String?,
-                                            if(m["MARKET_ID"].toString() != "null") Integer.parseInt(m["MARKET_ID"].toString()) else null,
-                                            m["PERSON_FILLING_DATA_ID"] as String?,
-                                            m["RATE_OFFERED_ID"] as Long,
-                                            LocalDate.parse(map["DATE_CT_ID"].toString(), formatter),
+                                    if(m["RATE_OFFERED_ID"] != null) {
+                                        t.add(
+                                            OdkSubmission(
+                                                1,
+                                                if (m["LOCAL_TRADER_ID"].toString() != "null") Integer.parseInt(
+                                                    m["LOCAL_TRADER_ID"].toString()
+                                                ) else -1,
+                                                m["MANDAL_ID"] as String?,
+                                                if (m["MARKET_ID"].toString() != "null") Integer.parseInt(
+                                                    m["MARKET_ID"].toString()
+                                                ) else -1,
+                                                m["PERSON_FILLING_DATA_ID"] as String?,
+                                                m["RATE_OFFERED_ID"] as Long,
+                                                LocalDate.parse(
+                                                    map["DATE_CT_ID"].toString(),
+                                                    formatter
+                                                ),
+                                            )
                                         )
-                                    )
+                                    }
+                                }
+                                else if(map.containsKey("CROP_NAME_1")) {
+                                    val m: HashMap<String, Any> = map["CROP_NAME_1"] as HashMap<String, Any>
+                                    if(m["RATE_OFFERED_1_ID"].toString() != "null") {
+                                        t.add(
+                                            OdkSubmission(
+                                                2,
+                                                if (m["LOCAL_TRADER_1_ID"].toString() != "null") Integer.parseInt(
+                                                    m["LOCAL_TRADER_1_ID"].toString()
+                                                ) else -1,
+                                                m["MANDAL_1_ID"] as String?,
+                                                if (m["MARKET_1_ID"].toString() != "null") Integer.parseInt(
+                                                    m["MARKET_1_ID"].toString()
+                                                ) else -1,
+                                                m["PERSON_FILLING_DATA_1_ID"] as String?,
+                                                m["RATE_OFFERED_1_ID"] as Long,
+                                                LocalDate.parse(
+                                                    map["DATE_CT_1_ID"].toString(),
+                                                    formatter
+                                                ),
+                                            )
+                                        )
+                                    }
+                                }
+                                else if(map.containsKey("CROP_NAME_2")) {
+                                    val m: HashMap<String, Any> = map["CROP_NAME_2"] as HashMap<String, Any>
+                                    if(m["RATE_OFFERED_2_ID"] != null) {
+                                        t.add(
+                                            OdkSubmission(
+                                                3,
+                                                if (m["LOCAL_TRADER_2_ID"].toString() != "null") Integer.parseInt(
+                                                    m["LOCAL_TRADER_2_ID"].toString()
+                                                ) else -1,
+                                                m["MANDAL_2_ID"] as String?,
+                                                if (m["MARKET_2_ID"].toString() != "null") Integer.parseInt(
+                                                    m["MARKET_2_ID"].toString()
+                                                ) else -1,
+                                                m["PERSON_FILLING_DATA_2_ID"] as String?,
+                                                m["RATE_OFFERED_2_ID"] as Long,
+                                                LocalDate.parse(
+                                                    map["DATE_CT_2_ID"].toString(),
+                                                    formatter
+                                                ),
+                                            )
+                                        )
+                                    }
                                 }
                             }
                         }
                     }
+
                     val file = File(
                         applicationContext.filesDir,
                         "TELANGANA_ADILABAD_ODK.csv"
@@ -273,6 +329,7 @@ class DailyWorker(appContext: Context, workerParams: WorkerParameters) :
                         for (row in t) {
 
                             writeRow(
+                                row.cropId,
                                 row.localTraderId,
                                 row.mandalId,
                                 row.marketId,
