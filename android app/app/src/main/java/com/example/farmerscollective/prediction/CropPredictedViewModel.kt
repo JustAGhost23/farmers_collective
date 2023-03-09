@@ -140,24 +140,28 @@ class CropPredictedViewModel(application: Application) : AndroidViewModel(applic
                 }
 
             }
-            Log.e("TAG", map.toString())
-            map.toSortedMap()
 
             _graph.value = map
             if(dailyOrWeekly.value == "Daily") {
                 _today.value = map[LocalDate.parse(date).minusDays(1).toString()] ?: 0.0f
+                temp.sortBy { value -> value.output }
+                temp = ArrayList(temp.map {
+                    it.gain -= map[date]!!
+                    it.loss -= map[date]!!
+                    it
+                })
             }
             else if(dailyOrWeekly.value == "Weekly") {
                 _today.value = map[LocalDate.parse(weekDate).minusDays(7).toString()] ?: 0.0f
+                temp.sortBy { value -> value.output }
+                temp = ArrayList(temp.map {
+                    it.gain -= map[weekDate]!!
+                    it.loss -= map[weekDate]!!
+                    it
+                })
             }
             Log.e("TAG", today.value.toString())
 
-            temp.sortBy { value -> value.output }
-            temp = ArrayList(temp.map {
-                it.gain -= map[date]!!
-                it.loss -= map[date]!!
-                it
-            })
             _data.value = temp.reversed().subList(1, 4)
         }
     }
