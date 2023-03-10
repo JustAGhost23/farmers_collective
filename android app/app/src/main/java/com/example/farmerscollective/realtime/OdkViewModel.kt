@@ -59,7 +59,6 @@ class OdkViewModel(application: Application) : AndroidViewModel(application) {
             if(file.exists()) {
                 csvReader().open(file) {
                     readAllAsSequence().forEachIndexed { i, it ->
-                        Log.i("TAG", it.toString())
                         val dt = LocalDate.parse(it[6])
                         val odk = OdkSubmission(
                             it[0].toInt(),
@@ -70,16 +69,15 @@ class OdkViewModel(application: Application) : AndroidViewModel(application) {
                             it[5].toLong(),
                             dt
                         )
-
-                        if(condition(odk) && odk.cropId == crop.value?.plus(1)) {
-                            if(!value.containsKey(dt)) value[dt] = arrayListOf()
+                        if (condition(odk) && odk.cropId == crop.value?.plus(1)) {
+                            if (!value.containsKey(dt)) value[dt] = arrayListOf()
                             value[dt]!!.add(odk)
                         }
                     }
                 }
             }
         }
-        Log.d(this.toString(), value.toString())
+        Log.e(this.toString(), value.toString())
         _list.value = value
     }
 
@@ -93,8 +91,9 @@ class OdkViewModel(application: Application) : AndroidViewModel(application) {
         loadList()
     }
 
-    fun view(s: Int) {
-        _view.value = s
+    fun view(selection: Int) {
+        _view.value = selection
+        loadList()
     }
 
     fun selectSubmission(date: LocalDate) {
