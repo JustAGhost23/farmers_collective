@@ -34,7 +34,7 @@ class CropPredictedViewModel(application: Application) : AndroidViewModel(applic
         getData()
     }
 
-    fun getData() {
+    private fun getData() {
         var temp = ArrayList<Prediction>()
         val map = mutableMapOf<String, Float>()
         var date = ""
@@ -161,8 +161,9 @@ class CropPredictedViewModel(application: Application) : AndroidViewModel(applic
                 })
             }
             Log.e("TAG", today.value.toString())
-
+            Log.d("TAG", temp.reversed().subList(1, 4).toString())
             _data.value = temp.reversed().subList(1, 4)
+
         }
     }
     fun changeSelection(dailyOrWeekly: String) {

@@ -12,26 +12,17 @@ import java.time.LocalDate
 
 class OdkViewModel(application: Application) : AndroidViewModel(application) {
     private val context = application
-    private val _dateSelect = MutableLiveData<ArrayList<OdkSubmission?>>(arrayListOf())
     private val _filter = MutableLiveData(0)
     private val _list = MutableLiveData<MutableMap<LocalDate, ArrayList<OdkSubmission?>>>(
         mutableMapOf()
     )
-
-    private val _view = MutableLiveData(0)
     private val _crop = MutableLiveData(0)
 
     val list: LiveData<MutableMap<LocalDate, ArrayList<OdkSubmission?>>>
     get() = _list
 
-    val dateSelect: LiveData<ArrayList<OdkSubmission?>>
-    get() = _dateSelect
-
     val filter: LiveData<Int>
     get() = _filter
-
-    val view: LiveData<Int>
-    get() = _view
 
     val crop: LiveData<Int>
     get() = _crop
@@ -50,7 +41,7 @@ class OdkViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun loadList() {
+    private fun loadList() {
         val value = mutableMapOf<LocalDate, ArrayList<OdkSubmission?>>()
 
         if(context.fileList().isNotEmpty()) {
@@ -62,9 +53,9 @@ class OdkViewModel(application: Application) : AndroidViewModel(application) {
                         val dt = LocalDate.parse(it[6])
                         val odk = OdkSubmission(
                             it[0].toInt(),
-                            it[1]?.toInt(),
+                            it[1].toInt(),
                             it[2],
-                            it[3]?.toInt(),
+                            it[3].toInt(),
                             it[4],
                             it[5].toLong(),
                             dt
@@ -89,15 +80,6 @@ class OdkViewModel(application: Application) : AndroidViewModel(application) {
     fun chooseCrop(selection: Int) {
         _crop.value = selection
         loadList()
-    }
-
-    fun view(selection: Int) {
-        _view.value = selection
-        loadList()
-    }
-
-    fun selectSubmission(date: LocalDate) {
-        _dateSelect.value = _list.value!![date]
     }
 
 }

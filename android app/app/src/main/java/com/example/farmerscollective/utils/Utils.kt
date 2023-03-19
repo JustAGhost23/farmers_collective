@@ -22,7 +22,7 @@ class Utils {
 
         val dates = ArrayList<String>()
         val yearColors = mutableMapOf<Int, Int>()
-        val colors = listOf("#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#00FFFF", "#FF00FF", "#FBCEB1", "#DDFFDD")
+        val colors = listOf("#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#00FFFF", "#FF00FF", "#FBCEB1", "#DDFFDD", "#AABBCC")
         val traders = listOf("PMRSS, DALLMILL",
                 "Ankush-Utnoor",
                 "Santhosh-Indravelly",

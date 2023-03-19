@@ -75,59 +75,20 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_begin="258dp" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/list"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/viewSpinner">
-
-        </androidx.recyclerview.widget.RecyclerView>
 
         <com.github.mikephil.charting.charts.BarChart
             android:id="@+id/barChart"
             android:layout_width="0dp"
             android:layout_height="300dp"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/viewSpinner">
+            app:layout_constraintTop_toBottomOf="@+id/cropSpinner">
 
         </com.github.mikephil.charting.charts.BarChart>
-
-        <Button
-            android:id="@+id/button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="Go back to submissions"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/barChart" />
-
-        <Spinner
-            android:id="@+id/viewSpinner"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:minHeight="54dp"
-            android:entries="@array/view"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/filterSpinner" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

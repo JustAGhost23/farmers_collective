@@ -94,6 +94,7 @@ class CropPredictedFragment : Fragment() {
 
             dailyOrWeeklySelector.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                    Log.d("TAG", "onItemSelected: ${resources.getStringArray(R.array.dailyOrWeekly)[p2]}" )
                     viewModel.changeSelection(resources.getStringArray(R.array.dailyOrWeekly)[p2])
                 }
 
@@ -204,13 +205,22 @@ class CropPredictedFragment : Fragment() {
                     d1.compareTo(d2)
                 }
 
-                var pred_dates = dates.subList(dates.size - 30, dates.size)
-                var real_dates = dates.subList(0, dates.size - 30)
 
-                if(viewModel.dailyOrWeekly.value == "Weekly") {
-                    pred_dates = dates.subList(dates.size - 12, dates.size)
-                    real_dates = dates.subList(0, dates.size - 12)
+
+                var pred_dates = if(viewModel.dailyOrWeekly.value == "Weekly") {
+                    dates.subList(dates.size - 12, dates.size)
                 }
+                else {
+                    dates.subList(dates.size - 30, dates.size)
+                }
+
+                var real_dates = if(viewModel.dailyOrWeekly.value == "Weekly") {
+                    dates.subList(0, dates.size - 12)
+                }
+                else {
+                    dates.subList(0, dates.size - 30)
+                }
+
 
                 Log.d("k", dates.toString())
 
@@ -239,6 +249,7 @@ class CropPredictedFragment : Fragment() {
                     }
                 }
 
+                Log.d("ccc", values3.toString())
                 Collections.sort(values3, EntryXComparator())
 
                 val dataset1 = LineDataSet(values1, "Nagpur")
