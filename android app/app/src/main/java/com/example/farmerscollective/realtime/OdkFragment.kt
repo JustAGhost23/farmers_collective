@@ -1,5 +1,6 @@
 package com.example.farmerscollective.realtime
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
@@ -31,6 +32,7 @@ class OdkFragment : Fragment() {
     private val viewModel by activityViewModels<OdkViewModel>()
     private lateinit var binding: FragmentOdkBinding
 
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -71,6 +73,17 @@ class OdkFragment : Fragment() {
 
             viewModel.list.observe(viewLifecycleOwner) {
                 Log.d(this.toString(), it.keys.toString())
+                val formatter: DateTimeFormatter =
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                if(it.isNotEmpty()) {
+                    binding.xAxis.text =
+                        "Submission Dates (${it.keys.first().format(formatter)} - ${
+                            it.keys.last().format(formatter)
+                        })"
+                }
+                else {
+                    binding.xAxis.text = "Submission Dates"
+                }
 
                 val list = it
                 val entries: ArrayList<BarEntry> = ArrayList()
@@ -79,8 +92,6 @@ class OdkFragment : Fragment() {
 
                 if (list != null) {
                     for(i in list) {
-                        val formatter: DateTimeFormatter =
-                            DateTimeFormatter.ofPattern("yyyy-MM-dd")
                         val count = i.value.size
                         if(count % 2 == 1) {
                             for (j in 0 until count / 2) {
