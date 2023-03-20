@@ -16,7 +16,7 @@ class CropPredictedViewModel(application: Application) : AndroidViewModel(applic
     private val _data = MutableLiveData<List<Prediction>>(arrayListOf())
     private val _graph = MutableLiveData<Map<String, Float>>(mapOf())
     private val _today = MutableLiveData<Float>()
-    private val _dailyOrWeekly = MutableLiveData<String>()
+    private val _dailyOrWeekly = MutableLiveData<String>("Daily")
 
     val data: LiveData<List<Prediction>>
         get() = _data
@@ -115,7 +115,7 @@ class CropPredictedViewModel(application: Application) : AndroidViewModel(applic
                         if(dailyOrWeekly.value == "Daily") {
                             readAllAsSequence().forEach {
                                 val dt = LocalDate.parse(it[0])
-                                if (dt.isBefore(LocalDate.parse(date))) map[it[0]] =
+                                if (dt.isBefore(LocalDate.parse(date))) map[dt.toString()] =
                                     it[1].toFloat()
                             }
                         }
@@ -123,13 +123,13 @@ class CropPredictedViewModel(application: Application) : AndroidViewModel(applic
                             var count = 7
                             var sum = 0.0
                             readAllAsSequence().toMutableList().asReversed().forEach {
-                                val dt = LocalDate.parse(it[0])
+                                val dt = LocalDate.parse(it[0]).minusDays(1)
                                 if(dt.isBefore(LocalDate.parse(weekDate))) {
                                     sum += it[1].toFloat()
                                     count -= 1
                                 }
                                 if (count == 0) {
-                                    if (dt.isBefore(LocalDate.parse(weekDate))) map[it[0]] =
+                                    if (dt.isBefore(LocalDate.parse(weekDate))) map[dt.toString()] =
                                         it[1].toFloat()
                                     count = 7
                                     sum = 0.0
@@ -141,7 +141,6 @@ class CropPredictedViewModel(application: Application) : AndroidViewModel(applic
 
             }
 
-            _graph.value = map
             if(dailyOrWeekly.value == "Daily") {
                 _today.value = map[LocalDate.parse(date).minusDays(1).toString()] ?: 0.0f
                 temp.sortBy { value -> value.output }
@@ -163,6 +162,8 @@ class CropPredictedViewModel(application: Application) : AndroidViewModel(applic
             Log.e("TAG", today.value.toString())
             Log.d("TAG", temp.reversed().subList(1, 4).toString())
             _data.value = temp.reversed().subList(1, 4)
+
+            _graph.value = map
 
         }
     }

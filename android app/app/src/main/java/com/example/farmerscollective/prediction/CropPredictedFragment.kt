@@ -207,14 +207,14 @@ class CropPredictedFragment : Fragment() {
 
 
 
-                var pred_dates = if(viewModel.dailyOrWeekly.value == "Weekly") {
+                val pred_dates = if(viewModel.dailyOrWeekly.value == "Weekly") {
                     dates.subList(dates.size - 12, dates.size)
                 }
                 else {
                     dates.subList(dates.size - 30, dates.size)
                 }
 
-                var real_dates = if(viewModel.dailyOrWeekly.value == "Weekly") {
+                val real_dates = if(viewModel.dailyOrWeekly.value == "Weekly") {
                     dates.subList(0, dates.size - 12)
                 }
                 else {
@@ -242,6 +242,9 @@ class CropPredictedFragment : Fragment() {
 
                 for(pred in hls) {
                     val date = pred.date
+
+                    Log.e("date", date)
+                    Log.e("dates", dates.toString())
 
                     val i = dates.indexOf(date)
                     if(it[date] != null) {
