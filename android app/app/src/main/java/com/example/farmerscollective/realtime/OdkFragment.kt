@@ -2,6 +2,7 @@ package com.example.farmerscollective.realtime
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,6 +17,9 @@ import com.example.farmerscollective.R
 import com.example.farmerscollective.data.OdkSubmission
 import com.example.farmerscollective.databinding.FragmentOdkBinding
 import com.example.farmerscollective.utils.Utils.Companion.traders
+import com.example.farmerscollective.utils.Utils.Companion.traderColors
+import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
@@ -87,8 +91,38 @@ class OdkFragment : Fragment() {
 
                 val list = it
                 val entries: ArrayList<BarEntry> = ArrayList()
+                val barColors: ArrayList<Int> = ArrayList()
+                val colorList: ArrayList<LegendEntry> = ArrayList()
+                val traderList: ArrayList<String> = ArrayList()
                 val axis = ArrayList<String?>()
                 val subs = mutableMapOf<Int, OdkSubmission>()
+
+//                var i = 1
+//                for(color in traderColors) {
+//                    val legendEntry: LegendEntry
+//                    if(i != 1) {
+//                        legendEntry = LegendEntry(
+//                            traders[i - 2],
+//                            Legend.LegendForm.SQUARE,
+//                            10.0f,
+//                            10.0f,
+//                            null,
+//                            Color.parseColor(color)
+//                        )
+//                    }
+//                    else {
+//                        legendEntry = LegendEntry(
+//                            "Not filled",
+//                            Legend.LegendForm.SQUARE,
+//                            10.0f,
+//                            10.0f,
+//                            null,
+//                            Color.parseColor(color)
+//                        )
+//                    }
+//                    colorList.add(legendEntry)
+//                    i += 1
+//                }
 
                 if (list != null) {
                     for(i in list) {
@@ -121,6 +155,51 @@ class OdkFragment : Fragment() {
                     for (i in list) {
                         var pos = count.toFloat()
                         for(j in i.value) {
+                            if (j != null) {
+                                val legendEntry: LegendEntry
+                                if(j.localTraderId == -1) {
+                                    legendEntry = LegendEntry(
+                                    "Not filled",
+                                    Legend.LegendForm.SQUARE,
+                                    10.0f,
+                                    10.0f,
+                                    null,
+                                    Color.parseColor(
+                                        traderColors[j.localTraderId.plus(1)]
+                                    )
+                                )
+                                    barColors.add(
+                                        Color.parseColor(
+                                            traderColors[j.localTraderId.plus(1)]
+                                        )
+                                    )
+                                    if(!traderList.contains("Not filled")) {
+                                        colorList.add(legendEntry)
+                                        traderList.add("Not filled")
+                                    }
+                                }
+                                else {
+                                    legendEntry = LegendEntry(
+                                        traders[j.localTraderId?.minus(1)!!],
+                                        Legend.LegendForm.SQUARE,
+                                        10.0f,
+                                        10.0f,
+                                        null,
+                                        Color.parseColor(
+                                            traderColors[j.localTraderId]
+                                        )
+                                    )
+                                    barColors.add(
+                                        Color.parseColor(
+                                            traderColors[j.localTraderId]
+                                        )
+                                    )
+                                    if(!traderList.contains(traders[j.localTraderId.minus(1)])) {
+                                        colorList.add(legendEntry)
+                                        traderList.add(traders[j.localTraderId.minus(1)])
+                                    }
+                                }
+                            }
                             val barEntry = BarEntry(pos, j!!.price.toFloat())
                             entries.add(barEntry)
                             subs[pos.toInt()] = j
@@ -132,9 +211,12 @@ class OdkFragment : Fragment() {
                 Log.e("TAG", entries.toString())
 
                 val barDataSet = BarDataSet(entries, "")
+                barDataSet.colors = barColors
 
                 val data = BarData(barDataSet)
                 barChart.axisRight.isEnabled = false
+                barChart.legend.setCustom(colorList)
+                barChart.legend.isWordWrapEnabled = true
                 barChart.data = data
                 barChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
                 barChart.xAxis.granularity = 1f

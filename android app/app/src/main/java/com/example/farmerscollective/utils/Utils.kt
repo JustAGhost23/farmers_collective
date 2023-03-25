@@ -1,7 +1,6 @@
 package com.example.farmerscollective.utils
 
 import android.content.Context
-import android.content.res.Configuration
 import android.graphics.Color
 import android.view.MotionEvent
 import android.widget.Toast
@@ -33,6 +32,7 @@ class Utils {
                 "Mahesh",
                 "Others",
         )
+        val traderColors = listOf("#ACDDDE", "#CAF1DE", "#E1F8DC", "#FEF8DD", "#F7D8BA", "#FFBFC8", "#C5A4F0", "#FF886D", "#C60404", "#868A93")
 
         init {
 
