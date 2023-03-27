@@ -29,6 +29,7 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import java.time.format.DateTimeFormatter
+import kotlin.math.min
 
 
 class OdkFragment : Fragment() {
@@ -40,7 +41,7 @@ class OdkFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_odk, container, false)
 
         with(binding) {
@@ -126,35 +127,39 @@ class OdkFragment : Fragment() {
 
                 if (list != null) {
                     for(i in list) {
-                        val count = i.value.size
-                        if(count % 2 == 1) {
-                            for (j in 0 until count / 2) {
-                                axis.add("          ")
-                            }
-                            axis.add(i.key.format(formatter))
-                            for (j in 0 until count / 2) {
-                                axis.add("          ")
-                            }
-                        }
-                        else {
-                            for (j in 0 until (count / 2) - 1) {
-                                axis.add("          ")
-                            }
-                            axis.add(i.key.format(formatter))
-                            for (j in 0 until count / 2) {
-                                axis.add("          ")
-                            }
-                        }
                         axis.add("          ")
+                        axis.add(i.key.format(formatter))
+                        for(j in 0 until 3) axis.add("          ")
+//                        val count = i.value.size
+//                        if(count % 2 == 1) {
+//                            for (j in 0 until count / 2) {
+//                                axis.add("          ")
+//                            }
+//                            axis.add(i.key.format(formatter))
+//                            for (j in 0 until count / 2) {
+//                                axis.add("          ")
+//                            }
+//                        }
+//                        else {
+//                            for (j in 0 until (count / 2) - 1) {
+//                                axis.add("          ")
+//                            }
+//                            axis.add(i.key.format(formatter))
+//                            for (j in 0 until count / 2) {
+//                                axis.add("          ")
+//                            }
+//                        }
+//                        axis.add("          ")
                     }
                 }
                 Log.e("AXIS", axis.toString())
 
                 if (list != null) {
-                    var count = 0
+                    var count = 1
                     for (i in list) {
                         var pos = count.toFloat()
-                        for(j in i.value) {
+                        val v = i.value.reversed().sortedBy { it!!.price }.subList(0, min(4, i.value.size))
+                        for(j in v) {
                             if (j != null) {
                                 val legendEntry: LegendEntry
                                 if(j.localTraderId == -1) {
@@ -205,7 +210,7 @@ class OdkFragment : Fragment() {
                             subs[pos.toInt()] = j
                             pos += 1
                         }
-                        count += i.value.size + 1
+                        count += 5
                     }
                 }
                 Log.e("TAG", entries.toString())
