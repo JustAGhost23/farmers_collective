@@ -12,7 +12,7 @@ import java.time.LocalDate
 
 class OdkViewModel(application: Application) : AndroidViewModel(application) {
     private val context = application
-    private val _filter = MutableLiveData(0)
+    private val _filter = MutableLiveData(2)
     private val _list = MutableLiveData<MutableMap<LocalDate, ArrayList<OdkSubmission?>>>(
         mutableMapOf()
     )
@@ -72,10 +72,10 @@ class OdkViewModel(application: Application) : AndroidViewModel(application) {
         _list.value = value
     }
 
-    fun filter(selection: Int) {
-        _filter.value = selection
-        loadList()
-    }
+//    fun filter(selection: Int) {
+//        _filter.value = selection
+//        loadList()
+//    }
 
     fun chooseCrop(selection: Int) {
         _crop.value = selection

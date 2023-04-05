@@ -46,20 +46,20 @@ class OdkFragment : Fragment() {
 
         with(binding) {
 
-            val spinAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, resources.getStringArray(R.array.odk_filter))
-            spinAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            filterSpinner.adapter = spinAdapter
-            filterSpinner.setSelection(viewModel.filter.value!!)
-
-            filterSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                    viewModel.filter(p2)
-                }
-
-                override fun onNothingSelected(p0: AdapterView<*>?) {
-                    //pass
-                }
-            }
+//            val spinAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, resources.getStringArray(R.array.odk_filter))
+//            spinAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+//            filterSpinner.adapter = spinAdapter
+//            filterSpinner.setSelection(viewModel.filter.value!!)
+//
+//            filterSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+//                override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+//                    viewModel.filter(p2)
+//                }
+//
+//                override fun onNothingSelected(p0: AdapterView<*>?) {
+//                    //pass
+//                }
+//            }
 
             val cropNameAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, resources.getStringArray(R.array.cropName))
             cropNameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
