@@ -98,6 +98,8 @@ class OdkFragment : Fragment() {
                 val axis = ArrayList<String?>()
                 val subs = mutableMapOf<Int, OdkSubmission>()
 
+                var minPrice: Float = 3500f
+
 //                var i = 1
 //                for(color in traderColors) {
 //                    val legendEntry: LegendEntry
@@ -206,6 +208,9 @@ class OdkFragment : Fragment() {
                                 }
                             }
                             val barEntry = BarEntry(pos, j!!.price.toFloat())
+                            if(j.price.toFloat() < minPrice) {
+                                minPrice = j.price.toFloat() - 200f
+                            }
                             entries.add(barEntry)
                             subs[pos.toInt()] = j
                             pos += 1
@@ -223,6 +228,7 @@ class OdkFragment : Fragment() {
                 barChart.legend.setCustom(colorList)
                 barChart.legend.isWordWrapEnabled = true
                 barChart.data = data
+                barChart.axisLeft.axisMinimum = minPrice
                 barChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
                 barChart.xAxis.granularity = 1f
                 barChart.xAxis.valueFormatter = IndexAxisValueFormatter(axis)
