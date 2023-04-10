@@ -60,6 +60,14 @@
         <item>Cotton</item>
     </string-array>
 
+    <string-array name="countries">
+        <item>Brazil</item>
+        <item>Indonesia</item>
+        <item>China</item>
+        <item>Argentina</item>
+        <item>USA</item>
+    </string-array>
+
     <string name="about_text">This app informs you about the current prices in Adilabad, our recommendations for selling produce and prices offered by competitors.</string>
     <string name="top_3_days_to_sell" translatable="false">The relative size of the green and red bars represents the probability that the day\'s price is higher or lower than today\'s. The expected gain or loss in the respective scenarios is given within the bars.</string>
     <string name="title">Rythu\nVaani</string>

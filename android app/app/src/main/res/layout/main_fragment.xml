@@ -14,27 +14,30 @@
     <Button
         android:id="@+id/btn1"
         style="@style/main_menu_option"
-        android:layout_marginTop="16dp"
         android:text="@string/main_1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline5" />
 
     <Button
-        android:id="@+id/btn5"
+        android:id="@+id/btn6"
         style="@style/main_menu_option"
-        android:layout_width="0dp"
-        android:layout_height="88dp"
-        android:text="@string/main_5"
+        android:text="International Prices"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn1" />
 
     <Button
+        android:id="@+id/btn5"
+        style="@style/main_menu_option"
+        android:text="@string/main_5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn6" />
+
+    <Button
         android:id="@+id/btn2"
         style="@style/main_menu_option"
-        android:layout_width="0dp"
-        android:layout_height="88dp"
         android:layout_marginTop="16dp"
         android:text="@string/main_2"
         app:layout_constraintEnd_toEndOf="parent"
@@ -44,9 +47,6 @@
     <Button
         android:id="@+id/btn3"
         style="@style/main_menu_option"
-        android:layout_width="0dp"
-        android:layout_height="88dp"
-        android:layout_marginTop="16dp"
         android:text="@string/main_3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -55,9 +55,6 @@
     <Button
         android:id="@+id/btn4"
         style="@style/main_menu_option"
-        android:layout_width="0dp"
-        android:layout_height="88dp"
-        android:layout_marginTop="16dp"
         android:text="@string/main_4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
