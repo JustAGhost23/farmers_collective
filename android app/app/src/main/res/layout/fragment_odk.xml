@@ -63,9 +63,9 @@
 
         <TextView
             android:id="@+id/yAxis"
-            android:layout_width="68dp"
+            android:layout_width="32dp"
             android:layout_height="wrap_content"
-            android:text="Price Submitted"
+            android:text="Price"
             android:rotation="270"
             android:gravity="fill_vertical"
             app:layout_constraintTop_toTopOf="@id/barChart"
@@ -100,7 +100,7 @@
             android:id="@+id/barChart"
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:layout_marginStart="56dp"
+            android:layout_marginStart="40dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             app:layout_constraintHorizontal_bias="1.0"

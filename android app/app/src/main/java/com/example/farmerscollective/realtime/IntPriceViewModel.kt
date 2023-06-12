@@ -1,25 +1,43 @@
 package com.example.farmerscollective.realtime
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import android.util.Log
+import androidx.lifecycle.*
+import com.example.farmerscollective.data.IntPriceEntry
 import com.example.farmerscollective.data.PriceDatabase
-import com.example.farmerscollective.utils.Utils.Companion.countryList
+import com.example.farmerscollective.utils.Utils.Companion.internationalPricesCrops
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class IntPriceViewModel(application: Application) : AndroidViewModel(application) {
 
     private val dao = PriceDatabase.getDatabase(application).intPriceDao()
-    var prices = dao.getAllPrices()
+    private var priceList: List<IntPriceEntry> = arrayListOf()
 
-    private val _country = MutableLiveData<Int>(0)
-    val country: LiveData<Int>
-    get() = _country
+    private val _crop = MutableLiveData(0)
+    val crop: LiveData<Int>
+    get() = _crop
 
-    fun changeCountry(index: Int) {
-        _country.value = index
-        prices = dao.getPricesByCountry(countryList[index])
+    private val _prices = MutableLiveData<List<IntPriceEntry>>(arrayListOf())
+    val prices: LiveData<List<IntPriceEntry>>
+    get() = _prices
+
+    init {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                _prices.postValue(dao.getPricesByCropId(_crop.value?.plus(1) ?: 1))
+            }
+        }
+    }
+
+    fun changeCropId(index: Int) {
+        _crop.value = index
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                _prices.postValue(dao.getPricesByCropId(index + 1))
+            }
+        }
     }
 
 }

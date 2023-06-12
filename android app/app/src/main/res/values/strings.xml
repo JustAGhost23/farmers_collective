@@ -60,12 +60,9 @@
         <item>Cotton</item>
     </string-array>
 
-    <string-array name="countries">
-        <item>Brazil</item>
-        <item>Indonesia</item>
-        <item>China</item>
-        <item>Argentina</item>
-        <item>USA</item>
+    <string-array name="internationalCropName">
+        <item>Soyabean</item>
+        <item>Cotton</item>
     </string-array>
 
     <string name="about_text">This app informs you about the current prices in Adilabad, our recommendations for selling produce and prices offered by competitors.</string>

@@ -6,14 +6,20 @@ import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.farmerscollective.R
+import com.example.farmerscollective.data.IntPriceEntry
 import com.example.farmerscollective.data.OdkSubmission
 import com.example.farmerscollective.data.Prediction
+import com.example.farmerscollective.data.PriceDatabase
 import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
+import com.google.common.math.DoubleMath.roundToInt
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.math.RoundingMode
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -22,6 +28,8 @@ class OneTimeWorker(appContext: Context, workerParams: WorkerParameters) :
     CoroutineWorker(appContext, workerParams) {
 
     private val analytics = FirebaseAnalytics.getInstance(applicationContext)
+
+    private val dao = PriceDatabase.getDatabase(applicationContext).intPriceDao()
 
     override suspend fun doWork(): Result {
 
@@ -247,6 +255,39 @@ class OneTimeWorker(appContext: Context, workerParams: WorkerParameters) :
                 }
                 .addOnFailureListener {
                     logWorkerEvent("failure", "WorkerFailure")
+                }
+
+            db.collection("Trading_Prices")
+                .get()
+                .addOnSuccessListener {it ->
+                    val t: ArrayList<IntPriceEntry> = arrayListOf()
+                    it.documents.forEach {doc ->
+                        doc.data?.forEach {
+                            val mapArray: ArrayList<HashMap<String, Any>> = it.value as ArrayList<HashMap<String, Any>>
+                            for (map in mapArray) {
+                                t.add(
+                                    IntPriceEntry(
+                                        map["date"] as String,
+                                        1,
+                                        roundToInt(map["soyabean"].toString().toDouble(), RoundingMode.FLOOR).toFloat(),
+                                    )
+                                )
+                                t.add(
+                                    IntPriceEntry(
+                                        map["date"] as String,
+                                        2,
+                                        roundToInt(map["cotton"].toString().toDouble(), RoundingMode.FLOOR).toFloat(),
+                                    )
+                                )
+                            }
+                        }
+                    }
+                    Log.e("intPrices", t.toString())
+                    CoroutineScope(Dispatchers.IO).launch {
+                        for (priceEntry in t) {
+                            dao.insertPrice(priceEntry)
+                        }
+                    }
                 }
 
             db.collection("TELANGANA_ADILABAD_ODK")

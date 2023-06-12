@@ -25,6 +25,9 @@
         <action
             android:id="@+id/action_mainFragment_to_odkFragment"
             app:destination="@id/odkFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_internationalPricesFragment"
+            app:destination="@id/internationalPricesFragment" />
     </fragment>
     <fragment
         android:id="@+id/cropPricesFragment"
@@ -80,6 +83,14 @@
         android:label="OdkFragment" >
         <action
             android:id="@+id/action_odkFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/internationalPricesFragment"
+        android:name="com.example.farmerscollective.realtime.IntPriceFragment"
+        android:label="IntPricesFragment">
+        <action
+            android:id="@+id/action_internationalPricesFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
     </fragment>
 </navigation>

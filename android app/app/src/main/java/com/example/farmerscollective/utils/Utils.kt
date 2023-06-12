@@ -18,7 +18,8 @@ class Utils {
 
     companion object {
         val MSP = mapOf(Pair(2015, 2600f), Pair(2016, 2775f), Pair(2017, 3050f), Pair(2018, 3399f), Pair(2019, 3710f), Pair(2020, 3880f), Pair(2021, 3950f), Pair(2022, 4300f))
-        val countryList = arrayListOf("Brazil", "Indonesia", "USA", "China", "Argentina")
+//        val countryList = arrayListOf("Brazil", "Indonesia", "USA", "China", "Argentina")
+        val internationalPricesCrops = arrayListOf("Soyabean", "Cotton")
 
         val dates = ArrayList<String>()
         val yearColors = mutableMapOf<Int, Int>()

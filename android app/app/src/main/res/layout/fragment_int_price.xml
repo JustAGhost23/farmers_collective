@@ -23,13 +23,13 @@
         <!--            app:layout_constraintTop_toBottomOf="@+id/price_view1" />-->
 
         <Spinner
-            android:id="@+id/country"
+            android:id="@+id/cropSpinner"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:entries="@array/countries"
+            android:entries="@array/internationalCropName"
             android:minHeight="54dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -63,13 +63,13 @@
 
         <TextView
             android:id="@+id/yAxis"
-            android:layout_width="68dp"
+            android:layout_width="32dp"
             android:layout_height="wrap_content"
             android:text="Price"
             android:rotation="270"
             android:gravity="fill_vertical"
-            app:layout_constraintTop_toTopOf="@id/barChart"
-            app:layout_constraintBottom_toBottomOf="@id/barChart"
+            app:layout_constraintTop_toTopOf="@id/lineChart"
+            app:layout_constraintBottom_toBottomOf="@id/lineChart"
             app:layout_constraintStart_toStartOf="parent"/>
 
         <TextView
@@ -77,9 +77,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="X Axis"
-            app:layout_constraintTop_toBottomOf="@id/barChart"
-            app:layout_constraintStart_toStartOf="@id/barChart"
-            app:layout_constraintEnd_toEndOf="@id/barChart"/>
+            app:layout_constraintTop_toBottomOf="@id/lineChart"
+            app:layout_constraintStart_toStartOf="@id/lineChart"
+            app:layout_constraintEnd_toEndOf="@id/lineChart"/>
 
         <TextView
             android:id="@+id/price_title"
@@ -96,19 +96,19 @@
             app:layout_constraintGuide_begin="258dp" />
 
 
-        <com.github.mikephil.charting.charts.BarChart
-            android:id="@+id/barChart"
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/lineChart"
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:layout_marginStart="56dp"
+            android:layout_marginStart="40dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/country">
+            app:layout_constraintTop_toBottomOf="@+id/cropSpinner">
 
-        </com.github.mikephil.charting.charts.BarChart>
+        </com.github.mikephil.charting.charts.LineChart>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

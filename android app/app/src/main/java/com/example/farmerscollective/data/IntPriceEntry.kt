@@ -3,11 +3,11 @@ package com.example.farmerscollective.data
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import org.checkerframework.checker.nullness.qual.NonNull
 
-@Entity(tableName = "int_price_table")
+@Entity(tableName = "int_price_table", primaryKeys = ["date", "cropId"])
 data class IntPriceEntry(
-    @PrimaryKey(autoGenerate = false) val subId: Int,
     @ColumnInfo(name = "date") val date: String,
-    @ColumnInfo(name = "country") val country: String,
+    @ColumnInfo(name = "cropId") val cropId: Int,
     @ColumnInfo(name = "price") val price: Float
 )

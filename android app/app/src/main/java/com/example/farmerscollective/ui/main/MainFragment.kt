@@ -75,6 +75,15 @@ class MainFragment : Fragment() {
                 else Toast.makeText(activity, "Please wait! Still loading data", Toast.LENGTH_SHORT).show()
             }
 
+            btn6.setOnClickListener {
+                val clickDaily = activity?.getSharedPreferences("prefs", Context.MODE_PRIVATE)?.getBoolean("isDailyDataAvailable", false)
+                val clickWeekly = activity?.getSharedPreferences("prefs", Context.MODE_PRIVATE)?.getBoolean("isWeeklyDataAvailable", false)
+                Log.d("testingDaily", clickDaily.toString())
+                Log.d("testingWeekly", clickWeekly.toString())
+                if(clickDaily == true && clickWeekly == true) it.findNavController().navigate(R.id.action_mainFragment_to_internationalPricesFragment)
+                else Toast.makeText(activity, "Please wait! Still loading data", Toast.LENGTH_SHORT).show()
+            }
+
         }
 
 
