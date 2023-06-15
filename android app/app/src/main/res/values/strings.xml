@@ -29,6 +29,19 @@
 
     </string-array>
 
+    <string-array name="mandiClean">
+
+        <item>Telangana - Adilabad</item>
+        <item>Rajasthan - Kota</item>
+        <item>Rajasthan - Bhawani Mandi</item>
+        <item>Madhya Pradesh - Sonkatch</item>
+        <item>Madhya Pradesh - Ratlam</item>
+        <item>Madhya Pradesh - Mahidpur</item>
+        <item>Madhya Pradesh - Ganjbasoda</item>
+        <item>Maharashtra - Nagpur</item>
+
+    </string-array>
+
     <string-array name="commodity">
         <item>Soyabean</item>
     </string-array>

@@ -22,6 +22,7 @@ import androidx.core.text.bold
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.example.farmerscollective.R
 import com.example.farmerscollective.databinding.CropPredictedFragmentBinding
 import com.example.farmerscollective.utils.FirstDrawListener
@@ -81,7 +82,22 @@ class CropPredictedFragment : Fragment() {
         binding.viewmodel = viewModel
         analytics = FirebaseAnalytics.getInstance(requireContext())
 
+        val sharedPref =
+            requireContext().getSharedPreferences(
+                "prefs",
+                Context.MODE_PRIVATE
+            )
+
         with(binding) {
+
+            recommZoom.setOnClickListener {
+                with(sharedPref.edit()) {
+                    putBoolean("isWeekly", viewModel.dailyOrWeekly.value == "Weekly")
+                    apply()
+                }
+                val action = CropPredictedFragmentDirections.actionCropPredictedFragmentToZoomedInFragment(5)
+                findNavController().navigate(action)
+            }
 
             val adap1 = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, resources.getStringArray(
                 R.array.dailyOrWeekly

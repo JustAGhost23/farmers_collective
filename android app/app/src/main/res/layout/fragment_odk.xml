@@ -31,8 +31,20 @@
             android:layout_marginEnd="8dp"
             android:entries="@array/cropName"
             android:minHeight="54dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/guideline7"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/price_view1" />
+
+        <Spinner
+            android:id="@+id/yearSpinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:minHeight="54dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/guideline7"
             app:layout_constraintTop_toBottomOf="@+id/price_view1" />
 
         <androidx.constraintlayout.widget.Guideline
@@ -61,25 +73,33 @@
             app:layout_constraintBottom_toTopOf="@+id/price_view1"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <TextView
-            android:id="@+id/yAxis"
-            android:layout_width="32dp"
-            android:layout_height="wrap_content"
-            android:text="Price"
-            android:rotation="270"
-            android:gravity="fill_vertical"
-            app:layout_constraintTop_toTopOf="@id/barChart"
-            app:layout_constraintBottom_toBottomOf="@id/barChart"
-            app:layout_constraintStart_toStartOf="parent"/>
+            <Button
+                android:id="@+id/barChartShare"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="#FFEB3B"
+                android:text="@string/share"
+                android:textColor="@android:color/primary_text_light"
+                app:layout_constraintEnd_toStartOf="@+id/guideline7"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/barChart" />
 
-        <TextView
-            android:id="@+id/xAxis"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="X Axis"
-            app:layout_constraintTop_toBottomOf="@id/barChart"
-            app:layout_constraintStart_toStartOf="@id/barChart"
-            app:layout_constraintEnd_toEndOf="@id/barChart"/>
+            <Button
+                android:id="@+id/barZoom"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="#FFEB3B"
+                android:text="zoom in"
+                android:textColor="@android:color/primary_text_light"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/guideline7"
+                app:layout_constraintTop_toBottomOf="@+id/barChart" />
 
         <TextView
             android:id="@+id/price_title"
@@ -100,15 +120,22 @@
             android:id="@+id/barChart"
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:layout_marginStart="40dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cropSpinner">
+            app:layout_constraintTop_toBottomOf="@+id/yearSpinner">
 
         </com.github.mikephil.charting.charts.BarChart>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

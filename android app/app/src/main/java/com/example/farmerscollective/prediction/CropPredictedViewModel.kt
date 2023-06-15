@@ -159,7 +159,6 @@ class CropPredictedViewModel(application: Application) : AndroidViewModel(applic
                     it
                 })
             }
-            Log.e("TAG", today.value.toString())
             Log.d("TAG", temp.reversed().subList(1, 4).toString())
             _data.value = temp.reversed().subList(1, 4)
 

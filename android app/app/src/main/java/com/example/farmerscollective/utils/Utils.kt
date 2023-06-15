@@ -74,7 +74,7 @@ class Utils {
             chart.setDrawBorders(false)
             chart.legend.isWordWrapEnabled = true
             chart.axisLeft.isEnabled = false
-            chart.axisRight.setDrawAxisLine(false)
+            chart.axisRight.setDrawAxisLine(true)
             chart.axisRight.setDrawGridLines(false)
             chart.xAxis.setDrawAxisLine(true)
             chart.xAxis.setDrawGridLines(false)

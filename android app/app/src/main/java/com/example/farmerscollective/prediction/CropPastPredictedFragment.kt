@@ -22,11 +22,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.example.farmerscollective.utils.Utils.Companion.ready
 import com.example.farmerscollective.utils.DatePickerFragment
 import com.example.farmerscollective.R
 import com.example.farmerscollective.databinding.CropPastPredictedFragmentBinding
 import com.example.farmerscollective.databinding.PastRecommBinding
+import com.example.farmerscollective.realtime.IntPriceFragmentDirections
 import com.example.farmerscollective.utils.FirstDrawListener
 import com.example.farmerscollective.utils.Utils
 import com.example.farmerscollective.utils.Utils.Companion.roundToString
@@ -95,6 +97,11 @@ class CropPastPredictedFragment : Fragment() {
 
             pastPredictView2.setOnClickListener {
                 it.findNavController().navigateUp()
+            }
+
+            pastRecommZoom.setOnClickListener {
+                val action = CropPastPredictedFragmentDirections.actionCropPastPredictedFragmentToZoomedInFragment(4)
+                findNavController().navigate(action)
             }
 
             viewModel.recomm.observe(viewLifecycleOwner) {

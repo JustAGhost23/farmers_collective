@@ -16,7 +16,13 @@ import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.work.*
+import com.example.farmerscollective.prediction.CropPastPredictedFragmentDirections
+import com.example.farmerscollective.prediction.CropPredictedFragmentDirections
+import com.example.farmerscollective.realtime.CropPricesFragmentDirections
+import com.example.farmerscollective.realtime.IntPriceFragmentDirections
+import com.example.farmerscollective.realtime.OdkFragmentDirections
 import com.example.farmerscollective.utils.ChartRangeDialog
 import com.example.farmerscollective.workers.DailyWorker
 import com.example.farmerscollective.workers.OneTimeWorker
@@ -166,8 +172,40 @@ class MainActivity : AppCompatActivity(), ChartRangeDialog.DialogListener {
         }
 
         val id = controller.currentDestination?.id
-        controller.popBackStack(id!!,true)
-        controller.navigate(id)
+        if(id == R.id.zoomedInFragment) {
+            controller.popBackStack(id, true)
+            val backId = controller.currentDestination?.id
+            if(backId == R.id.cropPredictedFragment) {
+                val action = CropPredictedFragmentDirections.actionCropPredictedFragmentToZoomedInFragment(5)
+                controller.navigate(action)
+            }
+            else if(backId == R.id.cropPastPredictedFragment) {
+                val action = CropPastPredictedFragmentDirections.actionCropPastPredictedFragmentToZoomedInFragment(4)
+                controller.navigate(action)
+            }
+            else if(backId == R.id.odkFragment) {
+                val action = OdkFragmentDirections.actionOdkFragmentToZoomedInFragment(3)
+                controller.navigate(action)
+            }
+            else if(backId == R.id.internationalPricesFragment) {
+                val action = IntPriceFragmentDirections.actionInternationalPricesFragmentToZoomedInFragment(2)
+                controller.navigate(action)
+            }
+            else {
+                val cropGraph = sharedPref.getBoolean("cropGraph", true)
+                val action = if(cropGraph) {
+                    CropPricesFragmentDirections.actionCropPricesFragmentToZoomedInFragment(0)
+                }
+                else {
+                    CropPricesFragmentDirections.actionCropPricesFragmentToZoomedInFragment(1)
+                }
+                controller.navigate(action)
+            }
+        }
+        else {
+            controller.popBackStack(id!!,true)
+            controller.navigate(id)
+        }
 
         val analytics = FirebaseAnalytics.getInstance(this)
         val bundle = Bundle()

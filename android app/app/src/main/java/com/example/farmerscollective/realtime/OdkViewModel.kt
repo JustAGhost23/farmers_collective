@@ -17,6 +17,10 @@ class OdkViewModel(application: Application) : AndroidViewModel(application) {
         mutableMapOf()
     )
     private val _crop = MutableLiveData(0)
+    private val current = if (LocalDate.now().isBefore(LocalDate.of(LocalDate.now().year, 7, 1)))
+        LocalDate.now().year - 1
+    else LocalDate.now().year
+    private val _year = MutableLiveData(current)
 
     val list: LiveData<MutableMap<LocalDate, ArrayList<OdkSubmission?>>>
     get() = _list
@@ -61,8 +65,14 @@ class OdkViewModel(application: Application) : AndroidViewModel(application) {
                             dt
                         )
                         if (condition(odk) && odk.cropId == crop.value?.plus(1)) {
-                            if (!value.containsKey(dt)) value[dt] = arrayListOf()
-                            value[dt]!!.add(odk)
+                            if(dt.year == _year.value && dt.month.value > 6) {
+                                if (!value.containsKey(dt)) value[dt] = arrayListOf()
+                                value[dt]!!.add(odk)
+                            }
+                            else if(dt.year == _year.value?.plus(1) && dt.month.value < 7) {
+                                if (!value.containsKey(dt)) value[dt] = arrayListOf()
+                                value[dt]!!.add(odk)
+                            }
                         }
                     }
                 }
@@ -80,6 +90,11 @@ class OdkViewModel(application: Application) : AndroidViewModel(application) {
     fun chooseCrop(selection: Int) {
         _crop.value = selection
         loadList()
+    }
+
+    fun changeYear(year: Int) {
+        _year.value = year
+
     }
 
 }

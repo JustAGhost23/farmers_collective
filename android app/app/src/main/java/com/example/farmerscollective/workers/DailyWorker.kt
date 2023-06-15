@@ -258,26 +258,19 @@ class DailyWorker(appContext: Context, workerParams: WorkerParameters) :
                                     IntPriceEntry(
                                         map["date"] as String,
                                         1,
-                                        DoubleMath.roundToInt(
-                                            map["soyabean"].toString().toDouble(),
-                                            RoundingMode.FLOOR
-                                        ).toFloat(),
+                                        map["soyabean"].toString().toFloat(),
                                     )
                                 )
                                 t.add(
                                     IntPriceEntry(
                                         map["date"] as String,
                                         2,
-                                        DoubleMath.roundToInt(
-                                            map["cotton"].toString().toDouble(),
-                                            RoundingMode.FLOOR
-                                        ).toFloat(),
+                                        map["cotton"].toString().toFloat(),
                                     )
                                 )
                             }
                         }
                     }
-                    Log.e("intPrices", t.toString())
                     CoroutineScope(Dispatchers.IO).launch {
                         for (priceEntry in t) {
                             dao.insertPrice(priceEntry)

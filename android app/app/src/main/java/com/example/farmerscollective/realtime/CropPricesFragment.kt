@@ -104,13 +104,13 @@ class CropPricesFragment : Fragment() {
             }
 
             val adap1 = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, resources.getStringArray(
-                R.array.mandi
+                R.array.mandiClean
             ))
             adap1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
             mandiSelector.adapter = adap1
 
-            mandiSelector.setSelection(adap1.getPosition("MAHARASHTRA_NAGPUR_Price"))
+            mandiSelector.setSelection(adap1.getPosition("Maharashtra - Nagpur"))
 
             mandiSelector.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
@@ -138,7 +138,9 @@ class CropPricesFragment : Fragment() {
                 LocalDate.now().year - 1
             else LocalDate.now().year
 
-            val arr = (current-7..current).map {
+            val initial = 2015
+
+            val arr = (initial..current).map {
                 "${it}-${(it + 1) % 100}"
             }
 
@@ -193,13 +195,15 @@ class CropPricesFragment : Fragment() {
                 chipGroup.addView(chip)
             }
 
-
             val mandis = resources.getStringArray(R.array.mandi)
+            val mandisClean = resources.getStringArray(R.array.mandiClean)
 
             for(mandi in mandis) {
 
+                val mandiClean = mandisClean[mandis.indexOf(mandi)]
+
                 val mChip = Chip(context)
-                mChip.text = mandi
+                mChip.text = mandiClean
                 mChip.isCheckable = true
 
                 if(viewModel.checkMandi(mandi)) {
@@ -217,7 +221,7 @@ class CropPricesFragment : Fragment() {
                         analytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
                     }
 
-                    viewModel.selectMandi(mandi, b)
+                    viewModel.selectMandi(mandi, mandiClean, b)
                 }
 
                 chipGroup2.addView(mChip)
@@ -258,7 +262,7 @@ class CropPricesFragment : Fragment() {
                     t1.textSize = 16f
                     t1.gravity = 1 //CENTER_HORIZONTAL
                     t1.background = ResourcesCompat.getDrawable(resources, R.drawable.table_cell_bg, null)
-                    t2.text = "${year}-${(year+1)%100}\n"
+                    t2.text = "${year - 1}-${(year) % 100}\n"
                     t2.textSize = 16f
                     t2.gravity = 1 //CENTER_HORIZONTAL
                     t2.background = ResourcesCompat.getDrawable(resources, R.drawable.table_cell_bg, null)
@@ -266,7 +270,7 @@ class CropPricesFragment : Fragment() {
                     t3.textSize = 16f
                     t3.gravity = 1 //CENTER_HORIZONTAL
                     t3.background = ResourcesCompat.getDrawable(resources, R.drawable.table_cell_bg, null)
-                    t4.text = "${it[year]!![1].second}\n${it[year]!![0].second}"
+                    t4.text = "${it[year]!![1].second.toInt()}\n${it[year]!![0].second.toInt()}"
                     t4.textSize = 16f
                     t4.gravity = 1 //CENTER_HORIZONTAL
                     t4.background = ResourcesCompat.getDrawable(resources, R.drawable.table_cell_bg, null)
@@ -320,14 +324,24 @@ class CropPricesFragment : Fragment() {
                 mandiChart.clear()
                 val axis = mandiChart.axisRight
                 val axis2 = mandiChart.axisLeft
+                var min: Float = Float.MAX_VALUE
 
                 val mspLine = LimitLine(Utils.MSP[2015 + yearSelector.selectedItemPosition]!!, "Minimum Support Price")
+                if(min > mspLine.limit - 200f) {
+                    min = mspLine.limit - 300f
+                }
+                for(item in it) {
+                    if(min > item.yMin - 200f) {
+                        min = item.yMin - 300f
+                    }
+                }
+
                 mspLine.lineWidth = 2f
                 mspLine.textSize = 8f
 
                 axis.removeAllLimitLines()
-                axis.axisMinimum = 0f
-                axis2.axisMinimum = 0f
+                axis.axisMinimum = min
+                axis2.axisMinimum = min
                 axis.addLimitLine(mspLine)
 
                 mandiChart.xAxis.valueFormatter = IndexAxisValueFormatter(dates)
