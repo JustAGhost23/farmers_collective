@@ -432,7 +432,13 @@ class ZoomedInFragment : Fragment() {
                     barChart.xAxis.granularity = 1f
                     barChart.xAxis.valueFormatter = IndexAxisValueFormatter(axis)
                     barChart.isHighlightPerDragEnabled = false
-                    barChart.moveViewToX(entries[entries.size - 1].x)
+                    barChart.setFitBars(true)
+                    if(entries.size == 0) {
+                        barChart.moveViewToX(0f)
+                    }
+                    else {
+                        barChart.moveViewToX(entries[entries.size - 1].x)
+                    }
                     if(!sharedPref.getBoolean("compress", false)) {
                         barChart.setVisibleXRangeMaximum(10.0f)
                     }

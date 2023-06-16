@@ -178,9 +178,9 @@ class OdkFragment : Fragment() {
 
                 if (list != null) {
                     for(i in list) {
-                        axis.add("")
+//                        axis.add("")
                         axis.add(i.key.format(formatter))
-                        for(j in 0 until 3) axis.add("")
+//                        for(j in 0 until 3) axis.add("")
 //                        val count = i.value.size
 //                        if(count % 2 == 1) {
 //                            for (j in 0 until count / 2) {
@@ -287,6 +287,7 @@ class OdkFragment : Fragment() {
                 barChart.xAxis.granularity = 1f
                 barChart.xAxis.valueFormatter = IndexAxisValueFormatter(axis)
                 barChart.isHighlightPerDragEnabled = false
+                barChart.setFitBars(true)
                 if(entries.size == 0) {
                     barChart.moveViewToX(0f)
                 }
