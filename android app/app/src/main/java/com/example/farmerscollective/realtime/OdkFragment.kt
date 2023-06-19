@@ -140,14 +140,21 @@ class OdkFragment : Fragment() {
 //                }
 
                 val list = it
-                val entries: ArrayList<BarEntry> = ArrayList()
-                val barColors: ArrayList<Int> = ArrayList()
+                val entries1: ArrayList<BarEntry> = ArrayList()
+                val entries2: ArrayList<BarEntry> = ArrayList()
+                val entries3: ArrayList<BarEntry> = ArrayList()
+                val entries4: ArrayList<BarEntry> = ArrayList()
+                val barColors1: ArrayList<Int> = ArrayList()
+                val barColors2: ArrayList<Int> = ArrayList()
+                val barColors3: ArrayList<Int> = ArrayList()
+                val barColors4: ArrayList<Int> = ArrayList()
                 val colorList: ArrayList<LegendEntry> = ArrayList()
                 val traderList: ArrayList<String> = ArrayList()
                 val axis = ArrayList<String?>()
-                val subs = mutableMapOf<Int, OdkSubmission>()
+                val subs = mutableMapOf<Int, List<OdkSubmission?>>()
 
-                var minPrice: Float = 3500f
+                var minPrice = 3500f
+                var xMax = 0f
 
 //                var i = 1
 //                for(color in traderColors) {
@@ -206,10 +213,19 @@ class OdkFragment : Fragment() {
                 Log.e("AXIS", axis.toString())
 
                 if (list != null) {
-                    var count = 1
+                    var count = 0f
                     for (i in list) {
-                        var pos = count.toFloat()
+                        xMax += 1f
+                        var pos = count
                         val v = i.value.reversed().sortedBy { it!!.price }.subList(0, min(4, i.value.size))
+                        entries1.add(BarEntry(pos, -100f))
+                        entries2.add(BarEntry(pos + 0.20f, -100f))
+                        entries3.add(BarEntry(pos + 0.40f, -100f))
+                        entries4.add(BarEntry(pos + 0.60f, -100f))
+                        barColors1.add(0)
+                        barColors2.add(0)
+                        barColors3.add(0)
+                        barColors4.add(0)
                         for(j in v) {
                             if (j != null) {
                                 val legendEntry: LegendEntry
@@ -224,11 +240,38 @@ class OdkFragment : Fragment() {
                                         traderColors[j.localTraderId.plus(1)]
                                     )
                                 )
-                                    barColors.add(
-                                        Color.parseColor(
-                                            traderColors[j.localTraderId.plus(1)]
+                                    if(v.indexOf(j) == 0) {
+                                        barColors1.removeAt(barColors1.size - 1)
+                                        barColors1.add(
+                                            Color.parseColor(
+                                                traderColors[j.localTraderId.plus(1)]
+                                            )
                                         )
-                                    )
+                                    }
+                                    else if(v.indexOf(j) == 1) {
+                                        barColors2.removeAt(barColors2.size - 1)
+                                        barColors2.add(
+                                            Color.parseColor(
+                                                traderColors[j.localTraderId.plus(1)]
+                                            )
+                                        )
+                                    }
+                                    else if(v.indexOf(j) == 2) {
+                                        barColors3.removeAt(barColors3.size - 1)
+                                        barColors3.add(
+                                            Color.parseColor(
+                                                traderColors[j.localTraderId.plus(1)]
+                                            )
+                                        )
+                                    }
+                                    else if(v.indexOf(j) == 3) {
+                                        barColors4.removeAt(barColors4.size - 1)
+                                        barColors4.add(
+                                            Color.parseColor(
+                                                traderColors[j.localTraderId.plus(1)]
+                                            )
+                                        )
+                                    }
                                     if(!traderList.contains("Not filled")) {
                                         colorList.add(legendEntry)
                                         traderList.add("Not filled")
@@ -245,11 +288,38 @@ class OdkFragment : Fragment() {
                                             traderColors[j.localTraderId]
                                         )
                                     )
-                                    barColors.add(
-                                        Color.parseColor(
-                                            traderColors[j.localTraderId]
+                                    if(v.indexOf(j) == 0) {
+                                        barColors1.removeAt(barColors1.size - 1)
+                                        barColors1.add(
+                                            Color.parseColor(
+                                                traderColors[j.localTraderId]
+                                            )
                                         )
-                                    )
+                                    }
+                                    else if(v.indexOf(j) == 1) {
+                                        barColors2.removeAt(barColors2.size - 1)
+                                        barColors2.add(
+                                            Color.parseColor(
+                                                traderColors[j.localTraderId]
+                                            )
+                                        )
+                                    }
+                                    else if(v.indexOf(j) == 2) {
+                                        barColors3.removeAt(barColors3.size - 1)
+                                        barColors3.add(
+                                            Color.parseColor(
+                                                traderColors[j.localTraderId]
+                                            )
+                                        )
+                                    }
+                                    else if(v.indexOf(j) == 3) {
+                                        barColors4.removeAt(barColors4.size - 1)
+                                        barColors4.add(
+                                            Color.parseColor(
+                                                traderColors[j.localTraderId]
+                                            )
+                                        )
+                                    }
                                     if(!traderList.contains(traders[j.localTraderId.minus(1)])) {
                                         colorList.add(legendEntry)
                                         traderList.add(traders[j.localTraderId.minus(1)])
@@ -260,19 +330,44 @@ class OdkFragment : Fragment() {
                             if(j.price.toFloat() < minPrice) {
                                 minPrice = j.price.toFloat() - 200f
                             }
-                            entries.add(barEntry)
-                            subs[pos.toInt()] = j
-                            pos += 1
+                            if(v.indexOf(j) == 0) {
+                                entries1.removeAt(entries1.size - 1)
+                                entries1.add(barEntry)
+                            }
+                            else if(v.indexOf(j) == 1) {
+                                entries2.removeAt(entries2.size - 1)
+                                entries2.add(barEntry)
+                            }
+                            else if(v.indexOf(j) == 2) {
+                                entries3.removeAt(entries3.size - 1)
+                                entries3.add(barEntry)
+                            }
+                            else if(v.indexOf(j) == 3) {
+                                entries4.removeAt(entries4.size - 1)
+                                entries4.add(barEntry)
+                            }
+                            subs[pos.toInt()] = v
+                            pos += 0.20f
                         }
-                        count += 5
+                        count += 1f
                     }
                 }
-                Log.e("TAG", entries.toString())
+                Log.e("entries1", entries1.toString())
+                Log.e("entries2", entries2.toString())
+                Log.e("entries3", entries3.toString())
+                Log.e("entries4", entries4.toString())
 
-                val barDataSet = BarDataSet(entries, "")
-                barDataSet.colors = barColors
+                val barDataSet1 = BarDataSet(entries1, "")
+                val barDataSet2 = BarDataSet(entries2, "")
+                val barDataSet3 = BarDataSet(entries3, "")
+                val barDataSet4 = BarDataSet(entries4, "")
+                barDataSet1.colors = barColors1
+                barDataSet2.colors = barColors2
+                barDataSet3.colors = barColors3
+                barDataSet4.colors = barColors4
 
-                val data = BarData(barDataSet)
+                val data = BarData(barDataSet1, barDataSet2, barDataSet3, barDataSet4)
+                data.barWidth = 0.20f
                 barChart.description.isEnabled = false
                 barChart.axisRight.isEnabled = true
                 barChart.axisLeft.isEnabled = false
@@ -280,22 +375,20 @@ class OdkFragment : Fragment() {
                 barChart.legend.isWordWrapEnabled = true
                 barChart.axisRight.setDrawGridLines(false)
                 barChart.axisLeft.setDrawGridLines(false)
-                barChart.xAxis.setDrawGridLines(false)
+                barChart.xAxis.setDrawGridLines(true)
                 barChart.data = data
                 barChart.axisRight.axisMinimum = minPrice
+                barChart.axisLeft.axisMinimum = minPrice
                 barChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
                 barChart.xAxis.granularity = 1f
                 barChart.xAxis.valueFormatter = IndexAxisValueFormatter(axis)
                 barChart.isHighlightPerDragEnabled = false
-                barChart.setFitBars(true)
-                if(entries.size == 0) {
-                    barChart.moveViewToX(0f)
-                }
-                else {
-                    barChart.moveViewToX(entries[entries.size - 1].x)
-                }
+                barChart.groupBars(0f, 0.12f, 0.02f)
+                barChart.xAxis.setCenterAxisLabels(true)
+                barChart.moveViewToX(xMax)
+                barChart.setFitBars(false)
                 if(!sharedPref.getBoolean("compress", false)) {
-                    barChart.setVisibleXRangeMaximum(10.0f)
+                    barChart.setVisibleXRangeMaximum(8.0f)
                 }
                 else {
                     barChart.setVisibleXRangeMaximum(365.0f)
@@ -306,21 +399,27 @@ class OdkFragment : Fragment() {
                         val x = e.x.toString()
 //                        val y = e.y.toString()
                         val selectedXAxisCount = x.substringBefore(".")
+                        val selectedXAxisPos = x.substringAfter(".").substring(0, 2)
                         val dataDialogBuilder: AlertDialog.Builder? = activity?.let { fragmentActivity ->
                             AlertDialog.Builder(fragmentActivity)
                         }
-                        val selectedOdkSubmission = subs[selectedXAxisCount.toInt()]
-                        val traderName = if(selectedOdkSubmission?.localTraderId!! == -1) "Not filled" else traders[selectedOdkSubmission.localTraderId - 1]
-                        val mandalId = if(selectedOdkSubmission.mandalId == "") "Not filled" else selectedOdkSubmission.mandalId
-                        dataDialogBuilder?.setMessage("Trader Name: ${traderName}\nMandal: ${mandalId}\nPrice: Rs ${selectedOdkSubmission.price}\nFilled by: ${selectedOdkSubmission.personFillingId}\nFilled on: ${selectedOdkSubmission.date}")!!
-                            .setCancelable(false)
-                            .setPositiveButton("Dismiss") { dialog, _ ->
-                                barChart.highlightValues(null)
-                                dialog.dismiss()
-                            }
-                        val dataDialog: AlertDialog = dataDialogBuilder.create()
-                        dataDialog.setTitle("ODK Data")
-                        dataDialog.show()
+                        if(subs[selectedXAxisCount.toInt()]?.size!! > selectedXAxisPos.toInt() / 25) {
+                            val selectedOdkSubmission =
+                                subs[selectedXAxisCount.toInt()]?.get(selectedXAxisPos.toInt() / 25)
+                            val traderName =
+                                if (selectedOdkSubmission?.localTraderId!! == -1) "Not filled" else traders[selectedOdkSubmission.localTraderId - 1]
+                            val mandalId =
+                                if (selectedOdkSubmission.mandalId == "") "Not filled" else selectedOdkSubmission.mandalId
+                            dataDialogBuilder?.setMessage("Trader Name: ${traderName}\nMandal: ${mandalId}\nPrice: Rs ${selectedOdkSubmission.price}\nFilled by: ${selectedOdkSubmission.personFillingId}\nFilled on: ${selectedOdkSubmission.date}")!!
+                                .setCancelable(false)
+                                .setPositiveButton("Dismiss") { dialog, _ ->
+                                    barChart.highlightValues(null)
+                                    dialog.dismiss()
+                                }
+                            val dataDialog: AlertDialog = dataDialogBuilder.create()
+                            dataDialog.setTitle("ODK Data")
+                            dataDialog.show()
+                        }
                     }
 
                     override fun onNothingSelected() {
