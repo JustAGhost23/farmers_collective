@@ -1,97 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
- <androidx.constraintlayout.widget.ConstraintLayout
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".prediction.CropPredictedFragment">
 
-     <Button
-         android:id="@+id/mandiZoom"
-         android:layout_width="0dp"
-         android:layout_height="wrap_content"
-         android:layout_marginStart="8dp"
-         android:layout_marginTop="16dp"
-         android:layout_marginEnd="8dp"
-         android:backgroundTint="@color/yellow"
-         android:text="zoom in"
-         android:textColor="@android:color/primary_text_light"
-         app:layout_constraintEnd_toEndOf="parent"
-         app:layout_constraintStart_toStartOf="@+id/guideline7"
-         app:layout_constraintTop_toBottomOf="@+id/yearSelector" />
+        <Button
+            android:id="@+id/mandiZoom"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="@color/yellow"
+            android:text="zoom in"
+            android:textColor="@android:color/primary_text_light"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline7"
+            app:layout_constraintTop_toBottomOf="@+id/yearSelector" />
 
-     <Button
-         android:id="@+id/mandiChartShare"
-         android:layout_width="0dp"
-         android:layout_height="wrap_content"
-         android:layout_marginStart="8dp"
-         android:layout_marginTop="16dp"
-         android:layout_marginEnd="8dp"
-         android:backgroundTint="#FFEB3B"
-         android:text="@string/share"
-         android:textColor="@android:color/primary_text_light"
-         app:layout_constraintEnd_toStartOf="@+id/guideline7"
-         app:layout_constraintStart_toStartOf="parent"
-         app:layout_constraintTop_toBottomOf="@+id/yearSelector" />
+        <Button
+            android:id="@+id/mandiChartShare"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="#FFEB3B"
+            android:text="@string/share"
+            android:textColor="@android:color/primary_text_light"
+            app:layout_constraintEnd_toStartOf="@+id/guideline7"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/yearSelector" />
 
-     <Button
-         android:id="@+id/yearChartShare"
-         android:layout_width="0dp"
-         android:layout_height="wrap_content"
-         android:layout_marginStart="8dp"
-         android:layout_marginTop="16dp"
-         android:layout_marginEnd="8dp"
-         android:backgroundTint="#FFEB3B"
-         android:text="@string/share"
-         android:textColor="@android:color/primary_text_light"
-         app:layout_constraintEnd_toStartOf="@+id/guideline7"
-         app:layout_constraintStart_toStartOf="parent"
-         app:layout_constraintTop_toBottomOf="@+id/yearChart" />
+        <Button
+            android:id="@+id/yearChartShare"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="#FFEB3B"
+            android:text="@string/share"
+            android:textColor="@android:color/primary_text_light"
+            app:layout_constraintEnd_toStartOf="@+id/guideline7"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/yearChart" />
 
-     <Button
-         android:id="@+id/yearZoom"
-         android:layout_width="0dp"
-         android:layout_height="wrap_content"
-         android:layout_marginStart="8dp"
-         android:layout_marginTop="16dp"
-         android:layout_marginEnd="8dp"
-         android:backgroundTint="#FFEB3B"
-         android:text="zoom in"
-         android:textColor="@android:color/primary_text_light"
-         app:layout_constraintEnd_toEndOf="parent"
-         app:layout_constraintStart_toStartOf="@+id/guideline7"
-         app:layout_constraintTop_toBottomOf="@+id/yearChart" />
+        <Button
+            android:id="@+id/yearZoom"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="#FFEB3B"
+            android:text="zoom in"
+            android:textColor="@android:color/primary_text_light"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline7"
+            app:layout_constraintTop_toBottomOf="@+id/yearChart" />
 
-     <View
-        android:id="@+id/divider"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:background="@android:color/darker_gray"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/yearChartShare" />
+        <View
+            android:id="@+id/divider"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:background="@android:color/darker_gray"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/yearChartShare" />
 
-     <Spinner
-        android:id="@+id/mandiSelector"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/commSelector" />
+        <Spinner
+            android:id="@+id/mandiSelector"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/commSelector" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/about_guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="219dp" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/about_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="219dp" />
 
         <View
             android:id="@+id/price_view1"
@@ -104,181 +104,181 @@
             app:layout_constraintTop_toTopOf="@+id/about_guideline" />
 
 
-    <View
-        android:id="@+id/price_view2"
-        android:layout_width="275dp"
-        android:layout_height="72dp"
-        android:background="@drawable/design_bg"
-        app:layout_constraintBottom_toTopOf="@+id/price_view1"
-        app:layout_constraintStart_toStartOf="parent" />
+        <View
+            android:id="@+id/price_view2"
+            android:layout_width="275dp"
+            android:layout_height="72dp"
+            android:background="@drawable/design_bg"
+            app:layout_constraintBottom_toTopOf="@+id/price_view1"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/price_title"
+            style="@style/title_text"
             android:text="@string/main_1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/price_view2"
-            style="@style/title_text" />
+            app:layout_constraintTop_toTopOf="@+id/price_view2" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="258dp" />
-
-
-     <com.github.mikephil.charting.charts.LineChart
-         android:id="@+id/yearChart"
-         android:layout_width="0dp"
-         android:layout_height="300dp"
-         android:layout_marginStart="8dp"
-         android:layout_marginTop="16dp"
-         android:layout_marginEnd="8dp"
-         android:minHeight="200dp"
-         app:layout_constraintEnd_toEndOf="parent"
-         app:layout_constraintHorizontal_bias="0.0"
-         app:layout_constraintStart_toStartOf="parent"
-         app:layout_constraintTop_toBottomOf="@+id/chipGroup" />
-
-     <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/mandiChart"
-        android:layout_width="0dp"
-        android:layout_height="300dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chipGroup2" />
-
-     <Spinner
-         android:id="@+id/commSelector"
-         android:layout_width="wrap_content"
-         android:layout_height="48dp"
-         android:layout_marginStart="8dp"
-         app:layout_constraintStart_toStartOf="parent"
-         app:layout_constraintTop_toBottomOf="@+id/tableTrends" />
-
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/chipGroup"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mandiSelector"
-        app:singleSelection="false"
-        app:selectionRequired="true" />
-
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/chipGroup2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider"
-        app:singleSelection="false"
-        app:selectionRequired="true" />
-
-     <Spinner
-         android:id="@+id/yearSelector"
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:layout_marginStart="8dp"
-         android:layout_marginTop="16dp"
-         android:layout_marginEnd="8dp"
-         android:paddingBottom="8dp"
-         app:layout_constraintEnd_toEndOf="parent"
-         app:layout_constraintStart_toStartOf="parent"
-         app:layout_constraintTop_toBottomOf="@id/mandiChart" />
-
-     <TableLayout
-         android:id="@+id/tableTrends"
-         android:visibility="gone"
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:layout_marginStart="16dp"
-         android:layout_marginTop="16dp"
-         android:layout_marginEnd="16dp"
-         app:layout_constraintEnd_toEndOf="parent"
-         app:layout_constraintStart_toStartOf="parent"
-         app:layout_constraintTop_toBottomOf="@+id/price_view1"
-         android:stretchColumns="*">
-
-         <TableRow
-             android:id="@+id/tbrow1"
-             android:background="@drawable/table_row_bg"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
-
-             <TextView
-                 android:id="@+id/t1"
-                 android:background="@drawable/table_cell_bg"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:textSize="16sp"
-                 android:text="" />
-
-             <TextView
-                 android:id="@+id/t2"
-                 android:background="@drawable/table_cell_bg"
-                 android:gravity="center_horizontal"
-                 android:textStyle="bold"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:textSize="16sp"
-                 android:text="Year" />
-
-             <TextView
-                 android:id="@+id/t3"
-                 android:background="@drawable/table_cell_bg"
-                 android:gravity="center_horizontal"
-                 android:textStyle="bold"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:textSize="16sp"
-                 android:text="Date" />
-
-             <TextView
-                 android:id="@+id/t4"
-                 android:background="@drawable/table_cell_bg"
-                 android:gravity="center_horizontal"
-                 android:textStyle="bold"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:textSize="16sp"
-                 android:text="Price" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="258dp" />
 
 
-         </TableRow>
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/yearChart"
+            android:layout_width="0dp"
+            android:layout_height="300dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:minHeight="200dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/chipGroup" />
 
-     </TableLayout>
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/mandiChart"
+            android:layout_width="0dp"
+            android:layout_height="300dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/chipGroup2" />
 
-<!--     <TextView-->
-<!--         android:id="@+id/trends"-->
-<!--         android:layout_width="0dp"-->
-<!--         android:layout_height="wrap_content"-->
-<!--         android:layout_marginStart="16dp"-->
-<!--         android:layout_marginTop="16dp"-->
-<!--         android:layout_marginEnd="16dp"-->
-<!--         android:textSize="16sp"-->
-<!--         app:layout_constraintEnd_toEndOf="parent"-->
-<!--         app:layout_constraintStart_toStartOf="parent"-->
-<!--         app:layout_constraintTop_toBottomOf="@+id/tableTrends" />-->
+        <Spinner
+            android:id="@+id/commSelector"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tableTrends" />
 
-     <androidx.constraintlayout.widget.Guideline
-         android:id="@+id/guideline7"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:orientation="vertical"
-         app:layout_constraintGuide_percent="0.5" />
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroup"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mandiSelector"
+            app:selectionRequired="true"
+            app:singleSelection="false" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroup2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/divider"
+            app:selectionRequired="true"
+            app:singleSelection="false" />
+
+        <Spinner
+            android:id="@+id/yearSelector"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:paddingBottom="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/mandiChart" />
+
+        <TableLayout
+            android:id="@+id/tableTrends"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:stretchColumns="*"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/price_view1">
+
+            <TableRow
+                android:id="@+id/tbrow1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/table_row_bg">
+
+                <TextView
+                    android:id="@+id/t1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/table_cell_bg"
+                    android:text=""
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/t2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/table_cell_bg"
+                    android:gravity="center_horizontal"
+                    android:text="Year"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/t3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/table_cell_bg"
+                    android:gravity="center_horizontal"
+                    android:text="Date"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/t4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/table_cell_bg"
+                    android:gravity="center_horizontal"
+                    android:text="Price"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
 
- </androidx.constraintlayout.widget.ConstraintLayout>
+            </TableRow>
+
+        </TableLayout>
+
+        <!--     <TextView-->
+        <!--         android:id="@+id/trends"-->
+        <!--         android:layout_width="0dp"-->
+        <!--         android:layout_height="wrap_content"-->
+        <!--         android:layout_marginStart="16dp"-->
+        <!--         android:layout_marginTop="16dp"-->
+        <!--         android:layout_marginEnd="16dp"-->
+        <!--         android:textSize="16sp"-->
+        <!--         app:layout_constraintEnd_toEndOf="parent"-->
+        <!--         app:layout_constraintStart_toStartOf="parent"-->
+        <!--         app:layout_constraintTop_toBottomOf="@+id/tableTrends" />-->
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

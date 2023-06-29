@@ -27,8 +27,10 @@ class ChartRangeDialog : DialogFragment() {
             listener = context as DialogListener
         } catch (e: ClassCastException) {
             // The activity doesn't implement the interface, throw exception
-            throw ClassCastException((context.toString() +
-                    " must implement NoticeDialogListener"))
+            throw ClassCastException(
+                (context.toString() +
+                        " must implement NoticeDialogListener")
+            )
         }
     }
 
@@ -46,11 +48,13 @@ class ChartRangeDialog : DialogFragment() {
 
             builder
                 .setTitle("Select X-axis range")
-                .setSingleChoiceItems(R.array.ranges, if(sharedPref.getBoolean("compress", false)) 1 else 0
+                .setSingleChoiceItems(
+                    R.array.ranges, if (sharedPref.getBoolean("compress", false)) 1 else 0
                 ) { _, i ->
                     selected = i
                 }
-                .setPositiveButton("set"
+                .setPositiveButton(
+                    "set"
                 ) { dialog, id ->
                     // Send the positive button event back to the host activity
                     listener.onDialogPositiveClick(this, selected)

@@ -61,16 +61,18 @@ class CropPredictedFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        FirstDrawListener.registerFirstDrawListener(view, object : FirstDrawListener.OnFirstDrawCallback {
-            override fun onDrawingStart() {
-                // In practice you can also record this event separately
-            }
+        FirstDrawListener.registerFirstDrawListener(
+            view,
+            object : FirstDrawListener.OnFirstDrawCallback {
+                override fun onDrawingStart() {
+                    // In practice you can also record this event separately
+                }
 
-            override fun onDrawingFinish() {
-                // This is when the Fragment UI is completely drawn on the screen
-                loadTrace.stop()
-            }
-        })
+                override fun onDrawingFinish() {
+                    // This is when the Fragment UI is completely drawn on the screen
+                    loadTrace.stop()
+                }
+            })
     }
 
     override fun onCreateView(
@@ -95,29 +97,36 @@ class CropPredictedFragment : Fragment() {
                     putBoolean("isWeekly", viewModel.dailyOrWeekly.value == "Weekly")
                     apply()
                 }
-                val action = CropPredictedFragmentDirections.actionCropPredictedFragmentToZoomedInFragment(5)
+                val action =
+                    CropPredictedFragmentDirections.actionCropPredictedFragmentToZoomedInFragment(5)
                 findNavController().navigate(action)
             }
 
-            val adap1 = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, resources.getStringArray(
-                R.array.dailyOrWeekly
-            ))
+            val adap1 = ArrayAdapter(
+                requireContext(), android.R.layout.simple_spinner_item, resources.getStringArray(
+                    R.array.dailyOrWeekly
+                )
+            )
             adap1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
             dailyOrWeeklySelector.adapter = adap1
 
             dailyOrWeeklySelector.setSelection(adap1.getPosition("Daily"))
 
-            dailyOrWeeklySelector.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                    Log.d("TAG", "onItemSelected: ${resources.getStringArray(R.array.dailyOrWeekly)[p2]}" )
-                    viewModel.changeSelection(resources.getStringArray(R.array.dailyOrWeekly)[p2])
-                }
+            dailyOrWeeklySelector.onItemSelectedListener =
+                object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                        Log.d(
+                            "TAG",
+                            "onItemSelected: ${resources.getStringArray(R.array.dailyOrWeekly)[p2]}"
+                        )
+                        viewModel.changeSelection(resources.getStringArray(R.array.dailyOrWeekly)[p2])
+                    }
 
-                override fun onNothingSelected(p0: AdapterView<*>?) {
-                    //do nothing
+                    override fun onNothingSelected(p0: AdapterView<*>?) {
+                        //do nothing
+                    }
                 }
-            }
 
             predictChart.tag = "2"
             predictView2.setOnClickListener {
@@ -131,15 +140,14 @@ class CropPredictedFragment : Fragment() {
 
             viewModel.today.observe(viewLifecycleOwner) {
                 var todayPrice: SpannableStringBuilder = SpannableStringBuilder()
-                if(viewModel.dailyOrWeekly.value == "Daily") {
+                if (viewModel.dailyOrWeekly.value == "Daily") {
                     todayPrice = SpannableStringBuilder().append(
                         String.format(
                             "Price for today is Rs %.1f\n",
                             it
                         )
                     ).bold { append("Top 3 days to sell:") }
-                }
-                else if(viewModel.dailyOrWeekly.value == "Weekly") {
+                } else if (viewModel.dailyOrWeekly.value == "Weekly") {
                     todayPrice = SpannableStringBuilder().append(
                         String.format(
                             "Price for this week is Rs %.1f\n",
@@ -222,18 +230,15 @@ class CropPredictedFragment : Fragment() {
                 }
 
 
-
-                val pred_dates = if(viewModel.dailyOrWeekly.value == "Weekly") {
+                val pred_dates = if (viewModel.dailyOrWeekly.value == "Weekly") {
                     dates.subList(dates.size - 12, dates.size)
-                }
-                else {
+                } else {
                     dates.subList(dates.size - 30, dates.size)
                 }
 
-                val real_dates = if(viewModel.dailyOrWeekly.value == "Weekly") {
+                val real_dates = if (viewModel.dailyOrWeekly.value == "Weekly") {
                     dates.subList(0, dates.size - 12)
-                }
-                else {
+                } else {
                     dates.subList(0, dates.size - 30)
                 }
 
@@ -256,14 +261,14 @@ class CropPredictedFragment : Fragment() {
 
                 val hls = viewModel.data.value!!
 
-                for(pred in hls) {
+                for (pred in hls) {
                     val date = pred.date
 
                     Log.e("date", date)
                     Log.e("dates", dates.toString())
 
                     val i = dates.indexOf(date)
-                    if(it[date] != null) {
+                    if (it[date] != null) {
                         values3.add(Entry(i.toFloat(), it[date]!!))
                     }
                 }
@@ -290,16 +295,18 @@ class CropPredictedFragment : Fragment() {
                 dataset3.setCircleColor(Color.parseColor("#0000FF"))
                 data.add(dataset3)
 
-                predictChart.xAxis.valueFormatter = IndexAxisValueFormatter(ArrayList(dates.map { date ->
-                    //2022-07-25
-                    date.substring(8) + date.substring(4, 8) + date.substring(2, 4)
-                }))
+                predictChart.xAxis.valueFormatter =
+                    IndexAxisValueFormatter(ArrayList(dates.map { date ->
+                        //2022-07-25
+                        date.substring(8) + date.substring(4, 8) + date.substring(2, 4)
+                    }))
 
                 predictChart.data = LineData(data)
-                predictChart.onChartGestureListener = Utils.Companion.CustomChartListener(requireContext(), predictChart, dates)
+                predictChart.onChartGestureListener =
+                    Utils.Companion.CustomChartListener(requireContext(), predictChart, dates)
                 predictChart.setVisibleXRangeMaximum(30.0f)
                 predictChart.moveViewToX((dates.size - 45).toFloat())
-                if(viewModel.dailyOrWeekly.value == "Weekly") {
+                if (viewModel.dailyOrWeekly.value == "Weekly") {
                     predictChart.moveViewToX((dates.size - 15).toFloat())
                     predictChart.setVisibleXRangeMaximum(365.0f)
                 }
@@ -343,8 +350,9 @@ class CropPredictedFragment : Fragment() {
                             file
                         )
                     )
-                    var str = "Predictions for next 30 days shown.\nTop 3 recommended days are: \n\n"
-                    for(pred in list) {
+                    var str =
+                        "Predictions for next 30 days shown.\nTop 3 recommended days are: \n\n"
+                    for (pred in list) {
                         str += "${pred.date}: ${pred.confidence * 100}% chance, expected gain Rs. ${pred.gain}\n"
                     }
 

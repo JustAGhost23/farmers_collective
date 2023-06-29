@@ -64,16 +64,18 @@ class CropPastPredictedFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        FirstDrawListener.registerFirstDrawListener(view, object : FirstDrawListener.OnFirstDrawCallback {
-            override fun onDrawingStart() {
-                // In practice you can also record this event separately
-            }
+        FirstDrawListener.registerFirstDrawListener(
+            view,
+            object : FirstDrawListener.OnFirstDrawCallback {
+                override fun onDrawingStart() {
+                    // In practice you can also record this event separately
+                }
 
-            override fun onDrawingFinish() {
-                // This is when the Fragment UI is completely drawn on the screen
-                loadTrace.stop()
-            }
-        })
+                override fun onDrawingFinish() {
+                    // This is when the Fragment UI is completely drawn on the screen
+                    loadTrace.stop()
+                }
+            })
     }
 
 
@@ -83,7 +85,12 @@ class CropPastPredictedFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
 
-        val binding = DataBindingUtil.inflate<CropPastPredictedFragmentBinding>(inflater, R.layout.crop_past_predicted_fragment, container, false)
+        val binding = DataBindingUtil.inflate<CropPastPredictedFragmentBinding>(
+            inflater,
+            R.layout.crop_past_predicted_fragment,
+            container,
+            false
+        )
         viewModel = ViewModelProvider(this)[CropPastPredictedViewModel::class.java]
 
         binding.viewmodel = viewModel
@@ -92,7 +99,7 @@ class CropPastPredictedFragment : Fragment() {
 
         val scale = resources.displayMetrics.density
 
-        with (binding) {
+        with(binding) {
             pastPredictChart.tag = "3"
 
             pastPredictView2.setOnClickListener {
@@ -100,7 +107,10 @@ class CropPastPredictedFragment : Fragment() {
             }
 
             pastRecommZoom.setOnClickListener {
-                val action = CropPastPredictedFragmentDirections.actionCropPastPredictedFragmentToZoomedInFragment(4)
+                val action =
+                    CropPastPredictedFragmentDirections.actionCropPastPredictedFragmentToZoomedInFragment(
+                        4
+                    )
                 findNavController().navigate(action)
             }
 
@@ -217,7 +227,7 @@ class CropPastPredictedFragment : Fragment() {
 
                 val hls = viewModel.recomm.value!!
 
-                for(pred in hls) {
+                for (pred in hls) {
                     val date = pred[0]
 
                     val i = dates.indexOf(date)
@@ -255,7 +265,8 @@ class CropPastPredictedFragment : Fragment() {
                 // enable scaling and dragging
 
                 pastPredictChart.data = LineData(data)
-                pastPredictChart.onChartGestureListener = Utils.Companion.CustomChartListener(requireContext(), pastPredictChart, dates)
+                pastPredictChart.onChartGestureListener =
+                    Utils.Companion.CustomChartListener(requireContext(), pastPredictChart, dates)
 
                 when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
                     Configuration.UI_MODE_NIGHT_NO -> {
@@ -299,7 +310,7 @@ class CropPastPredictedFragment : Fragment() {
                         )
                     )
                     var str = "Predicted dates for ${viewModel.date.value!!} were: \n\n"
-                    for(pred in list) {
+                    for (pred in list) {
                         str += "${pred[0]}: Actual profit if sold Rs. ${pred[5]}\n"
                     }
 
@@ -332,7 +343,7 @@ class CropPastPredictedFragment : Fragment() {
     }
 
     fun showDatePickerDialog() {
-        if(dialog == null) dialog = DatePickerFragment(viewModel)
+        if (dialog == null) dialog = DatePickerFragment(viewModel)
 
         dialog!!.show(parentFragmentManager, "datePicker")
     }

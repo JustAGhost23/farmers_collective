@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity(), ChartRangeDialog.DialogListener {
         settings = findViewById(R.id.settings)
         textView = findViewById(R.id.textView)
 
-        if(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             textView.setSingleLine()
             settings.updateLayoutParams<ConstraintLayout.LayoutParams> {
                 endToStart = refresh.id
@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity(), ChartRangeDialog.DialogListener {
                 setMargins(0, (16 * scale + 0.5f).toInt(), (16 * scale + 0.5f).toInt(), 0)
             }
         }
-        if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+        if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             textView.setLines(2)
             settings.updateLayoutParams<ConstraintLayout.LayoutParams> {
                 topToBottom = refresh.id
@@ -110,7 +110,11 @@ class MainActivity : AppCompatActivity(), ChartRangeDialog.DialogListener {
                 Context.MODE_PRIVATE
             )
 
-        if(!sharedPref.getBoolean("isDailyDataAvailable", false) || !sharedPref.getBoolean("isWeeklyDataAvailable", false))
+        if (!sharedPref.getBoolean(
+                "isDailyDataAvailable",
+                false
+            ) || !sharedPref.getBoolean("isWeeklyDataAvailable", false)
+        )
             WorkManager
                 .getInstance(applicationContext)
                 .enqueueUniqueWork("one-time", ExistingWorkPolicy.KEEP, worker1)
@@ -121,11 +125,13 @@ class MainActivity : AppCompatActivity(), ChartRangeDialog.DialogListener {
 
         refresh.setOnClickListener {
 
-            if(!sharedPref.getBoolean("isDailyDataAvailable", false) || !sharedPref.getBoolean("isWeeklyDataAvailable", false)) {
+            if (!sharedPref.getBoolean(
+                    "isDailyDataAvailable",
+                    false
+                ) || !sharedPref.getBoolean("isWeeklyDataAvailable", false)
+            ) {
                 Toast.makeText(this, "Please wait! Still loading data", Toast.LENGTH_SHORT).show()
-            }
-
-            else {
+            } else {
                 WorkManager
                     .getInstance(applicationContext)
                     .enqueueUniqueWork("one-time", ExistingWorkPolicy.KEEP, worker1)
@@ -172,38 +178,37 @@ class MainActivity : AppCompatActivity(), ChartRangeDialog.DialogListener {
         }
 
         val id = controller.currentDestination?.id
-        if(id == R.id.zoomedInFragment) {
+        if (id == R.id.zoomedInFragment) {
             controller.popBackStack(id, true)
             val backId = controller.currentDestination?.id
-            if(backId == R.id.cropPredictedFragment) {
-                val action = CropPredictedFragmentDirections.actionCropPredictedFragmentToZoomedInFragment(5)
+            if (backId == R.id.cropPredictedFragment) {
+                val action =
+                    CropPredictedFragmentDirections.actionCropPredictedFragmentToZoomedInFragment(5)
                 controller.navigate(action)
-            }
-            else if(backId == R.id.cropPastPredictedFragment) {
-                val action = CropPastPredictedFragmentDirections.actionCropPastPredictedFragmentToZoomedInFragment(4)
+            } else if (backId == R.id.cropPastPredictedFragment) {
+                val action =
+                    CropPastPredictedFragmentDirections.actionCropPastPredictedFragmentToZoomedInFragment(
+                        4
+                    )
                 controller.navigate(action)
-            }
-            else if(backId == R.id.odkFragment) {
+            } else if (backId == R.id.odkFragment) {
                 val action = OdkFragmentDirections.actionOdkFragmentToZoomedInFragment(3)
                 controller.navigate(action)
-            }
-            else if(backId == R.id.internationalPricesFragment) {
-                val action = IntPriceFragmentDirections.actionInternationalPricesFragmentToZoomedInFragment(2)
+            } else if (backId == R.id.internationalPricesFragment) {
+                val action =
+                    IntPriceFragmentDirections.actionInternationalPricesFragmentToZoomedInFragment(2)
                 controller.navigate(action)
-            }
-            else {
+            } else {
                 val cropGraph = sharedPref.getBoolean("cropGraph", true)
-                val action = if(cropGraph) {
+                val action = if (cropGraph) {
                     CropPricesFragmentDirections.actionCropPricesFragmentToZoomedInFragment(0)
-                }
-                else {
+                } else {
                     CropPricesFragmentDirections.actionCropPricesFragmentToZoomedInFragment(1)
                 }
                 controller.navigate(action)
             }
-        }
-        else {
-            controller.popBackStack(id!!,true)
+        } else {
+            controller.popBackStack(id!!, true)
             controller.navigate(id)
         }
 

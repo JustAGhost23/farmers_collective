@@ -8,7 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.farmerscollective.R
 import java.time.LocalDate
 
-class OdkAdapter(private val dataset: Array<LocalDate>, val listener: Listener): RecyclerView.Adapter<OdkAdapter.ViewHolder>() {
+class OdkAdapter(private val dataset: Array<LocalDate>, val listener: Listener) :
+    RecyclerView.Adapter<OdkAdapter.ViewHolder>() {
 
     /**
      * Provide a reference to the type of views that you are using

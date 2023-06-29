@@ -28,38 +28,52 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val binding = DataBindingUtil.inflate<MainFragmentBinding>(
-            inflater, R.layout.main_fragment, container, false)
+            inflater, R.layout.main_fragment, container, false
+        )
 
-        val test = activity?.getSharedPreferences("prefs", Context.MODE_PRIVATE)?.getBoolean("isDailyDataAvailable", false)
+        val test = activity?.getSharedPreferences("prefs", Context.MODE_PRIVATE)
+            ?.getBoolean("isDailyDataAvailable", false)
         Log.d("TESTING", test.toString())
 
         with(binding) {
 
             btn1.setOnClickListener {
-                val clickDaily = activity?.getSharedPreferences("prefs", Context.MODE_PRIVATE)?.getBoolean("isDailyDataAvailable", false)
-                val clickWeekly = activity?.getSharedPreferences("prefs", Context.MODE_PRIVATE)?.getBoolean("isWeeklyDataAvailable", false)
+                val clickDaily = activity?.getSharedPreferences("prefs", Context.MODE_PRIVATE)
+                    ?.getBoolean("isDailyDataAvailable", false)
+                val clickWeekly = activity?.getSharedPreferences("prefs", Context.MODE_PRIVATE)
+                    ?.getBoolean("isWeeklyDataAvailable", false)
                 Log.d("testingDaily", clickDaily.toString())
                 Log.d("testingWeekly", clickWeekly.toString())
-                if(clickDaily == true && clickWeekly == true) it.findNavController().navigate(R.id.action_mainFragment_to_cropPricesFragment)
-                else Toast.makeText(activity, "Please wait! Still loading data", Toast.LENGTH_SHORT).show()
+                if (clickDaily == true && clickWeekly == true) it.findNavController()
+                    .navigate(R.id.action_mainFragment_to_cropPricesFragment)
+                else Toast.makeText(activity, "Please wait! Still loading data", Toast.LENGTH_SHORT)
+                    .show()
             }
 
             btn2.setOnClickListener {
-                val clickDaily = activity?.getSharedPreferences("prefs", Context.MODE_PRIVATE)?.getBoolean("isDailyDataAvailable", false)
-                val clickWeekly = activity?.getSharedPreferences("prefs", Context.MODE_PRIVATE)?.getBoolean("isWeeklyDataAvailable", false)
+                val clickDaily = activity?.getSharedPreferences("prefs", Context.MODE_PRIVATE)
+                    ?.getBoolean("isDailyDataAvailable", false)
+                val clickWeekly = activity?.getSharedPreferences("prefs", Context.MODE_PRIVATE)
+                    ?.getBoolean("isWeeklyDataAvailable", false)
                 Log.d("testingDaily", clickDaily.toString())
                 Log.d("testingWeekly", clickWeekly.toString())
-                if(clickDaily == true && clickWeekly == true) it.findNavController().navigate(R.id.action_mainFragment_to_cropPredictedFragment2)
-                else Toast.makeText(activity, "Please wait! Still loading data", Toast.LENGTH_SHORT).show()
+                if (clickDaily == true && clickWeekly == true) it.findNavController()
+                    .navigate(R.id.action_mainFragment_to_cropPredictedFragment2)
+                else Toast.makeText(activity, "Please wait! Still loading data", Toast.LENGTH_SHORT)
+                    .show()
             }
 
             btn3.setOnClickListener {
-                val clickDaily = activity?.getSharedPreferences("prefs", Context.MODE_PRIVATE)?.getBoolean("isDailyDataAvailable", false)
-                val clickWeekly = activity?.getSharedPreferences("prefs", Context.MODE_PRIVATE)?.getBoolean("isWeeklyDataAvailable", false)
+                val clickDaily = activity?.getSharedPreferences("prefs", Context.MODE_PRIVATE)
+                    ?.getBoolean("isDailyDataAvailable", false)
+                val clickWeekly = activity?.getSharedPreferences("prefs", Context.MODE_PRIVATE)
+                    ?.getBoolean("isWeeklyDataAvailable", false)
                 Log.d("testingDaily", clickDaily.toString())
                 Log.d("testingWeekly", clickWeekly.toString())
-                if(clickDaily == true && clickWeekly == true) it.findNavController().navigate(R.id.action_mainFragment_to_cropPastPredictedFragment)
-                else Toast.makeText(activity, "Please wait! Still loading data", Toast.LENGTH_SHORT).show()
+                if (clickDaily == true && clickWeekly == true) it.findNavController()
+                    .navigate(R.id.action_mainFragment_to_cropPastPredictedFragment)
+                else Toast.makeText(activity, "Please wait! Still loading data", Toast.LENGTH_SHORT)
+                    .show()
             }
 
             btn4.setOnClickListener {
@@ -67,21 +81,29 @@ class MainFragment : Fragment() {
             }
 
             btn5.setOnClickListener {
-                val clickDaily = activity?.getSharedPreferences("prefs", Context.MODE_PRIVATE)?.getBoolean("isDailyDataAvailable", false)
-                val clickWeekly = activity?.getSharedPreferences("prefs", Context.MODE_PRIVATE)?.getBoolean("isWeeklyDataAvailable", false)
+                val clickDaily = activity?.getSharedPreferences("prefs", Context.MODE_PRIVATE)
+                    ?.getBoolean("isDailyDataAvailable", false)
+                val clickWeekly = activity?.getSharedPreferences("prefs", Context.MODE_PRIVATE)
+                    ?.getBoolean("isWeeklyDataAvailable", false)
                 Log.d("testingDaily", clickDaily.toString())
                 Log.d("testingWeekly", clickWeekly.toString())
-                if(clickDaily == true && clickWeekly == true) it.findNavController().navigate(R.id.action_mainFragment_to_odkFragment)
-                else Toast.makeText(activity, "Please wait! Still loading data", Toast.LENGTH_SHORT).show()
+                if (clickDaily == true && clickWeekly == true) it.findNavController()
+                    .navigate(R.id.action_mainFragment_to_odkFragment)
+                else Toast.makeText(activity, "Please wait! Still loading data", Toast.LENGTH_SHORT)
+                    .show()
             }
 
             btn6.setOnClickListener {
-                val clickDaily = activity?.getSharedPreferences("prefs", Context.MODE_PRIVATE)?.getBoolean("isDailyDataAvailable", false)
-                val clickWeekly = activity?.getSharedPreferences("prefs", Context.MODE_PRIVATE)?.getBoolean("isWeeklyDataAvailable", false)
+                val clickDaily = activity?.getSharedPreferences("prefs", Context.MODE_PRIVATE)
+                    ?.getBoolean("isDailyDataAvailable", false)
+                val clickWeekly = activity?.getSharedPreferences("prefs", Context.MODE_PRIVATE)
+                    ?.getBoolean("isWeeklyDataAvailable", false)
                 Log.d("testingDaily", clickDaily.toString())
                 Log.d("testingWeekly", clickWeekly.toString())
-                if(clickDaily == true && clickWeekly == true) it.findNavController().navigate(R.id.action_mainFragment_to_internationalPricesFragment)
-                else Toast.makeText(activity, "Please wait! Still loading data", Toast.LENGTH_SHORT).show()
+                if (clickDaily == true && clickWeekly == true) it.findNavController()
+                    .navigate(R.id.action_mainFragment_to_internationalPricesFragment)
+                else Toast.makeText(activity, "Please wait! Still loading data", Toast.LENGTH_SHORT)
+                    .show()
             }
 
         }

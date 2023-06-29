@@ -85,7 +85,11 @@ class OdkFragment : Fragment() {
 //                }
 //            }
 
-            val cropNameAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, resources.getStringArray(R.array.cropName))
+            val cropNameAdapter = ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                resources.getStringArray(R.array.cropName)
+            )
             cropNameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             cropSpinner.adapter = cropNameAdapter
             cropSpinner.setSelection(viewModel.crop.value!!)
@@ -110,7 +114,8 @@ class OdkFragment : Fragment() {
                 "${it}-${(it + 1) % 100}"
             }
 
-            val yearAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, arr)
+            val yearAdapter =
+                ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, arr)
             yearAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             yearSpinner.adapter = yearAdapter
             yearSpinner.setSelection(yearAdapter.getPosition("${current}-${(current + 1) % 100}"))
@@ -184,7 +189,7 @@ class OdkFragment : Fragment() {
 //                }
 
                 if (list != null) {
-                    for(i in list) {
+                    for (i in list) {
 //                        axis.add("")
                         axis.add(i.key.format(formatter))
 //                        for(j in 0 until 3) axis.add("")
@@ -217,7 +222,8 @@ class OdkFragment : Fragment() {
                     for (i in list) {
                         xMax += 1f
                         var pos = count
-                        val v = i.value.reversed().sortedBy { it!!.price }.subList(0, min(4, i.value.size))
+                        val v = i.value.reversed().sortedBy { it!!.price }
+                            .subList(0, min(4, i.value.size))
                         entries1.add(BarEntry(pos, -100f))
                         entries2.add(BarEntry(pos + 0.20f, -100f))
                         entries3.add(BarEntry(pos + 0.40f, -100f))
@@ -226,45 +232,42 @@ class OdkFragment : Fragment() {
                         barColors2.add(0)
                         barColors3.add(0)
                         barColors4.add(0)
-                        for(j in v) {
+                        for (j in v) {
                             if (j != null) {
                                 val legendEntry: LegendEntry
-                                if(j.localTraderId == -1) {
+                                if (j.localTraderId == -1) {
                                     legendEntry = LegendEntry(
-                                    "Not filled",
-                                    Legend.LegendForm.SQUARE,
-                                    10.0f,
-                                    10.0f,
-                                    null,
-                                    Color.parseColor(
-                                        traderColors[j.localTraderId.plus(1)]
+                                        "Not filled",
+                                        Legend.LegendForm.SQUARE,
+                                        10.0f,
+                                        10.0f,
+                                        null,
+                                        Color.parseColor(
+                                            traderColors[j.localTraderId.plus(1)]
+                                        )
                                     )
-                                )
-                                    if(v.indexOf(j) == 0) {
+                                    if (v.indexOf(j) == 0) {
                                         barColors1.removeAt(barColors1.size - 1)
                                         barColors1.add(
                                             Color.parseColor(
                                                 traderColors[j.localTraderId.plus(1)]
                                             )
                                         )
-                                    }
-                                    else if(v.indexOf(j) == 1) {
+                                    } else if (v.indexOf(j) == 1) {
                                         barColors2.removeAt(barColors2.size - 1)
                                         barColors2.add(
                                             Color.parseColor(
                                                 traderColors[j.localTraderId.plus(1)]
                                             )
                                         )
-                                    }
-                                    else if(v.indexOf(j) == 2) {
+                                    } else if (v.indexOf(j) == 2) {
                                         barColors3.removeAt(barColors3.size - 1)
                                         barColors3.add(
                                             Color.parseColor(
                                                 traderColors[j.localTraderId.plus(1)]
                                             )
                                         )
-                                    }
-                                    else if(v.indexOf(j) == 3) {
+                                    } else if (v.indexOf(j) == 3) {
                                         barColors4.removeAt(barColors4.size - 1)
                                         barColors4.add(
                                             Color.parseColor(
@@ -272,12 +275,11 @@ class OdkFragment : Fragment() {
                                             )
                                         )
                                     }
-                                    if(!traderList.contains("Not filled")) {
+                                    if (!traderList.contains("Not filled")) {
                                         colorList.add(legendEntry)
                                         traderList.add("Not filled")
                                     }
-                                }
-                                else {
+                                } else {
                                     legendEntry = LegendEntry(
                                         traders[j.localTraderId?.minus(1)!!],
                                         Legend.LegendForm.SQUARE,
@@ -288,31 +290,28 @@ class OdkFragment : Fragment() {
                                             traderColors[j.localTraderId]
                                         )
                                     )
-                                    if(v.indexOf(j) == 0) {
+                                    if (v.indexOf(j) == 0) {
                                         barColors1.removeAt(barColors1.size - 1)
                                         barColors1.add(
                                             Color.parseColor(
                                                 traderColors[j.localTraderId]
                                             )
                                         )
-                                    }
-                                    else if(v.indexOf(j) == 1) {
+                                    } else if (v.indexOf(j) == 1) {
                                         barColors2.removeAt(barColors2.size - 1)
                                         barColors2.add(
                                             Color.parseColor(
                                                 traderColors[j.localTraderId]
                                             )
                                         )
-                                    }
-                                    else if(v.indexOf(j) == 2) {
+                                    } else if (v.indexOf(j) == 2) {
                                         barColors3.removeAt(barColors3.size - 1)
                                         barColors3.add(
                                             Color.parseColor(
                                                 traderColors[j.localTraderId]
                                             )
                                         )
-                                    }
-                                    else if(v.indexOf(j) == 3) {
+                                    } else if (v.indexOf(j) == 3) {
                                         barColors4.removeAt(barColors4.size - 1)
                                         barColors4.add(
                                             Color.parseColor(
@@ -320,29 +319,26 @@ class OdkFragment : Fragment() {
                                             )
                                         )
                                     }
-                                    if(!traderList.contains(traders[j.localTraderId.minus(1)])) {
+                                    if (!traderList.contains(traders[j.localTraderId.minus(1)])) {
                                         colorList.add(legendEntry)
                                         traderList.add(traders[j.localTraderId.minus(1)])
                                     }
                                 }
                             }
                             val barEntry = BarEntry(pos, j!!.price.toFloat())
-                            if(j.price.toFloat() < minPrice) {
+                            if (j.price.toFloat() < minPrice) {
                                 minPrice = j.price.toFloat() - 200f
                             }
-                            if(v.indexOf(j) == 0) {
+                            if (v.indexOf(j) == 0) {
                                 entries1.removeAt(entries1.size - 1)
                                 entries1.add(barEntry)
-                            }
-                            else if(v.indexOf(j) == 1) {
+                            } else if (v.indexOf(j) == 1) {
                                 entries2.removeAt(entries2.size - 1)
                                 entries2.add(barEntry)
-                            }
-                            else if(v.indexOf(j) == 2) {
+                            } else if (v.indexOf(j) == 2) {
                                 entries3.removeAt(entries3.size - 1)
                                 entries3.add(barEntry)
-                            }
-                            else if(v.indexOf(j) == 3) {
+                            } else if (v.indexOf(j) == 3) {
                                 entries4.removeAt(entries4.size - 1)
                                 entries4.add(barEntry)
                             }
@@ -387,23 +383,22 @@ class OdkFragment : Fragment() {
                 barChart.xAxis.setCenterAxisLabels(true)
                 barChart.moveViewToX(xMax)
                 barChart.setFitBars(false)
-                if(!sharedPref.getBoolean("compress", false)) {
+                if (!sharedPref.getBoolean("compress", false)) {
                     barChart.setVisibleXRangeMaximum(8.0f)
-                }
-                else {
+                } else {
                     barChart.setVisibleXRangeMaximum(365.0f)
                 }
-                barChart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener
-                {
+                barChart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
                     override fun onValueSelected(e: Entry, h: Highlight?) {
                         val x = e.x.toString()
 //                        val y = e.y.toString()
                         val selectedXAxisCount = x.substringBefore(".")
                         val selectedXAxisPos = x.substringAfter(".").substring(0, 2)
-                        val dataDialogBuilder: AlertDialog.Builder? = activity?.let { fragmentActivity ->
-                            AlertDialog.Builder(fragmentActivity)
-                        }
-                        if(subs[selectedXAxisCount.toInt()]?.size!! > selectedXAxisPos.toInt() / 25) {
+                        val dataDialogBuilder: AlertDialog.Builder? =
+                            activity?.let { fragmentActivity ->
+                                AlertDialog.Builder(fragmentActivity)
+                            }
+                        if (subs[selectedXAxisCount.toInt()]?.size!! > selectedXAxisPos.toInt() / 25) {
                             val selectedOdkSubmission =
                                 subs[selectedXAxisCount.toInt()]?.get(selectedXAxisPos.toInt() / 25)
                             val traderName =
@@ -441,18 +436,35 @@ class OdkFragment : Fragment() {
                     fOut.flush()
                     fOut.close()
                     file.setReadable(true, false)
-                    share.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(requireContext(), requireContext().packageName + ".provider", file))
-                    share.putExtra(Intent.EXTRA_TEXT, cropSpinner.selectedItem.toString() + " ODK prices in " + yearSpinner.selectedItem.toString())
+                    share.putExtra(
+                        Intent.EXTRA_STREAM,
+                        FileProvider.getUriForFile(
+                            requireContext(),
+                            requireContext().packageName + ".provider",
+                            file
+                        )
+                    )
+                    share.putExtra(
+                        Intent.EXTRA_TEXT,
+                        cropSpinner.selectedItem.toString() + " ODK prices in " + yearSpinner.selectedItem.toString()
+                    )
 
                     val bundle = Bundle()
-                    bundle.putString(FirebaseAnalytics.Param.ITEM_ID, cropSpinner.selectedItem.toString() + " ODK prices in " + yearSpinner.selectedItem.toString())
+                    bundle.putString(
+                        FirebaseAnalytics.Param.ITEM_ID,
+                        cropSpinner.selectedItem.toString() + " ODK prices in " + yearSpinner.selectedItem.toString()
+                    )
                     bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "image")
                     analytics.logEvent(FirebaseAnalytics.Event.SHARE, bundle)
 
                     startActivity(share)
                 } catch (e: IOException) {
                     e.printStackTrace()
-                    Toast.makeText(requireContext(), "Error occurred, please try later", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Error occurred, please try later",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
 
             }

@@ -39,16 +39,16 @@ class CropPricesViewModel(application: Application) : AndroidViewModel(applicati
     private val _trends = MutableLiveData<Map<Int, List<Pair<String, Float>>>>(mutableMapOf())
 
     val dataByYear: LiveData<ArrayList<ILineDataSet>>
-    get() = _dataByYear
+        get() = _dataByYear
 
     val dataByMandi: LiveData<ArrayList<ILineDataSet>>
-    get() = _dataByMandi
+        get() = _dataByMandi
 
     val trends: LiveData<Map<Int, List<Pair<String, Float>>>>
-    get() = _trends
+        get() = _trends
 
     val year: LiveData<Int>
-    get() = _year
+        get() = _year
 
     private val current = if (LocalDate.now().isBefore(LocalDate.of(LocalDate.now().year, 7, 1)))
         LocalDate.now().year - 1
@@ -73,13 +73,13 @@ class CropPricesViewModel(application: Application) : AndroidViewModel(applicati
         var max1 = Pair("", Float.MIN_VALUE)
         var max2 = Pair("", Float.MIN_VALUE)
 
-        if(file1.exists()) {
+        if (file1.exists()) {
             csvReader().open(file1) {
                 readAllAsSequence().forEachIndexed { i, it ->
                     val p = it[1].toFloat()
                     val m = it[0].substring(5, 7).toInt()
                     val y = it[0].substring(0, 4)
-                    if(m > 6) {
+                    if (m > 6) {
                         if (min1.second > p) min1 =
                             Pair(it[0], p)
 //                            Pair(DateFormatSymbols().months[m - 1] + " $y", p)
@@ -91,14 +91,14 @@ class CropPricesViewModel(application: Application) : AndroidViewModel(applicati
             }
         }
 
-        if(file2.exists()) {
+        if (file2.exists()) {
             csvReader().open(file2) {
                 readAllAsSequence().forEachIndexed { i, it ->
                     val p = it[1].toFloat()
                     val m = it[0].substring(5, 7).toInt()
                     val y = it[0].substring(0, 4)
 
-                    if(m < 7) {
+                    if (m < 7) {
                         if (min2.second > p) min2 =
                             Pair(it[0], p)
 //                            Pair(DateFormatSymbols().months[m - 1] + " $y", p)
@@ -113,12 +113,12 @@ class CropPricesViewModel(application: Application) : AndroidViewModel(applicati
         val data = Bundle()
         val list = mutableListOf<Pair<String, Float>>()
         val dataMap = _trends.value as MutableMap<Int, List<Pair<String, Float>>>
-        val min: Pair<String, Float> = if(min1.second < min2.second) {
+        val min: Pair<String, Float> = if (min1.second < min2.second) {
             min1
         } else {
             min2
         }
-        val max: Pair<String, Float> = if(max1.second > max2.second) {
+        val max: Pair<String, Float> = if (max1.second > max2.second) {
             max1
         } else {
             max2
@@ -147,37 +147,39 @@ class CropPricesViewModel(application: Application) : AndroidViewModel(applicati
         val temp = ArrayList<ILineDataSet>()
         val trendsMap = mutableMapOf<Int, List<Pair<String, Float>>>()
 
-        if(context.fileList().isNotEmpty()) {
+        if (context.fileList().isNotEmpty()) {
             val mandi = _mandi.value!!
 
             val range = _selectedYears.value!!
 
-            for(year in range) {
+            for (year in range) {
                 var min = Pair("", Float.MAX_VALUE)
                 var max = Pair("", Float.MIN_VALUE)
                 val file1 = File(context.filesDir, "${mandi}_${year}")
                 val file2 = File(context.filesDir, "${mandi}_${year + 1}")
                 val prices = mutableMapOf<String, Float>()
 
-                if(file1.exists()) {
+                if (file1.exists()) {
                     csvReader().open(file1) {
                         readAllAsSequence().forEachIndexed { i, it ->
                             val date = LocalDate.parse(it[0])
                             val ddmm = it[0].substring(8) + "-" + it[0].substring(5, 7)
 
                             val start = LocalDate.of(year, 6, 30)
-                            if(date.isAfter(start)) prices[ddmm] = it[1].toFloat()
+                            if (date.isAfter(start)) prices[ddmm] = it[1].toFloat()
 
                             val p = it[1].toFloat()
                             val m = it[0].substring(5, 7).toInt()
-                            if(min.second > p) min = Pair(DateFormatSymbols().months[m-1] + " $year", p)
-                            if(max.second < p) max = Pair(DateFormatSymbols().months[m-1] + " $year", p)
+                            if (min.second > p) min =
+                                Pair(DateFormatSymbols().months[m - 1] + " $year", p)
+                            if (max.second < p) max =
+                                Pair(DateFormatSymbols().months[m - 1] + " $year", p)
 
                         }
                     }
                 }
 
-                if(file2.exists()) {
+                if (file2.exists()) {
                     csvReader().open(file2) {
                         readAllAsSequence().forEachIndexed { i, it ->
                             val date = LocalDate.parse(it[0])
@@ -185,12 +187,14 @@ class CropPricesViewModel(application: Application) : AndroidViewModel(applicati
 
                             val end = LocalDate.of(year + 1, 7, 1)
 
-                            if(date.isBefore(end)) prices[ddmm] = it[1].toFloat()
+                            if (date.isBefore(end)) prices[ddmm] = it[1].toFloat()
 
                             val p = it[1].toFloat()
                             val m = it[0].substring(5, 7).toInt()
-                            if(min.second > p) min = Pair(DateFormatSymbols().months[m-1] + " $year", p)
-                            if(max.second < p) max = Pair(DateFormatSymbols().months[m-1] + " $year", p)
+                            if (min.second > p) min =
+                                Pair(DateFormatSymbols().months[m - 1] + " $year", p)
+                            if (max.second < p) max =
+                                Pair(DateFormatSymbols().months[m - 1] + " $year", p)
 
                         }
                     }
@@ -208,8 +212,9 @@ class CropPricesViewModel(application: Application) : AndroidViewModel(applicati
                         values1.add(Entry(i.toFloat(), prices[date]!!))
 
                         val m = date.substring(3).toInt()
-                        if(!maxMap.containsKey(m)) maxMap[m] = Pair(date, prices[date]!!)
-                        else if(maxMap[m]!!.second < prices[date]!!) maxMap[m] = Pair(date, prices[date]!!)
+                        if (!maxMap.containsKey(m)) maxMap[m] = Pair(date, prices[date]!!)
+                        else if (maxMap[m]!!.second < prices[date]!!) maxMap[m] =
+                            Pair(date, prices[date]!!)
 
                     }
 
@@ -217,11 +222,14 @@ class CropPricesViewModel(application: Application) : AndroidViewModel(applicati
 
                 val values2 = ArrayList<Entry>()
 
-                for(pair in maxMap.values) {
+                for (pair in maxMap.values) {
                     values2.add(Entry(dates.indexOf(pair.first).toFloat(), pair.second))
                 }
 
-                val dataset1 = LineDataSet(values1, year.toString() + "-" + (year + 1).toString().substring(2, 4))
+                val dataset1 = LineDataSet(
+                    values1,
+                    year.toString() + "-" + (year + 1).toString().substring(2, 4)
+                )
                 dataset1.setDrawCircles(false)
                 dataset1.color = yearColors[year]!!
                 dataset1.lineWidth = 2f
@@ -250,7 +258,7 @@ class CropPricesViewModel(application: Application) : AndroidViewModel(applicati
 
         val temp = ArrayList<ILineDataSet>()
 
-        if(context.fileList().isNotEmpty()) {
+        if (context.fileList().isNotEmpty()) {
             val array = _selectedMandis.value
             val arrayClean = _selectedMandisClean.value
             val year = _year.value!!
@@ -258,32 +266,32 @@ class CropPricesViewModel(application: Application) : AndroidViewModel(applicati
             val start = LocalDate.of(year, 6, 30)
             val end = LocalDate.of(year + 1, 7, 1)
 
-            for(mandi in array!!) {
+            for (mandi in array!!) {
                 val mandiClean = arrayClean?.get(array.indexOf(mandi))
                 val file1 = File(context.filesDir, "${mandi}_${year}")
                 val file2 = File(context.filesDir, "${mandi}_${year + 1}")
 
                 val prices = mutableMapOf<String, Float>()
 
-                if(file1.exists()) {
+                if (file1.exists()) {
                     csvReader().open(file1) {
                         readAllAsSequence().forEachIndexed { i, it ->
                             val date = LocalDate.parse(it[0])
                             val ddmm = it[0].substring(8) + "-" + it[0].substring(5, 7)
 
-                            if(date.isAfter(start)) prices[ddmm] = it[1].toFloat()
+                            if (date.isAfter(start)) prices[ddmm] = it[1].toFloat()
 
                         }
                     }
                 }
 
-                if(file2.exists()) {
+                if (file2.exists()) {
                     csvReader().open(file2) {
                         readAllAsSequence().forEachIndexed { i, it ->
                             val date = LocalDate.parse(it[0])
                             val ddmm = it[0].substring(8) + "-" + it[0].substring(5, 7)
 
-                            if(date.isBefore(end)) prices[ddmm] = it[1].toFloat()
+                            if (date.isBefore(end)) prices[ddmm] = it[1].toFloat()
 
                         }
                     }
@@ -299,7 +307,8 @@ class CropPricesViewModel(application: Application) : AndroidViewModel(applicati
                         values1.add(Entry(i.toFloat(), prices[date]!!))
 
                         val m = date.substring(3).toInt() - 1
-                        if(maxList[m].second < prices[date]!!) maxList[m] = Pair(date, prices[date]!!)
+                        if (maxList[m].second < prices[date]!!) maxList[m] =
+                            Pair(date, prices[date]!!)
 
                     }
 
@@ -307,8 +316,13 @@ class CropPricesViewModel(application: Application) : AndroidViewModel(applicati
 
                 val values2 = ArrayList<Entry>()
 
-                for(pair in maxList) {
-                    if(pair.second != 0f) values2.add(Entry(dates.indexOf(pair.first).toFloat(), pair.second))
+                for (pair in maxList) {
+                    if (pair.second != 0f) values2.add(
+                        Entry(
+                            dates.indexOf(pair.first).toFloat(),
+                            pair.second
+                        )
+                    )
                 }
 
                 val mandiColors = mutableMapOf<String, Int>()
@@ -346,21 +360,20 @@ class CropPricesViewModel(application: Application) : AndroidViewModel(applicati
     fun selectYear(year: Int, check: Boolean) {
         val newList = _selectedYears.value!!
 
-        if(check) {
-            if(!newList.contains(year)) {
+        if (check) {
+            if (!newList.contains(year)) {
                 newList.add(year)
                 getTrends(year)
             }
-        }
-        else {
-            if(newList.size > 1) {
+        } else {
+            if (newList.size > 1) {
                 newList.remove(year)
                 val dataMap = _trends.value as MutableMap<Int, List<Pair<String, Float>>>
                 dataMap.remove(year + 1)
                 _trends.value = dataMap
-            }
-            else {
-                Toast.makeText(context, "Atleast one year must be selected", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(context, "Atleast one year must be selected", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
 
@@ -373,19 +386,18 @@ class CropPricesViewModel(application: Application) : AndroidViewModel(applicati
         val newList = _selectedMandis.value!!
         val newListClean = _selectedMandisClean.value!!
 
-        if(check) {
-            if(!newList.contains(mandi)) {
+        if (check) {
+            if (!newList.contains(mandi)) {
                 newList.add(mandi)
                 newListClean.add(mandiClean)
             }
-        }
-        else {
-            if(newList.size > 1) {
+        } else {
+            if (newList.size > 1) {
                 newList.remove(mandi)
                 newListClean.remove(mandiClean)
-            }
-            else {
-                Toast.makeText(context, "Atleast one mandi must be selected", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(context, "Atleast one mandi must be selected", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
 
@@ -399,7 +411,7 @@ class CropPricesViewModel(application: Application) : AndroidViewModel(applicati
     fun changeMandi(mandi: String) {
         _mandi.value = mandi
         getDataByYear()
-        for(year in _selectedYears.value!!) {
+        for (year in _selectedYears.value!!) {
             getTrends(year)
         }
     }
@@ -410,14 +422,14 @@ class CropPricesViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     fun checkYear(year: Int): Boolean {
-        if(_selectedYears.value!!.contains(year)) {
+        if (_selectedYears.value!!.contains(year)) {
             return true
         }
         return false
     }
 
     fun checkMandi(mandi: String): Boolean {
-        if(_selectedMandis.value!!.contains(mandi)) {
+        if (_selectedMandis.value!!.contains(mandi)) {
             return true
         }
         return false

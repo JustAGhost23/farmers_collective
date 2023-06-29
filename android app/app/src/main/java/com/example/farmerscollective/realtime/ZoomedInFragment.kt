@@ -51,7 +51,6 @@ class ZoomedInFragment : Fragment() {
     private val args by navArgs<ZoomedInFragmentArgs>()
 
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -75,7 +74,7 @@ class ZoomedInFragment : Fragment() {
                 findNavController().navigateUp()
             }
 
-            when(args.chart) {
+            when (args.chart) {
                 0 ->
                     cropViewModel.dataByYear.observe(viewLifecycleOwner) {
                         barChart.visibility = View.GONE
@@ -85,11 +84,12 @@ class ZoomedInFragment : Fragment() {
                         zoomChart.data = LineData(it)
 
                         zoomChart.onChartGestureListener =
-                            Utils.Companion.CustomChartListener(requireContext(), zoomChart,
+                            Utils.Companion.CustomChartListener(
+                                requireContext(), zoomChart,
                                 Utils.dates
                             )
 
-                        if(!sharedPref.getBoolean("compress", false)) {
+                        if (!sharedPref.getBoolean("compress", false)) {
                             zoomChart.setVisibleXRangeMaximum(10.0f)
                         }
 
@@ -121,7 +121,7 @@ class ZoomedInFragment : Fragment() {
                         }
 
                     }
-                
+
                 1 ->
                     cropViewModel.dataByMandi.observe(viewLifecycleOwner) {
                         barChart.visibility = View.GONE
@@ -131,12 +131,15 @@ class ZoomedInFragment : Fragment() {
                         val axis2 = zoomChart.axisLeft
                         var min: Float = Float.MAX_VALUE
 
-                        val mspLine = LimitLine(Utils.MSP[cropViewModel.year.value]!!, "Minimum Support Price")
-                        if(min > mspLine.limit - 200f) {
+                        val mspLine = LimitLine(
+                            Utils.MSP[cropViewModel.year.value]!!,
+                            "Minimum Support Price"
+                        )
+                        if (min > mspLine.limit - 200f) {
                             min = mspLine.limit - 300f
                         }
-                        for(item in it) {
-                            if(min > item.yMin - 200f) {
+                        for (item in it) {
+                            if (min > item.yMin - 200f) {
                                 min = item.yMin - 300f
                             }
                         }
@@ -154,11 +157,12 @@ class ZoomedInFragment : Fragment() {
                         zoomChart.data = LineData(it)
 
                         zoomChart.onChartGestureListener =
-                            Utils.Companion.CustomChartListener(requireContext(), zoomChart,
+                            Utils.Companion.CustomChartListener(
+                                requireContext(), zoomChart,
                                 Utils.dates
                             )
 
-                        if(!sharedPref.getBoolean("compress", false)) {
+                        if (!sharedPref.getBoolean("compress", false)) {
                             zoomChart.setVisibleXRangeMaximum(10.0f)
                         }
 
@@ -226,21 +230,24 @@ class ZoomedInFragment : Fragment() {
 //                            zoomChart.setVisibleXRangeMaximum(10.0f)
 //                        }
 
-                        if(list != null) {
+                        if (list != null) {
                             var pos = 0
-                            for(i in list) {
+                            for (i in list) {
                                 axis.add(i.date)
                                 values.add(Entry(pos.toFloat(), i.price))
-                                if(i.price > maxPrice - 100f) {
+                                if (i.price > maxPrice - 100f) {
                                     maxPrice = i.price + 200f
                                 }
-                                if(i.price < minPrice + 100f) {
+                                if (i.price < minPrice + 100f) {
                                     minPrice = i.price - 200f
                                 }
                                 pos += 1
                             }
                         }
-                        val dataSet = LineDataSet(values, Utils.internationalPricesCrops[intPriceViewModel.crop.value!!])
+                        val dataSet = LineDataSet(
+                            values,
+                            Utils.internationalPricesCrops[intPriceViewModel.crop.value!!]
+                        )
                         dataSet.color = Color.parseColor("#000000")
                         dataSet.setDrawCircles(false)
                         entries.add(dataSet)
@@ -257,7 +264,7 @@ class ZoomedInFragment : Fragment() {
                         zoomChart.legend.isWordWrapEnabled = true
 //                        zoomChart.axisLeft.setDrawGridLines(false)
 //                        zoomChart.xAxis.setDrawGridLines(false)
-                        if(it.isNotEmpty()) {
+                        if (it.isNotEmpty()) {
                             if (!sharedPref.getBoolean("compress", false)) {
                                 zoomChart.moveViewToX(entries[0].xMax)
                                 zoomChart.setVisibleXRangeMaximum(10.0f)
@@ -330,7 +337,7 @@ class ZoomedInFragment : Fragment() {
 //                }
 
                     if (list != null) {
-                        for(i in list) {
+                        for (i in list) {
 //                        axis.add("")
                             axis.add(i.key.format(formatter))
 //                        for(j in 0 until 3) axis.add("")
@@ -363,7 +370,8 @@ class ZoomedInFragment : Fragment() {
                         for (i in list) {
                             xMax += 1f
                             var pos = count
-                            val v = i.value.reversed().sortedBy { it!!.price }.subList(0, min(4, i.value.size))
+                            val v = i.value.reversed().sortedBy { it!!.price }
+                                .subList(0, min(4, i.value.size))
                             entries1.add(BarEntry(pos, -100f))
                             entries2.add(BarEntry(pos + 0.20f, -100f))
                             entries3.add(BarEntry(pos + 0.40f, -100f))
@@ -372,10 +380,10 @@ class ZoomedInFragment : Fragment() {
                             barColors2.add(0)
                             barColors3.add(0)
                             barColors4.add(0)
-                            for(j in v) {
+                            for (j in v) {
                                 if (j != null) {
                                     val legendEntry: LegendEntry
-                                    if(j.localTraderId == -1) {
+                                    if (j.localTraderId == -1) {
                                         legendEntry = LegendEntry(
                                             "Not filled",
                                             Legend.LegendForm.SQUARE,
@@ -386,31 +394,28 @@ class ZoomedInFragment : Fragment() {
                                                 Utils.traderColors[j.localTraderId.plus(1)]
                                             )
                                         )
-                                        if(v.indexOf(j) == 0) {
+                                        if (v.indexOf(j) == 0) {
                                             barColors1.removeAt(barColors1.size - 1)
                                             barColors1.add(
                                                 Color.parseColor(
                                                     Utils.traderColors[j.localTraderId.plus(1)]
                                                 )
                                             )
-                                        }
-                                        else if(v.indexOf(j) == 1) {
+                                        } else if (v.indexOf(j) == 1) {
                                             barColors2.removeAt(barColors2.size - 1)
                                             barColors2.add(
                                                 Color.parseColor(
                                                     Utils.traderColors[j.localTraderId.plus(1)]
                                                 )
                                             )
-                                        }
-                                        else if(v.indexOf(j) == 2) {
+                                        } else if (v.indexOf(j) == 2) {
                                             barColors3.removeAt(barColors3.size - 1)
                                             barColors3.add(
                                                 Color.parseColor(
                                                     Utils.traderColors[j.localTraderId.plus(1)]
                                                 )
                                             )
-                                        }
-                                        else if(v.indexOf(j) == 3) {
+                                        } else if (v.indexOf(j) == 3) {
                                             barColors4.removeAt(barColors4.size - 1)
                                             barColors4.add(
                                                 Color.parseColor(
@@ -418,12 +423,11 @@ class ZoomedInFragment : Fragment() {
                                                 )
                                             )
                                         }
-                                        if(!traderList.contains("Not filled")) {
+                                        if (!traderList.contains("Not filled")) {
                                             colorList.add(legendEntry)
                                             traderList.add("Not filled")
                                         }
-                                    }
-                                    else {
+                                    } else {
                                         legendEntry = LegendEntry(
                                             Utils.traders[j.localTraderId?.minus(1)!!],
                                             Legend.LegendForm.SQUARE,
@@ -434,31 +438,28 @@ class ZoomedInFragment : Fragment() {
                                                 Utils.traderColors[j.localTraderId]
                                             )
                                         )
-                                        if(v.indexOf(j) == 0) {
+                                        if (v.indexOf(j) == 0) {
                                             barColors1.removeAt(barColors1.size - 1)
                                             barColors1.add(
                                                 Color.parseColor(
                                                     Utils.traderColors[j.localTraderId]
                                                 )
                                             )
-                                        }
-                                        else if(v.indexOf(j) == 1) {
+                                        } else if (v.indexOf(j) == 1) {
                                             barColors2.removeAt(barColors2.size - 1)
                                             barColors2.add(
                                                 Color.parseColor(
                                                     Utils.traderColors[j.localTraderId]
                                                 )
                                             )
-                                        }
-                                        else if(v.indexOf(j) == 2) {
+                                        } else if (v.indexOf(j) == 2) {
                                             barColors3.removeAt(barColors3.size - 1)
                                             barColors3.add(
                                                 Color.parseColor(
                                                     Utils.traderColors[j.localTraderId]
                                                 )
                                             )
-                                        }
-                                        else if(v.indexOf(j) == 3) {
+                                        } else if (v.indexOf(j) == 3) {
                                             barColors4.removeAt(barColors4.size - 1)
                                             barColors4.add(
                                                 Color.parseColor(
@@ -466,29 +467,31 @@ class ZoomedInFragment : Fragment() {
                                                 )
                                             )
                                         }
-                                        if(!traderList.contains(Utils.traders[j.localTraderId.minus(1)])) {
+                                        if (!traderList.contains(
+                                                Utils.traders[j.localTraderId.minus(
+                                                    1
+                                                )]
+                                            )
+                                        ) {
                                             colorList.add(legendEntry)
                                             traderList.add(Utils.traders[j.localTraderId.minus(1)])
                                         }
                                     }
                                 }
                                 val barEntry = BarEntry(pos, j!!.price.toFloat())
-                                if(j.price.toFloat() < minPrice) {
+                                if (j.price.toFloat() < minPrice) {
                                     minPrice = j.price.toFloat() - 200f
                                 }
-                                if(v.indexOf(j) == 0) {
+                                if (v.indexOf(j) == 0) {
                                     entries1.removeAt(entries1.size - 1)
                                     entries1.add(barEntry)
-                                }
-                                else if(v.indexOf(j) == 1) {
+                                } else if (v.indexOf(j) == 1) {
                                     entries2.removeAt(entries2.size - 1)
                                     entries2.add(barEntry)
-                                }
-                                else if(v.indexOf(j) == 2) {
+                                } else if (v.indexOf(j) == 2) {
                                     entries3.removeAt(entries3.size - 1)
                                     entries3.add(barEntry)
-                                }
-                                else if(v.indexOf(j) == 3) {
+                                } else if (v.indexOf(j) == 3) {
                                     entries4.removeAt(entries4.size - 1)
                                     entries4.add(barEntry)
                                 }
@@ -533,23 +536,22 @@ class ZoomedInFragment : Fragment() {
                     barChart.xAxis.setCenterAxisLabels(true)
                     barChart.moveViewToX(xMax)
                     barChart.setFitBars(false)
-                    if(!sharedPref.getBoolean("compress", false)) {
+                    if (!sharedPref.getBoolean("compress", false)) {
                         barChart.setVisibleXRangeMaximum(8.0f)
-                    }
-                    else {
+                    } else {
                         barChart.setVisibleXRangeMaximum(365.0f)
                     }
-                    barChart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener
-                    {
+                    barChart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
                         override fun onValueSelected(e: Entry, h: Highlight?) {
                             val x = e.x.toString()
 //                        val y = e.y.toString()
                             val selectedXAxisCount = x.substringBefore(".")
                             val selectedXAxisPos = x.substringAfter(".").substring(0, 2)
-                            val dataDialogBuilder: AlertDialog.Builder? = activity?.let { fragmentActivity ->
-                                AlertDialog.Builder(fragmentActivity)
-                            }
-                            if(subs[selectedXAxisCount.toInt()]?.size!! > selectedXAxisPos.toInt() / 25) {
+                            val dataDialogBuilder: AlertDialog.Builder? =
+                                activity?.let { fragmentActivity ->
+                                    AlertDialog.Builder(fragmentActivity)
+                                }
+                            if (subs[selectedXAxisCount.toInt()]?.size!! > selectedXAxisPos.toInt() / 25) {
                                 val selectedOdkSubmission =
                                     subs[selectedXAxisCount.toInt()]?.get(selectedXAxisPos.toInt() / 25)
                                 val traderName =
@@ -601,13 +603,23 @@ class ZoomedInFragment : Fragment() {
 
                         for (date in dates) {
                             val i = dates.indexOf(date)
-                            if (it[0].containsKey(date)) values1.add(Entry(i.toFloat(), it[0][date]!!))
-                            if (it[1].containsKey(date)) values2.add(Entry(i.toFloat(), it[1][date]!!))
+                            if (it[0].containsKey(date)) values1.add(
+                                Entry(
+                                    i.toFloat(),
+                                    it[0][date]!!
+                                )
+                            )
+                            if (it[1].containsKey(date)) values2.add(
+                                Entry(
+                                    i.toFloat(),
+                                    it[1][date]!!
+                                )
+                            )
                         }
 
                         val hls = pastPredictedViewModel.recomm.value!!
 
-                        for(pred in hls) {
+                        for (pred in hls) {
                             val date = pred[0]
 
                             val i = dates.indexOf(date)
@@ -645,7 +657,8 @@ class ZoomedInFragment : Fragment() {
                         // enable scaling and dragging
 
                         zoomChart.data = LineData(pastPredictedData)
-                        zoomChart.onChartGestureListener = Utils.Companion.CustomChartListener(requireContext(), zoomChart, dates)
+                        zoomChart.onChartGestureListener =
+                            Utils.Companion.CustomChartListener(requireContext(), zoomChart, dates)
 
                         zoomChart.invalidate()
                     }
@@ -656,10 +669,9 @@ class ZoomedInFragment : Fragment() {
 
                         val isWeekly = sharedPref.getBoolean("isWeekly", false)
 
-                        if(isWeekly && predictedViewModel.dailyOrWeekly.value == "Daily") {
+                        if (isWeekly && predictedViewModel.dailyOrWeekly.value == "Daily") {
                             predictedViewModel.changeSelection("Weekly")
-                        }
-                        else if(!isWeekly && predictedViewModel.dailyOrWeekly.value == "Weekly") {
+                        } else if (!isWeekly && predictedViewModel.dailyOrWeekly.value == "Weekly") {
                             predictedViewModel.changeSelection("Daily")
                         }
 
@@ -678,18 +690,15 @@ class ZoomedInFragment : Fragment() {
                         }
 
 
-
-                        val pred_dates = if(predictedViewModel.dailyOrWeekly.value == "Weekly") {
+                        val pred_dates = if (predictedViewModel.dailyOrWeekly.value == "Weekly") {
                             dates.subList(dates.size - 12, dates.size)
-                        }
-                        else {
+                        } else {
                             dates.subList(dates.size - 30, dates.size)
                         }
 
-                        val real_dates = if(predictedViewModel.dailyOrWeekly.value == "Weekly") {
+                        val real_dates = if (predictedViewModel.dailyOrWeekly.value == "Weekly") {
                             dates.subList(0, dates.size - 12)
-                        }
-                        else {
+                        } else {
                             dates.subList(0, dates.size - 30)
                         }
 
@@ -712,14 +721,14 @@ class ZoomedInFragment : Fragment() {
 
                         val hls = predictedViewModel.data.value!!
 
-                        for(pred in hls) {
+                        for (pred in hls) {
                             val date = pred.date
 
                             Log.e("date", date)
                             Log.e("dates", dates.toString())
 
                             val i = dates.indexOf(date)
-                            if(it[date] != null) {
+                            if (it[date] != null) {
                                 values3.add(Entry(i.toFloat(), it[date]!!))
                             }
                         }
@@ -755,10 +764,11 @@ class ZoomedInFragment : Fragment() {
                         )
 
                         zoomChart.data = LineData(predictedData)
-                        zoomChart.onChartGestureListener = Utils.Companion.CustomChartListener(requireContext(), zoomChart, dates)
+                        zoomChart.onChartGestureListener =
+                            Utils.Companion.CustomChartListener(requireContext(), zoomChart, dates)
                         zoomChart.setVisibleXRangeMaximum(30.0f)
                         zoomChart.moveViewToX((dates.size - 45).toFloat())
-                        if(predictedViewModel.dailyOrWeekly.value == "Weekly") {
+                        if (predictedViewModel.dailyOrWeekly.value == "Weekly") {
                             zoomChart.moveViewToX((dates.size - 15).toFloat())
                             zoomChart.setVisibleXRangeMaximum(365.0f)
                         }

@@ -11,7 +11,7 @@ import java.io.File
 import java.time.LocalDate
 
 class CropPredictedViewModel(application: Application) : AndroidViewModel(application) {
-    // TODO: Implement the ViewModel
+
     val context = application
     private val _data = MutableLiveData<List<Prediction>>(arrayListOf())
     private val _graph = MutableLiveData<Map<String, Float>>(mapOf())
@@ -42,7 +42,7 @@ class CropPredictedViewModel(application: Application) : AndroidViewModel(applic
 
         if (context.fileList().isNotEmpty()) {
             var file: File
-            file = if(dailyOrWeekly.value == "Daily") {
+            file = if (dailyOrWeekly.value == "Daily") {
                 File(context.filesDir, "dailyPredict.csv")
             } else {
                 File(context.filesDir, "weeklyPredict.csv")
@@ -77,19 +77,18 @@ class CropPredictedViewModel(application: Application) : AndroidViewModel(applic
 
             if (file.exists()) {
                 csvReader().open(file) {
-                    if(dailyOrWeekly.value == "Daily") {
+                    if (dailyOrWeekly.value == "Daily") {
                         readAllAsSequence().forEach {
                             val dt = LocalDate.parse(it[0])
                             if (dt.isBefore(LocalDate.parse(date))) map[it[0]] =
                                 it[1].toFloat()
                         }
-                    }
-                    else {
+                    } else {
                         var count = 7
                         var sum = 0.0
                         readAllAsSequence().toMutableList().asReversed().forEach {
                             val dt = LocalDate.parse(it[0])
-                            if(dt.isBefore(LocalDate.parse(weekDate))) {
+                            if (dt.isBefore(LocalDate.parse(weekDate))) {
                                 sum += it[1].toFloat()
                                 count -= 1
                             }
@@ -112,19 +111,18 @@ class CropPredictedViewModel(application: Application) : AndroidViewModel(applic
 
                 if (file.exists()) {
                     csvReader().open(file) {
-                        if(dailyOrWeekly.value == "Daily") {
+                        if (dailyOrWeekly.value == "Daily") {
                             readAllAsSequence().forEach {
                                 val dt = LocalDate.parse(it[0])
                                 if (dt.isBefore(LocalDate.parse(date))) map[dt.toString()] =
                                     it[1].toFloat()
                             }
-                        }
-                        else {
+                        } else {
                             var count = 7
                             var sum = 0.0
                             readAllAsSequence().toMutableList().asReversed().forEach {
                                 val dt = LocalDate.parse(it[0]).minusDays(1)
-                                if(dt.isBefore(LocalDate.parse(weekDate))) {
+                                if (dt.isBefore(LocalDate.parse(weekDate))) {
                                     sum += it[1].toFloat()
                                     count -= 1
                                 }
@@ -141,7 +139,7 @@ class CropPredictedViewModel(application: Application) : AndroidViewModel(applic
 
             }
 
-            if(dailyOrWeekly.value == "Daily") {
+            if (dailyOrWeekly.value == "Daily") {
                 _today.value = map[LocalDate.parse(date).minusDays(1).toString()] ?: 0.0f
                 temp.sortBy { value -> value.output }
                 temp = ArrayList(temp.map {
@@ -149,8 +147,7 @@ class CropPredictedViewModel(application: Application) : AndroidViewModel(applic
                     it.loss -= map[date]!!
                     it
                 })
-            }
-            else if(dailyOrWeekly.value == "Weekly") {
+            } else if (dailyOrWeekly.value == "Weekly") {
                 _today.value = map[LocalDate.parse(weekDate).minusDays(7).toString()] ?: 0.0f
                 temp.sortBy { value -> value.output }
                 temp = ArrayList(temp.map {
@@ -166,6 +163,7 @@ class CropPredictedViewModel(application: Application) : AndroidViewModel(applic
 
         }
     }
+
     fun changeSelection(dailyOrWeekly: String) {
         _dailyOrWeekly.value = dailyOrWeekly
         getData()

@@ -9,7 +9,7 @@
         android:id="@+id/mainFragment"
         android:name="com.example.farmerscollective.ui.main.MainFragment"
         android:label="main_fragment"
-        tools:layout="@layout/main_fragment" >
+        tools:layout="@layout/main_fragment">
         <action
             android:id="@+id/action_mainFragment_to_cropPricesFragment"
             app:destination="@id/cropPricesFragment" />
@@ -32,7 +32,7 @@
     <fragment
         android:id="@+id/cropPricesFragment"
         android:name="com.example.farmerscollective.realtime.CropPricesFragment"
-        android:label="CropPricesFragment" >
+        android:label="CropPricesFragment">
         <action
             android:id="@+id/action_cropPricesFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
@@ -44,7 +44,7 @@
         android:id="@+id/cropPredictedFragment"
         android:name="com.example.farmerscollective.prediction.CropPredictedFragment"
         android:label="crop_predicted_fragment"
-        tools:layout="@layout/crop_predicted_fragment" >
+        tools:layout="@layout/crop_predicted_fragment">
         <action
             android:id="@+id/action_cropPredictedFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
@@ -55,7 +55,7 @@
     <fragment
         android:id="@+id/aboutFragment"
         android:name="com.example.farmerscollective.AboutFragment"
-        android:label="AboutFragment" >
+        android:label="AboutFragment">
         <action
             android:id="@+id/action_aboutFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
@@ -63,7 +63,7 @@
     <fragment
         android:id="@+id/cropPastPredictedFragment"
         android:name="com.example.farmerscollective.prediction.CropPastPredictedFragment"
-        android:label="CropPastPredictedFragment" >
+        android:label="CropPastPredictedFragment">
         <action
             android:id="@+id/action_cropPastPredictedFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
@@ -74,7 +74,7 @@
     <fragment
         android:id="@+id/zoomedInFragment"
         android:name="com.example.farmerscollective.realtime.ZoomedInFragment"
-        android:label="ZoomedInFragment" >
+        android:label="ZoomedInFragment">
         <action
             android:id="@+id/action_zoomedInFragment_to_cropPricesFragment"
             app:destination="@id/cropPricesFragment" />
@@ -92,13 +92,13 @@
             app:destination="@id/internationalPricesFragment" />
         <argument
             android:name="chart"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/odkFragment"
         android:name="com.example.farmerscollective.realtime.OdkFragment"
-        android:label="OdkFragment" >
+        android:label="OdkFragment">
         <action
             android:id="@+id/action_odkFragment_to_mainFragment"
             app:destination="@id/mainFragment" />

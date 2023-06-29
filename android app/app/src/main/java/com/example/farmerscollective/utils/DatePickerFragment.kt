@@ -9,7 +9,8 @@ import com.example.farmerscollective.prediction.CropPastPredictedViewModel
 import com.google.firebase.analytics.FirebaseAnalytics
 import java.time.LocalDate
 
-class DatePickerFragment(private val viewModel: CropPastPredictedViewModel) : DialogFragment(), DatePickerDialog.OnDateSetListener {
+class DatePickerFragment(private val viewModel: CropPastPredictedViewModel) : DialogFragment(),
+    DatePickerDialog.OnDateSetListener {
 
     private var dialog: DatePickerDialog? = null
     private var analytics: FirebaseAnalytics? = null
@@ -17,7 +18,7 @@ class DatePickerFragment(private val viewModel: CropPastPredictedViewModel) : Di
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         // Use the current date as the default date in the picker
 
-        if(dialog == null) {
+        if (dialog == null) {
             val start = LocalDate.now().minusDays(30)
             val year = start.year
             val month = start.monthValue - 1
@@ -27,7 +28,7 @@ class DatePickerFragment(private val viewModel: CropPastPredictedViewModel) : Di
             dialog = DatePickerDialog(requireContext(), this, year, month, day)
         }
 
-        if(analytics == null) {
+        if (analytics == null) {
             analytics = FirebaseAnalytics.getInstance(requireContext())
         }
 

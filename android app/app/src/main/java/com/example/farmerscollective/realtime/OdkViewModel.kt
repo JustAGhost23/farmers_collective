@@ -23,13 +23,13 @@ class OdkViewModel(application: Application) : AndroidViewModel(application) {
     private val _year = MutableLiveData(current)
 
     val list: LiveData<MutableMap<LocalDate, ArrayList<OdkSubmission?>>>
-    get() = _list
+        get() = _list
 
     val filter: LiveData<Int>
-    get() = _filter
+        get() = _filter
 
     val crop: LiveData<Int>
-    get() = _crop
+        get() = _crop
 
     init {
         loadList()
@@ -37,8 +37,8 @@ class OdkViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun condition(odk: OdkSubmission): Boolean {
         val today = LocalDate.now()
-        if(odk.date == null) return false
-        return when(_filter.value) {
+        if (odk.date == null) return false
+        return when (_filter.value) {
             0 -> today.minusDays(7).isBefore(odk.date)
             1 -> today.minusDays(28).isBefore(odk.date)
             else -> true
@@ -48,10 +48,10 @@ class OdkViewModel(application: Application) : AndroidViewModel(application) {
     private fun loadList() {
         val value = mutableMapOf<LocalDate, ArrayList<OdkSubmission?>>()
 
-        if(context.fileList().isNotEmpty()) {
+        if (context.fileList().isNotEmpty()) {
             val file = File(context.filesDir, "TELANGANA_ADILABAD_ODK.csv")
 
-            if(file.exists()) {
+            if (file.exists()) {
                 csvReader().open(file) {
                     readAllAsSequence().forEachIndexed { i, it ->
                         val dt = LocalDate.parse(it[6])
@@ -65,11 +65,10 @@ class OdkViewModel(application: Application) : AndroidViewModel(application) {
                             dt
                         )
                         if (condition(odk) && odk.cropId == crop.value?.plus(1)) {
-                            if(dt.year == _year.value && dt.month.value > 6) {
+                            if (dt.year == _year.value && dt.month.value > 6) {
                                 if (!value.containsKey(dt)) value[dt] = arrayListOf()
                                 value[dt]!!.add(odk)
-                            }
-                            else if(dt.year == _year.value?.plus(1) && dt.month.value < 7) {
+                            } else if (dt.year == _year.value?.plus(1) && dt.month.value < 7) {
                                 if (!value.containsKey(dt)) value[dt] = arrayListOf()
                                 value[dt]!!.add(odk)
                             }

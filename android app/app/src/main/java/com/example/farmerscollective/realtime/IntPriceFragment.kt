@@ -62,11 +62,16 @@ class IntPriceFragment : Fragment() {
         with(binding) {
 
             lineZoom.setOnClickListener {
-                val action = IntPriceFragmentDirections.actionInternationalPricesFragmentToZoomedInFragment(2)
+                val action =
+                    IntPriceFragmentDirections.actionInternationalPricesFragmentToZoomedInFragment(2)
                 findNavController().navigate(action)
             }
 
-            val cropAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, resources.getStringArray(R.array.internationalCropName))
+            val cropAdapter = ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                resources.getStringArray(R.array.internationalCropName)
+            )
             cropAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             cropSpinner.adapter = cropAdapter
             cropSpinner.setSelection(viewModel.crop.value!!)
@@ -91,7 +96,8 @@ class IntPriceFragment : Fragment() {
                 "${it}-${(it + 1) % 100}"
             }
 
-            val yearAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, arr)
+            val yearAdapter =
+                ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, arr)
             yearAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             yearSpinner.adapter = yearAdapter
             yearSpinner.setSelection(yearAdapter.getPosition("${current}-${(current + 1) % 100}"))
@@ -127,15 +133,15 @@ class IntPriceFragment : Fragment() {
                 var maxPrice: Float = 0f
                 var minPrice: Float = 35000f
 
-                if(list != null) {
+                if (list != null) {
                     var pos = 0
-                    for(i in list) {
+                    for (i in list) {
                         axis.add(i.date.substring(5, 10))
                         values.add(Entry(pos.toFloat(), i.price))
-                        if(i.price > maxPrice - 100f) {
+                        if (i.price > maxPrice - 100f) {
                             maxPrice = i.price + 200f
                         }
-                        if(i.price < minPrice + 100f) {
+                        if (i.price < minPrice + 100f) {
                             minPrice = i.price - 200f
                         }
                         pos += 1
@@ -164,7 +170,7 @@ class IntPriceFragment : Fragment() {
                 lineChart.axisRight.setDrawGridLines(false)
                 lineChart.axisLeft.setDrawGridLines(false)
                 lineChart.xAxis.setDrawGridLines(false)
-                if(it.isNotEmpty()) {
+                if (it.isNotEmpty()) {
                     if (!sharedPref.getBoolean("compress", false)) {
                         lineChart.moveViewToX(entries[0].xMax)
                         lineChart.setVisibleXRangeMaximum(10.0f)
@@ -188,18 +194,35 @@ class IntPriceFragment : Fragment() {
                     fOut.flush()
                     fOut.close()
                     file.setReadable(true, false)
-                    share.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(requireContext(), requireContext().packageName + ".provider", file))
-                    share.putExtra(Intent.EXTRA_TEXT,  cropSpinner.selectedItem.toString() + " international prices in " + yearSpinner.selectedItem.toString())
+                    share.putExtra(
+                        Intent.EXTRA_STREAM,
+                        FileProvider.getUriForFile(
+                            requireContext(),
+                            requireContext().packageName + ".provider",
+                            file
+                        )
+                    )
+                    share.putExtra(
+                        Intent.EXTRA_TEXT,
+                        cropSpinner.selectedItem.toString() + " international prices in " + yearSpinner.selectedItem.toString()
+                    )
 
                     val bundle = Bundle()
-                    bundle.putString(FirebaseAnalytics.Param.ITEM_ID, cropSpinner.selectedItem.toString() + " international prices in " + yearSpinner.selectedItem.toString())
+                    bundle.putString(
+                        FirebaseAnalytics.Param.ITEM_ID,
+                        cropSpinner.selectedItem.toString() + " international prices in " + yearSpinner.selectedItem.toString()
+                    )
                     bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "image")
                     analytics.logEvent(FirebaseAnalytics.Event.SHARE, bundle)
 
                     startActivity(share)
                 } catch (e: IOException) {
                     e.printStackTrace()
-                    Toast.makeText(requireContext(), "Error occurred, please try later", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Error occurred, please try later",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
 
             }

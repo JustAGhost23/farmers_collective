@@ -17,24 +17,56 @@ import kotlin.math.roundToInt
 class Utils {
 
     companion object {
-        val MSP = mapOf(Pair(2015, 2600f), Pair(2016, 2775f), Pair(2017, 3050f), Pair(2018, 3399f), Pair(2019, 3710f), Pair(2020, 3880f), Pair(2021, 3950f), Pair(2022, 4300f))
-//        val countryList = arrayListOf("Brazil", "Indonesia", "USA", "China", "Argentina")
+        val MSP = mapOf(
+            Pair(2015, 2600f),
+            Pair(2016, 2775f),
+            Pair(2017, 3050f),
+            Pair(2018, 3399f),
+            Pair(2019, 3710f),
+            Pair(2020, 3880f),
+            Pair(2021, 3950f),
+            Pair(2022, 4300f)
+        )
+
+        //        val countryList = arrayListOf("Brazil", "Indonesia", "USA", "China", "Argentina")
         val internationalPricesCrops = arrayListOf("Soyabean", "Cotton")
 
         val dates = ArrayList<String>()
         val yearColors = mutableMapOf<Int, Int>()
-        val colors = listOf("#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#00FFFF", "#FF00FF", "#FBCEB1", "#DDFFDD", "#AABBCC")
-        val traders = listOf("PMRSS, DALLMILL",
-                "Ankush-Utnoor",
-                "Santhosh-Indravelly",
-                "Bhiva-Jainoor",
-                "Kamdhenu Trader",
-                "Raju Trader",
-                "KK Solvents",
-                "Mahesh",
-                "Others",
+        val colors = listOf(
+            "#FF0000",
+            "#00FF00",
+            "#0000FF",
+            "#FFFF00",
+            "#00FFFF",
+            "#FF00FF",
+            "#FBCEB1",
+            "#DDFFDD",
+            "#AABBCC"
         )
-        val traderColors = listOf("#ACDDDE", "#CAF1DE", "#E1F8DC", "#FEF8DD", "#F7D8BA", "#FFBFC8", "#C5A4F0", "#FF886D", "#C60404", "#868A93")
+        val traders = listOf(
+            "PMRSS, DALLMILL",
+            "Ankush-Utnoor",
+            "Santhosh-Indravelly",
+            "Bhiva-Jainoor",
+            "Kamdhenu Trader",
+            "Raju Trader",
+            "KK Solvents",
+            "Mahesh",
+            "Others",
+        )
+        val traderColors = listOf(
+            "#ACDDDE",
+            "#CAF1DE",
+            "#E1F8DC",
+            "#FEF8DD",
+            "#F7D8BA",
+            "#FFBFC8",
+            "#C5A4F0",
+            "#FF886D",
+            "#C60404",
+            "#868A93"
+        )
 
         init {
 
@@ -88,16 +120,21 @@ class Utils {
         }
 
 
-        fun roundToString(value: Float, places: Int = 1) = ((value * 10.0.pow(places.toDouble())).roundToInt() / 10.0.pow(places.toDouble())).toString()
+        fun roundToString(value: Float, places: Int = 1) =
+            ((value * 10.0.pow(places.toDouble())).roundToInt() / 10.0.pow(places.toDouble())).toString()
 
-        class CustomChartListener(val context: Context, val chart: LineChart, val dates: ArrayList<String>):
+        class CustomChartListener(
+            val context: Context,
+            val chart: LineChart,
+            val dates: ArrayList<String>
+        ) :
             OnChartGestureListener {
             private var mToast: Toast? = null
 
             override fun onChartSingleTapped(me: MotionEvent?) {
 
                 val x = chart.getHighlightByTouchPoint(me!!.x, me.y).x.toInt()
-                if(x < dates.size) {
+                if (x < dates.size) {
                     val y = chart.getHighlightByTouchPoint(me.x, me.y).y
                     val date = dates[x]
 

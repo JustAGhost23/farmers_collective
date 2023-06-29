@@ -168,7 +168,10 @@ class DailyWorker(appContext: Context, workerParams: WorkerParameters) :
                     val last = res.last()
                     val list = res.toList()
                     for (document in list.subList(0, list.size)) {
-                        if(document.id.substring(0,4).toInt() <= LocalDate.now().year && document.id.substring(0,4).toInt() >= LocalDate.now().year - 2) {
+                        if (document.id.substring(0, 4)
+                                .toInt() <= LocalDate.now().year && document.id.substring(0, 4)
+                                .toInt() >= LocalDate.now().year - 2
+                        ) {
                             val data =
                                 document.data["data"] as ArrayList<HashMap<String, Any>>
                             val t = ArrayList<Prediction>()
@@ -248,11 +251,12 @@ class DailyWorker(appContext: Context, workerParams: WorkerParameters) :
 
             db.collection("Trading_Prices")
                 .get()
-                .addOnSuccessListener {it ->
+                .addOnSuccessListener { it ->
                     val t: ArrayList<IntPriceEntry> = arrayListOf()
-                    it.documents.forEach {doc ->
+                    it.documents.forEach { doc ->
                         doc.data?.forEach {
-                            val mapArray: ArrayList<HashMap<String, Any>> = it.value as ArrayList<HashMap<String, Any>>
+                            val mapArray: ArrayList<HashMap<String, Any>> =
+                                it.value as ArrayList<HashMap<String, Any>>
                             for (map in mapArray) {
                                 t.add(
                                     IntPriceEntry(
@@ -281,16 +285,18 @@ class DailyWorker(appContext: Context, workerParams: WorkerParameters) :
 
             db.collection("TELANGANA_ADILABAD_ODK")
                 .get()
-                .addOnSuccessListener {it ->
+                .addOnSuccessListener { it ->
                     val t: ArrayList<OdkSubmission> = arrayListOf()
                     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-                    it.documents.forEach {doc ->
+                    it.documents.forEach { doc ->
                         doc.data?.forEach {
-                            val mapArray: ArrayList<HashMap<String, Any>> = it.value as ArrayList<HashMap<String, Any>>
-                            for(map in mapArray) {
-                                if(map.containsKey("CROP_NAME")) {
-                                    val m: HashMap<String, Any> = map["CROP_NAME"] as HashMap<String, Any>
-                                    if(m["RATE_OFFERED_ID"] != null) {
+                            val mapArray: ArrayList<HashMap<String, Any>> =
+                                it.value as ArrayList<HashMap<String, Any>>
+                            for (map in mapArray) {
+                                if (map.containsKey("CROP_NAME")) {
+                                    val m: HashMap<String, Any> =
+                                        map["CROP_NAME"] as HashMap<String, Any>
+                                    if (m["RATE_OFFERED_ID"] != null) {
                                         t.add(
                                             OdkSubmission(
                                                 1,
@@ -310,10 +316,10 @@ class DailyWorker(appContext: Context, workerParams: WorkerParameters) :
                                             )
                                         )
                                     }
-                                }
-                                else if(map.containsKey("CROP_NAME_1")) {
-                                    val m: HashMap<String, Any> = map["CROP_NAME_1"] as HashMap<String, Any>
-                                    if(m["RATE_OFFERED_1_ID"].toString() != "null") {
+                                } else if (map.containsKey("CROP_NAME_1")) {
+                                    val m: HashMap<String, Any> =
+                                        map["CROP_NAME_1"] as HashMap<String, Any>
+                                    if (m["RATE_OFFERED_1_ID"].toString() != "null") {
                                         t.add(
                                             OdkSubmission(
                                                 2,
@@ -333,10 +339,10 @@ class DailyWorker(appContext: Context, workerParams: WorkerParameters) :
                                             )
                                         )
                                     }
-                                }
-                                else if(map.containsKey("CROP_NAME_2")) {
-                                    val m: HashMap<String, Any> = map["CROP_NAME_2"] as HashMap<String, Any>
-                                    if(m["RATE_OFFERED_2_ID"] != null) {
+                                } else if (map.containsKey("CROP_NAME_2")) {
+                                    val m: HashMap<String, Any> =
+                                        map["CROP_NAME_2"] as HashMap<String, Any>
+                                    if (m["RATE_OFFERED_2_ID"] != null) {
                                         t.add(
                                             OdkSubmission(
                                                 3,

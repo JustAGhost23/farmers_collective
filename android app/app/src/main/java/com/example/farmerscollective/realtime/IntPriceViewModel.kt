@@ -17,15 +17,15 @@ class IntPriceViewModel(application: Application) : AndroidViewModel(application
 
     private val _crop = MutableLiveData(0)
     val crop: LiveData<Int>
-    get() = _crop
+        get() = _crop
 
     private val _prices = MutableLiveData<List<IntPriceEntry>>(arrayListOf())
     val prices: LiveData<List<IntPriceEntry>>
-    get() = _prices
+        get() = _prices
 
     private val _year = MutableLiveData<Int>()
     val year: LiveData<Int>
-    get() = _year
+        get() = _year
 
     private val current = if (LocalDate.now().isBefore(LocalDate.of(LocalDate.now().year, 7, 1)))
         LocalDate.now().year - 1
@@ -43,16 +43,15 @@ class IntPriceViewModel(application: Application) : AndroidViewModel(application
     private fun loadList() {
         val list = dao.getPricesByCropId(_crop.value?.plus(1) ?: 1) as ArrayList<IntPriceEntry>
         val realList: ArrayList<IntPriceEntry> = arrayListOf()
-        for(item in list) {
+        for (item in list) {
             val y = item.date.substring(0, 4)
             val m = item.date.substring(5, 7)
-            if(_year.value!! == y.toInt()) {
-                if(m.toInt() > 6) {
+            if (_year.value!! == y.toInt()) {
+                if (m.toInt() > 6) {
                     realList.add(item)
                 }
-            }
-            else if(_year.value!!.plus(1) == y.toInt()) {
-                if(m.toInt() < 7) {
+            } else if (_year.value!!.plus(1) == y.toInt()) {
+                if (m.toInt() < 7) {
                     realList.add(item)
                 }
             }
