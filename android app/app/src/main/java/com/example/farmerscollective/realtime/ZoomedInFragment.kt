@@ -39,9 +39,12 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.min
 
-
+// ZoomedIn Fragment
+// This fragment holds a graph, which can be accessed via Zoom In buttons available below all graphs
+// This provides a zoomed in view of a graph in landscape mode
 class ZoomedInFragment : Fragment() {
 
+    // Initialize viewModels and binding
     private lateinit var binding: FragmentZoomedInBinding
     private val intPriceViewModel by activityViewModels<IntPriceViewModel>()
     private val odkViewModel by activityViewModels<OdkViewModel>()
@@ -56,39 +59,53 @@ class ZoomedInFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-        // Inflate the layout for this fragment
+        // Inflate the layout for this fragment (fragment_zoomed_in.xml)
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_zoomed_in, container, false)
+
+        // Shared Preferences
         val sharedPref =
             requireContext().getSharedPreferences(
                 "prefs",
                 Context.MODE_PRIVATE
             )
 
+        // Variables to hold pastPredicted and predicted data
         val pastPredictedData = ArrayList<ILineDataSet>()
         val predictedData = ArrayList<ILineDataSet>()
 
+        // Setting functions for UI components using viewbinding
         with(binding) {
             zoomChart.clear()
+
+            // Setting onClick listener to navigate up back to previous fragment
             zoom.setOnClickListener {
                 requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
                 findNavController().navigateUp()
             }
 
+            // Setup a graph depending on what argument was passed while navigating to ZoomedIn Fragment
+            // barChart holds a bar chart, and zoomChart holds a lineChart
+            // Visibility of both charts is set accordingly as required (one is not present when the other is visible)
             when (args.chart) {
                 0 ->
                     cropViewModel.dataByYear.observe(viewLifecycleOwner) {
                         barChart.visibility = View.GONE
                         zoomChart.visibility = View.VISIBLE
+
                         zoomChart.clear()
+
+                        // Add data for realtime prices along with xAxis labels
                         zoomChart.xAxis.valueFormatter = IndexAxisValueFormatter(Utils.dates)
                         zoomChart.data = LineData(it)
 
+                        // Add onChartGesture listener
                         zoomChart.onChartGestureListener =
                             Utils.Companion.CustomChartListener(
                                 requireContext(), zoomChart,
                                 Utils.dates
                             )
 
+                        // Compress settings
                         if (!sharedPref.getBoolean("compress", false)) {
                             zoomChart.setVisibleXRangeMaximum(10.0f)
                         }
@@ -98,9 +115,11 @@ class ZoomedInFragment : Fragment() {
                             apply()
                         }
 
+                        // Update zoomChart with updated values
                         adjustAxis(zoomChart)
                         zoomChart.invalidate()
 
+                        // Dark Mode configuration for text
                         when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
                             Configuration.UI_MODE_NIGHT_NO -> {
                                 binding.zoomedInFragment.setBackgroundColor(Color.WHITE)
@@ -127,10 +146,12 @@ class ZoomedInFragment : Fragment() {
                         barChart.visibility = View.GONE
                         zoomChart.visibility = View.VISIBLE
 
+                        // Initial variables
                         val axis = zoomChart.axisRight
                         val axis2 = zoomChart.axisLeft
                         var min: Float = Float.MAX_VALUE
 
+                        // Set LimitLine for Minimum Support Price
                         val mspLine = LimitLine(
                             Utils.MSP[cropViewModel.year.value]!!,
                             "Minimum Support Price"
@@ -148,20 +169,24 @@ class ZoomedInFragment : Fragment() {
                         mspLine.textColor = Color.BLACK
                         mspLine.textSize = 8f
 
+                        // Add limit line to graph
                         axis.removeAllLimitLines()
                         axis.axisMinimum = min
                         axis2.axisMinimum = min
                         axis.addLimitLine(mspLine)
 
+                        // Add data for realtime prices along with xAxis labels
                         zoomChart.xAxis.valueFormatter = IndexAxisValueFormatter(Utils.dates)
                         zoomChart.data = LineData(it)
 
+                        // Add onChartGesture listener
                         zoomChart.onChartGestureListener =
                             Utils.Companion.CustomChartListener(
                                 requireContext(), zoomChart,
                                 Utils.dates
                             )
 
+                        // Compress settings
                         if (!sharedPref.getBoolean("compress", false)) {
                             zoomChart.setVisibleXRangeMaximum(10.0f)
                         }
@@ -172,8 +197,10 @@ class ZoomedInFragment : Fragment() {
                         }
 
                         zoomChart.moveViewToX(Utils.dates.size - 30f)
+                        // Update zoomChart with updated values
                         zoomChart.invalidate()
 
+                        // Dark Mode configuration for text
                         when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
                             Configuration.UI_MODE_NIGHT_NO -> {
                                 mspLine.textColor = Color.BLACK
@@ -204,36 +231,22 @@ class ZoomedInFragment : Fragment() {
 
                         zoomChart.clear()
                         Log.e("Tag", it.toString())
-//                if(it.isNotEmpty()) {
-//                    binding.xAxis.text =
-//                        "Dates (${it.first().date} - ${
-//                            it.last().date
-//                        })"
-//                }
-//                else {
-//                    binding.xAxis.text = "Dates"
-//                }
 
+                        // Initial variables
                         val list = it
                         val axis = ArrayList<String>()
                         val entries: ArrayList<ILineDataSet> = ArrayList()
                         val values = ArrayList<Entry>()
 
+                        // Max Price and Min Price for graph
                         var maxPrice: Float = 0f
                         var minPrice: Float = 35000f
 
-
-                        zoomChart.onChartGestureListener =
-                            Utils.Companion.CustomChartListener(requireContext(), zoomChart, axis)
-
-//                        if(!sharedPref.getBoolean("compress", false)) {
-//                            zoomChart.setVisibleXRangeMaximum(10.0f)
-//                        }
-
+                        // Add axis labels to axis list and obtain maximum and minimum price
                         if (list != null) {
                             var pos = 0
                             for (i in list) {
-                                axis.add(i.date)
+                                axis.add(i.date.substring(5, 10))
                                 values.add(Entry(pos.toFloat(), i.price))
                                 if (i.price > maxPrice - 100f) {
                                     maxPrice = i.price + 200f
@@ -244,14 +257,19 @@ class ZoomedInFragment : Fragment() {
                                 pos += 1
                             }
                         }
-                        val dataSet = LineDataSet(
-                            values,
-                            Utils.internationalPricesCrops[intPriceViewModel.crop.value!!]
-                        )
+
+                        // onChartGestureListener from Utils
+                        zoomChart.onChartGestureListener =
+                            Utils.Companion.CustomChartListener(requireContext(), zoomChart, axis)
+
+
+                        // Create dataset and set values
+                        val dataSet = LineDataSet(values, Utils.internationalPricesCrops[intPriceViewModel.crop.value!!])
                         dataSet.color = Color.parseColor("#000000")
                         dataSet.setDrawCircles(false)
                         entries.add(dataSet)
 
+                        // Set custom specifications for zoomChart as needed
                         zoomChart.data = LineData(entries)
                         zoomChart.description.isEnabled = false
                         zoomChart.axisRight.isEnabled = true
@@ -262,8 +280,8 @@ class ZoomedInFragment : Fragment() {
                         zoomChart.xAxis.granularity = 1f
                         zoomChart.xAxis.valueFormatter = IndexAxisValueFormatter(axis)
                         zoomChart.legend.isWordWrapEnabled = true
-//                        zoomChart.axisLeft.setDrawGridLines(false)
-//                        zoomChart.xAxis.setDrawGridLines(false)
+                        zoomChart.axisRight.setDrawGridLines(false)
+                        // Compress settings
                         if (it.isNotEmpty()) {
                             if (!sharedPref.getBoolean("compress", false)) {
                                 zoomChart.moveViewToX(entries[0].xMax)
@@ -273,6 +291,7 @@ class ZoomedInFragment : Fragment() {
                                 zoomChart.setVisibleXRangeMaximum(365.0f)
                             }
                         }
+                        // Update zoomChart with new values
                         zoomChart.invalidate()
                     }
                 3 -> odkViewModel.list.observe(viewLifecycleOwner) {
@@ -280,18 +299,10 @@ class ZoomedInFragment : Fragment() {
                     zoomChart.visibility = View.GONE
 
                     Log.d(this.toString(), it.keys.toString())
+                    // Date Time Formatter
                     val formatter: DateTimeFormatter =
                         DateTimeFormatter.ofPattern("MM-dd")
-//                if(it.isNotEmpty()) {
-//                    binding.xAxis.text =
-//                        "Submission Dates (${it.keys.first().format(formatter)} - ${
-//                            it.keys.last().format(formatter)
-//                        })"
-//                }
-//                else {
-//                    binding.xAxis.text = "Submission Dates"
-//                }
-
+                    // Initial values
                     val list = it
                     val entries1: ArrayList<BarEntry> = ArrayList()
                     val entries2: ArrayList<BarEntry> = ArrayList()
@@ -306,81 +317,43 @@ class ZoomedInFragment : Fragment() {
                     val axis = ArrayList<String?>()
                     val subs = mutableMapOf<Int, List<OdkSubmission?>>()
 
+                    // Minimium Price
                     var minPrice = 3500f
                     var xMax = 0f
 
-//                var i = 1
-//                for(color in traderColors) {
-//                    val legendEntry: LegendEntry
-//                    if(i != 1) {
-//                        legendEntry = LegendEntry(
-//                            traders[i - 2],
-//                            Legend.LegendForm.SQUARE,
-//                            10.0f,
-//                            10.0f,
-//                            null,
-//                            Color.parseColor(color)
-//                        )
-//                    }
-//                    else {
-//                        legendEntry = LegendEntry(
-//                            "Not filled",
-//                            Legend.LegendForm.SQUARE,
-//                            10.0f,
-//                            10.0f,
-//                            null,
-//                            Color.parseColor(color)
-//                        )
-//                    }
-//                    colorList.add(legendEntry)
-//                    i += 1
-//                }
-
+                    // Add axis labels
                     if (list != null) {
                         for (i in list) {
-//                        axis.add("")
                             axis.add(i.key.format(formatter))
-//                        for(j in 0 until 3) axis.add("")
-//                        val count = i.value.size
-//                        if(count % 2 == 1) {
-//                            for (j in 0 until count / 2) {
-//                                axis.add("          ")
-//                            }
-//                            axis.add(i.key.format(formatter))
-//                            for (j in 0 until count / 2) {
-//                                axis.add("          ")
-//                            }
-//                        }
-//                        else {
-//                            for (j in 0 until (count / 2) - 1) {
-//                                axis.add("          ")
-//                            }
-//                            axis.add(i.key.format(formatter))
-//                            for (j in 0 until count / 2) {
-//                                axis.add("          ")
-//                            }
-//                        }
-//                        axis.add("          ")
                         }
                     }
-                    Log.e("AXIS", axis.toString())
 
+                    // Entries are split into 4 parts, each having the nth best price for a given crop and day, where n lies between 1 and 4
+                    // To accomodate for days that have less than 4 prices, we add -1000 for the other prices, so as to maintain continuity
+                    // First all entry lists are filled with -1000, if a value to replace exists then -1000 is removed and other value is added
                     if (list != null) {
                         var count = 0f
                         for (i in list) {
                             xMax += 1f
                             var pos = count
+
+                            // Obtain highest 4 values per day
                             val v = i.value.reversed().sortedBy { it!!.price }
                                 .subList(0, min(4, i.value.size))
-                            entries1.add(BarEntry(pos, -100f))
-                            entries2.add(BarEntry(pos + 0.20f, -100f))
-                            entries3.add(BarEntry(pos + 0.40f, -100f))
-                            entries4.add(BarEntry(pos + 0.60f, -100f))
+
+                            // Fill all entries with -1000
+                            entries1.add(BarEntry(pos, -1000f))
+                            entries2.add(BarEntry(pos + 0.20f, -1000f))
+                            entries3.add(BarEntry(pos + 0.40f, -1000f))
+                            entries4.add(BarEntry(pos + 0.60f, -1000f))
                             barColors1.add(0)
                             barColors2.add(0)
                             barColors3.add(0)
                             barColors4.add(0)
                             for (j in v) {
+                                // While adding a new ODKSubmission into its respective list, we also add a LegendEntry and specific color
+                                // To handle cases where trader is not added, we have added an extra option "Not filled"
+                                // Hence the if-else statement to handle this case
                                 if (j != null) {
                                     val legendEntry: LegendEntry
                                     if (j.localTraderId == -1) {
@@ -467,17 +440,13 @@ class ZoomedInFragment : Fragment() {
                                                 )
                                             )
                                         }
-                                        if (!traderList.contains(
-                                                Utils.traders[j.localTraderId.minus(
-                                                    1
-                                                )]
-                                            )
-                                        ) {
+                                        if (!traderList.contains(Utils.traders[j.localTraderId.minus(1)])) {
                                             colorList.add(legendEntry)
                                             traderList.add(Utils.traders[j.localTraderId.minus(1)])
                                         }
                                     }
                                 }
+                                // Add odkSubmission to respective entries list
                                 val barEntry = BarEntry(pos, j!!.price.toFloat())
                                 if (j.price.toFloat() < minPrice) {
                                     minPrice = j.price.toFloat() - 200f
@@ -506,6 +475,7 @@ class ZoomedInFragment : Fragment() {
                     Log.e("entries3", entries3.toString())
                     Log.e("entries4", entries4.toString())
 
+                    // Create datasets and specify colors
                     val barDataSet1 = BarDataSet(entries1, "")
                     val barDataSet2 = BarDataSet(entries2, "")
                     val barDataSet3 = BarDataSet(entries3, "")
@@ -515,7 +485,10 @@ class ZoomedInFragment : Fragment() {
                     barDataSet3.colors = barColors3
                     barDataSet4.colors = barColors4
 
+                    // Create BarDataSet for multiple bar graphs
                     val data = BarData(barDataSet1, barDataSet2, barDataSet3, barDataSet4)
+
+                    // Set custom specifications for barChart as needed
                     data.barWidth = 0.20f
                     barChart.description.isEnabled = false
                     barChart.axisRight.isEnabled = true
@@ -536,21 +509,25 @@ class ZoomedInFragment : Fragment() {
                     barChart.xAxis.setCenterAxisLabels(true)
                     barChart.moveViewToX(xMax)
                     barChart.setFitBars(false)
+                    // Compress settings
                     if (!sharedPref.getBoolean("compress", false)) {
                         barChart.setVisibleXRangeMaximum(8.0f)
                     } else {
                         barChart.setVisibleXRangeMaximum(365.0f)
                     }
+                    // Add onChartValueSelected listener to show dialog for selected ODK Submission
                     barChart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
                         override fun onValueSelected(e: Entry, h: Highlight?) {
                             val x = e.x.toString()
-//                        val y = e.y.toString()
                             val selectedXAxisCount = x.substringBefore(".")
                             val selectedXAxisPos = x.substringAfter(".").substring(0, 2)
+
+                            // Build dialog for fragment
                             val dataDialogBuilder: AlertDialog.Builder? =
                                 activity?.let { fragmentActivity ->
                                     AlertDialog.Builder(fragmentActivity)
                                 }
+                            // Fill dialog with required fields and show
                             if (subs[selectedXAxisCount.toInt()]?.size!! > selectedXAxisPos.toInt() / 25) {
                                 val selectedOdkSubmission =
                                     subs[selectedXAxisCount.toInt()]?.get(selectedXAxisPos.toInt() / 25)
@@ -574,6 +551,7 @@ class ZoomedInFragment : Fragment() {
                             //pass
                         }
                     })
+                    // Update barChart with updated values
                     barChart.invalidate()
                 }
                 4 ->
@@ -584,6 +562,7 @@ class ZoomedInFragment : Fragment() {
                         zoomChart.clear()
                         pastPredictedData.clear()
 
+                        // Add and sort days to list
                         val dates = ArrayList<String>()
 
                         dates.addAll(it[0].keys)
@@ -595,12 +574,13 @@ class ZoomedInFragment : Fragment() {
                             d1.compareTo(d2)
                         }
 
-                        Log.d("k", dates.toString())
-
+                        // values1 -> Predicted values
+                        // values2 -> Actual values
                         val values1 = ArrayList<Entry>()
                         val values2 = ArrayList<Entry>()
                         val values3 = ArrayList<Entry>()
 
+                        // Add values to values1 and values2 accordingly
                         for (date in dates) {
                             val i = dates.indexOf(date)
                             if (it[0].containsKey(date)) values1.add(
@@ -628,10 +608,12 @@ class ZoomedInFragment : Fragment() {
 
                         Collections.sort(values3, EntryXComparator())
 
+                        // Create datasets
                         val dataset1 = LineDataSet(values1, "Predicted")
                         val dataset2 = LineDataSet(values2, "Actual")
                         val dataset3 = LineDataSet(values3, "")
 
+                        // Change required properties of datasets
                         dataset1.setDrawCircles(false)
                         dataset1.color = Color.parseColor("#00FF00")
 
@@ -649,6 +631,7 @@ class ZoomedInFragment : Fragment() {
                         dataset3.setCircleColor(Color.parseColor("#0000FF"))
                         pastPredictedData.add(dataset3)
 
+                        // Format labels for xAxis as needed
                         zoomChart.xAxis.valueFormatter =
                             IndexAxisValueFormatter(ArrayList(dates.map { date ->
                                 //2022-07-25
@@ -656,10 +639,12 @@ class ZoomedInFragment : Fragment() {
                             }))
                         // enable scaling and dragging
 
+                        // Add graph data to zoomChart
                         zoomChart.data = LineData(pastPredictedData)
                         zoomChart.onChartGestureListener =
                             Utils.Companion.CustomChartListener(requireContext(), zoomChart, dates)
 
+                        // Updated zoomChart with updated values
                         zoomChart.invalidate()
                     }
                 5 ->
@@ -667,8 +652,10 @@ class ZoomedInFragment : Fragment() {
                         barChart.visibility = View.GONE
                         zoomChart.visibility = View.VISIBLE
 
+                        // Check if data is set as Weekly or Daily
                         val isWeekly = sharedPref.getBoolean("isWeekly", false)
 
+                        // Update data in viewModel accordingly
                         if (isWeekly && predictedViewModel.dailyOrWeekly.value == "Daily") {
                             predictedViewModel.changeSelection("Weekly")
                         } else if (!isWeekly && predictedViewModel.dailyOrWeekly.value == "Weekly") {
@@ -678,6 +665,7 @@ class ZoomedInFragment : Fragment() {
                         zoomChart.clear()
                         predictedData.clear()
 
+                        // Add and sort days in a list
                         val dates = java.util.ArrayList<String>()
 
                         dates.addAll(it.keys)
@@ -689,7 +677,7 @@ class ZoomedInFragment : Fragment() {
                             d1.compareTo(d2)
                         }
 
-
+                        // Set list of predicted/real days to be selected depending on daily/weekly selection
                         val pred_dates = if (predictedViewModel.dailyOrWeekly.value == "Weekly") {
                             dates.subList(dates.size - 12, dates.size)
                         } else {
@@ -702,13 +690,13 @@ class ZoomedInFragment : Fragment() {
                             dates.subList(0, dates.size - 30)
                         }
 
-
-                        Log.d("k", dates.toString())
-
+                        // values1 -> Actual values
+                        // values2 -> Predicted values
                         val values1 = java.util.ArrayList<Entry>()
                         val values2 = java.util.ArrayList<Entry>()
                         val values3 = java.util.ArrayList<Entry>()
 
+                        // Add actual and predicted values to respective lists
                         for (date in real_dates) {
                             val i = dates.indexOf(date)
                             values1.add(Entry(i.toFloat(), it[date]!!))
@@ -736,10 +724,12 @@ class ZoomedInFragment : Fragment() {
                         Log.d("ccc", values3.toString())
                         Collections.sort(values3, EntryXComparator())
 
+                        // Create dataset
                         val dataset1 = LineDataSet(values1, "Nagpur")
                         val dataset2 = LineDataSet(values2, "Predicted")
                         val dataset3 = LineDataSet(values3, "")
 
+                        // Set required attributes for datasets
                         dataset1.setDrawCircles(false)
                         dataset1.color = Color.parseColor("#FF0000")
                         predictedData.add(dataset1)
@@ -755,6 +745,7 @@ class ZoomedInFragment : Fragment() {
                         dataset3.setCircleColor(Color.parseColor("#0000FF"))
                         predictedData.add(dataset3)
 
+                        // Set axis labels on xAxis according to given format
                         zoomChart.xAxis.valueFormatter = IndexAxisValueFormatter(
                             java.util.ArrayList(
                                 dates.map { date ->
@@ -763,7 +754,10 @@ class ZoomedInFragment : Fragment() {
                                 })
                         )
 
+                        // Add data to graph
                         zoomChart.data = LineData(predictedData)
+
+                        // Format graph as needed
                         zoomChart.onChartGestureListener =
                             Utils.Companion.CustomChartListener(requireContext(), zoomChart, dates)
                         zoomChart.setVisibleXRangeMaximum(30.0f)
@@ -773,12 +767,12 @@ class ZoomedInFragment : Fragment() {
                             zoomChart.setVisibleXRangeMaximum(365.0f)
                         }
 
+                        // Update zoomChart with new updated values
                         zoomChart.invalidate()
                     }
-
-
             }
         }
+        // Returning binding.root to update the layout with above code
         return binding.root
     }
 

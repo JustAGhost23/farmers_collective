@@ -46,9 +46,10 @@ import java.io.IOException
 import java.time.LocalDate
 import java.util.stream.Stream
 
-
+// Crop Prices Fragment
 class CropPricesFragment : Fragment() {
 
+    // Late initialized variables
     private val viewModel by activityViewModels<CropPricesViewModel>()
     private lateinit var binding: CropPricesFragmentBinding
     private lateinit var loadTrace: Trace
@@ -62,6 +63,7 @@ class CropPricesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Register how long it takes for the fragment UI to load up
         FirstDrawListener.registerFirstDrawListener(
             view,
             object : FirstDrawListener.OnFirstDrawCallback {
@@ -80,23 +82,29 @@ class CropPricesFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        // Use viewbinding to bind the Crop Prices Fragment layout(crop_prices_fragment.xml) to Crop Prices Fragment.
         binding = DataBindingUtil.inflate(inflater, R.layout.crop_prices_fragment, container, false)
+        // Firebase Analytics
         analytics = FirebaseAnalytics.getInstance(requireContext())
 
+        // Shared Preferences
         val sharedPref =
             requireContext().getSharedPreferences(
                 "prefs",
                 Context.MODE_PRIVATE
             )
 
+        // Setting functions for UI components using viewbinding
         with(binding) {
 
+            // Setting onClick listener to navigate to ZoomedInFragment (yearChart)
             yearZoom.setOnClickListener {
                 val action =
                     CropPricesFragmentDirections.actionCropPricesFragmentToZoomedInFragment(0)
                 findNavController().navigate(action)
             }
 
+            // Setting onClick listener to navigate to ZoomedInFragment (mandiChart)
             mandiZoom.setOnClickListener {
                 val action =
                     CropPricesFragmentDirections.actionCropPricesFragmentToZoomedInFragment(1)
@@ -107,17 +115,17 @@ class CropPricesFragment : Fragment() {
                 findNavController().navigateUp()
             }
 
+            // Setting up adapter for dropdown spinner to select mandi
             val adap1 = ArrayAdapter(
                 requireContext(), android.R.layout.simple_spinner_item, resources.getStringArray(
                     R.array.mandiClean
                 )
             )
             adap1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
             mandiSelector.adapter = adap1
-
             mandiSelector.setSelection(adap1.getPosition("Maharashtra - Nagpur"))
 
+            // Setting up onItemSelected listener to change selection and update values
             mandiSelector.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                     val bundle = Bundle()
@@ -139,15 +147,17 @@ class CropPricesFragment : Fragment() {
                     //do nothing
                 }
             }
+
+            // Setting up adapter for dropdown spinner to select commodity (crop)
             val adap2 = ArrayAdapter(
                 requireContext(), android.R.layout.simple_spinner_item, resources.getStringArray(
                     R.array.commodity
                 )
             )
             adap2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
             commSelector.adapter = adap2
 
+            // Creating list of years to show data for
             val current = if (LocalDate.now().isBefore(LocalDate.of(LocalDate.now().year, 6, 30)))
                 LocalDate.now().year - 1
             else LocalDate.now().year
@@ -158,12 +168,13 @@ class CropPricesFragment : Fragment() {
                 "${it}-${(it + 1) % 100}"
             }
 
+            // Setting up adapter for dropdown spinner to select year
             val adap3 = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, arr)
             adap3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
             yearSelector.adapter = adap3
             yearSelector.setSelection(adap3.getPosition("${current}-${(current + 1) % 100}"))
 
+            // Setting up onItemSelected listener to change selection and update values
             yearSelector.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                     val bundle = Bundle()
@@ -183,6 +194,7 @@ class CropPricesFragment : Fragment() {
                 }
             }
 
+            // Adding selctable chips for each year
             arr.forEachIndexed { i, item ->
                 val year = item.substring(0, 4).toInt()
 
@@ -215,9 +227,11 @@ class CropPricesFragment : Fragment() {
                 chipGroup.addView(chip)
             }
 
+            // Mandi arrays from strings.xml
             val mandis = resources.getStringArray(R.array.mandi)
             val mandisClean = resources.getStringArray(R.array.mandiClean)
 
+            // Adding selectable chips for each mandi
             for (mandi in mandis) {
 
                 val mandiClean = mandisClean[mandis.indexOf(mandi)]
@@ -253,80 +267,86 @@ class CropPricesFragment : Fragment() {
                 chipGroup2.addView(mChip)
             }
 
-
+            // Utils functions to prepare yearChare and mandiChart
             ready(yearChart)
             ready(mandiChart)
 
+            // Observing trends from viewModel to add changes when trends update
             viewModel.trends.observe(viewLifecycleOwner) {
-//                var s = ""
-//                    s += this@CropPricesFragment.getString(R.string.trends,
-//                    year,
-//                    (year + 1) % 100,
-//                    it[year]!![0].first,
-//                    it[year]!![0].second,
-//                    it[year]!![1].first,
-//                    it[year]!![1].second
-//                    )
                 Log.d("trends", " has been changed")
+
+                // Check if trends list is empty or not
                 if (it.isNotEmpty()) {
                     tableTrends.visibility = View.VISIBLE
                 } else {
                     tableTrends.visibility = View.GONE
                 }
+                // Add views programatically to add rows to table displaying trends
                 tableTrends.removeViews(1, tableTrends.childCount - 1)
                 for (year in it.keys.sorted()) {
-                    val row: TableRow = TableRow(context)
-                    val t1: TextView = TextView(context)
-                    val t2: TextView = TextView(context)
-                    val t3: TextView = TextView(context)
-                    val t4: TextView = TextView(context)
+                    val row = TableRow(context)
+                    val t1 = TextView(context)
+                    val t2 = TextView(context)
+                    val t3 = TextView(context)
+                    val t4 = TextView(context)
+
                     row.removeViews(0, row.childCount)
                     row.background =
                         ResourcesCompat.getDrawable(resources, R.drawable.table_row_bg, null)
+
                     t1.text = "Highest\nLowest"
                     t1.setTypeface(null, Typeface.BOLD)
                     t1.textSize = 16f
                     t1.gravity = 1 //CENTER_HORIZONTAL
                     t1.background =
                         ResourcesCompat.getDrawable(resources, R.drawable.table_cell_bg, null)
+
                     t2.text = "${year - 1}-${(year) % 100}\n"
                     t2.textSize = 16f
                     t2.gravity = 1 //CENTER_HORIZONTAL
                     t2.background =
                         ResourcesCompat.getDrawable(resources, R.drawable.table_cell_bg, null)
+
                     t3.text = "${it[year]!![1].first}\n${it[year]!![0].first}"
                     t3.textSize = 16f
                     t3.gravity = 1 //CENTER_HORIZONTAL
                     t3.background =
                         ResourcesCompat.getDrawable(resources, R.drawable.table_cell_bg, null)
+
                     t4.text = "${it[year]!![1].second.toInt()}\n${it[year]!![0].second.toInt()}"
                     t4.textSize = 16f
                     t4.gravity = 1 //CENTER_HORIZONTAL
                     t4.background =
                         ResourcesCompat.getDrawable(resources, R.drawable.table_cell_bg, null)
+
+                    // Add views to row, and add row to table
                     row.addView(t1)
                     row.addView(t2)
                     row.addView(t3)
                     row.addView(t4)
                     tableTrends.addView(row)
                 }
-//                trends.text = s
             }
 
 
             viewModel.dataByYear.observe(viewLifecycleOwner) {
 
                 yearChart.clear()
+
+                // Add data for realtime prices along with xAxis labels
                 yearChart.xAxis.valueFormatter = IndexAxisValueFormatter(dates)
                 yearChart.data = LineData(it)
 
+                // Add onChartGesture listener
                 yearChart.onChartGestureListener =
                     Utils.Companion.CustomChartListener(requireContext(), yearChart, dates)
 
+                // Compress settings
                 if (!sharedPref.getBoolean("compress", false)) {
                     yearChart.setVisibleXRangeMaximum(10.0f)
                 }
 
+                // Dark Mode configuration for text
                 when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
                     Configuration.UI_MODE_NIGHT_NO -> {
                         yearChart.xAxis.textColor = Color.BLACK
@@ -344,6 +364,7 @@ class CropPricesFragment : Fragment() {
                     }
                 }
 
+                // Update zoomChart with updated values
                 adjustAxis(yearChart)
                 yearChart.invalidate()
 
@@ -352,10 +373,13 @@ class CropPricesFragment : Fragment() {
             viewModel.dataByMandi.observe(viewLifecycleOwner) {
 
                 mandiChart.clear()
+
+                // Initial variables
                 val axis = mandiChart.axisRight
                 val axis2 = mandiChart.axisLeft
                 var min: Float = Float.MAX_VALUE
 
+                // Set LimitLine for Minimum Support Price
                 val mspLine = LimitLine(
                     Utils.MSP[2015 + yearSelector.selectedItemPosition]!!,
                     "Minimum Support Price"
@@ -372,21 +396,26 @@ class CropPricesFragment : Fragment() {
                 mspLine.lineWidth = 2f
                 mspLine.textSize = 8f
 
+                // Add limit line to graph
                 axis.removeAllLimitLines()
                 axis.axisMinimum = min
                 axis2.axisMinimum = min
                 axis.addLimitLine(mspLine)
 
+                // Add data for realtime prices along with xAxis labels
                 mandiChart.xAxis.valueFormatter = IndexAxisValueFormatter(dates)
                 mandiChart.data = LineData(it)
 
+                // Add onChartGesture listener
                 mandiChart.onChartGestureListener =
                     Utils.Companion.CustomChartListener(requireContext(), mandiChart, dates)
 
+                // Compress settings
                 if (!sharedPref.getBoolean("compress", false)) {
                     mandiChart.setVisibleXRangeMaximum(10.0f)
                 }
 
+                // Dark Mode configuration for text
                 when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
                     Configuration.UI_MODE_NIGHT_NO -> {
                         mandiChart.xAxis.textColor = Color.BLACK
@@ -407,39 +436,20 @@ class CropPricesFragment : Fragment() {
                         mspLine.textColor = Color.WHITE
                     }
                 }
+
+                // Update zoomChart with updated values
                 adjustAxis(mandiChart)
                 mandiChart.invalidate()
 
             }
 
-//            sharedPref.registerOnSharedPreferenceChangeListener { sharedPreferences, s ->
-//                if(s != "compress") return@registerOnSharedPreferenceChangeListener
-//
-//                if(sharedPreferences!!.getBoolean("compress", false)) {
-//                    mandiChart.setVisibleXRangeMaximum(365.0f)
-//                    yearChart.setVisibleXRangeMaximum(365.0f)
-//
-//                    mandiChart.fitScreen()
-//                    yearChart.fitScreen()
-//                }
-//
-//                else {
-//                    mandiChart.setVisibleXRangeMaximum(10.0f)
-//                    yearChart.setVisibleXRangeMaximum(10.0f)
-//
-//                    mandiChart.moveViewToX(0.0f)
-//                    yearChart.moveViewToX(0.0f)
-//                }
-//
-//
-//            }
-
-
+            // Setting onClick listener to share a picture of the graph
             yearChartShare.setOnClickListener {
                 val icon: Bitmap = yearChart.chartBitmap
                 val share = Intent(Intent.ACTION_SEND)
                 share.type = "image/png"
 
+                // Create bitmap and push to file
                 try {
                     val file = File(requireContext().cacheDir, "temp.png")
                     val fOut = FileOutputStream(file)
@@ -455,8 +465,10 @@ class CropPricesFragment : Fragment() {
                             file
                         )
                     )
+                    // Create intent containing image to be shared
                     share.putExtra(Intent.EXTRA_TEXT, mandiSelector.selectedItem.toString())
 
+                    // Log event on Firebase Analytics
                     val bundle = Bundle()
                     bundle.putString(
                         FirebaseAnalytics.Param.ITEM_ID,
@@ -465,6 +477,7 @@ class CropPricesFragment : Fragment() {
                     bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "image")
                     analytics.logEvent(FirebaseAnalytics.Event.SHARE, bundle)
 
+                    // Share intent
                     startActivity(share)
                 } catch (e: IOException) {
                     e.printStackTrace()
@@ -477,11 +490,13 @@ class CropPricesFragment : Fragment() {
 
             }
 
+            // Setting onClick listener to share a picture of the graph
             mandiChartShare.setOnClickListener {
                 val icon: Bitmap = mandiChart.chartBitmap
                 val share = Intent(Intent.ACTION_SEND)
                 share.type = "image/png"
 
+                // Create bitmap and push to file
                 try {
                     val file = File(requireContext().cacheDir, "temp.png")
                     val fOut = FileOutputStream(file)
@@ -497,8 +512,10 @@ class CropPricesFragment : Fragment() {
                             file
                         )
                     )
+                    // Create intent containing image to be shared
                     share.putExtra(Intent.EXTRA_TEXT, "Prices in ${yearSelector.selectedItem}")
 
+                    // Log event on Firebase Analytics
                     val bundle = Bundle()
                     bundle.putString(
                         FirebaseAnalytics.Param.ITEM_ID,
@@ -507,6 +524,7 @@ class CropPricesFragment : Fragment() {
                     bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "image")
                     analytics.logEvent(FirebaseAnalytics.Event.SHARE, bundle)
 
+                    // Share intent
                     startActivity(share)
                 } catch (e: IOException) {
                     e.printStackTrace()
@@ -520,6 +538,7 @@ class CropPricesFragment : Fragment() {
             }
         }
 
+        // Returning binding.root to update the layout with above code
         return binding.root
     }
 

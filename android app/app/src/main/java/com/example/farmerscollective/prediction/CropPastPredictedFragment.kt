@@ -195,14 +195,9 @@ class CropPastPredictedFragment : Fragment() {
                             }
                         }
                     }
-
-
                     // Add view to Past Recommendations binding
                     pastRecomm.addView(row.root)
-
                 }
-
-
             }
 
             val data = ArrayList<ILineDataSet>()
