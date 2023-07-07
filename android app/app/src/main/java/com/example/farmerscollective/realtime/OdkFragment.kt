@@ -42,9 +42,10 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import kotlin.math.min
 
-
+// ODK Fragment
 class OdkFragment : Fragment() {
 
+    // Late initialized variables
     private val viewModel by activityViewModels<OdkViewModel>()
     private lateinit var binding: FragmentOdkBinding
     private lateinit var analytics: FirebaseAnalytics
@@ -54,22 +55,28 @@ class OdkFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        // Use viewbinding to bind the ODK Fragment layout(fragment_odk.xml) to ODK Fragment.
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_odk, container, false)
+        // Firebase Analytics
         analytics = FirebaseAnalytics.getInstance(requireContext())
 
+        // Shared Preferences
         val sharedPref =
             requireContext().getSharedPreferences(
                 "prefs",
                 Context.MODE_PRIVATE
             )
 
+        // Setting functions for UI components using viewbinding
         with(binding) {
 
+            // Setting onClick listener to navigate to ZoomedInFragment
             barZoom.setOnClickListener {
                 val action = OdkFragmentDirections.actionOdkFragmentToZoomedInFragment(3)
                 findNavController().navigate(action)
             }
 
+            // Setting up adapter for dropdown menu to select filter (currently unused)
 //            val spinAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, resources.getStringArray(R.array.odk_filter))
 //            spinAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 //            filterSpinner.adapter = spinAdapter
@@ -85,6 +92,7 @@ class OdkFragment : Fragment() {
 //                }
 //            }
 
+            // Setting up adapter for dropdown menu to select crop
             val cropNameAdapter = ArrayAdapter(
                 requireContext(),
                 android.R.layout.simple_spinner_item,
@@ -94,6 +102,7 @@ class OdkFragment : Fragment() {
             cropSpinner.adapter = cropNameAdapter
             cropSpinner.setSelection(viewModel.crop.value!!)
 
+            // Setting up onItemSelected listener to change selection and update values
             cropSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                     viewModel.chooseCrop(p2)
@@ -104,6 +113,7 @@ class OdkFragment : Fragment() {
                 }
             }
 
+            // Creating list of years to show data for
             val current = if (LocalDate.now().isBefore(LocalDate.of(LocalDate.now().year, 6, 30)))
                 LocalDate.now().year - 1
             else LocalDate.now().year
@@ -114,12 +124,14 @@ class OdkFragment : Fragment() {
                 "${it}-${(it + 1) % 100}"
             }
 
+            // Setting up adapter for dropdown menu to select year
             val yearAdapter =
                 ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, arr)
             yearAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             yearSpinner.adapter = yearAdapter
             yearSpinner.setSelection(yearAdapter.getPosition("${current}-${(current + 1) % 100}"))
 
+            // Setting up onItemSelected listener to change selection and update values
             yearSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                     viewModel.changeYear(arr.toList()[p2].substring(0, 4).toInt())
@@ -130,20 +142,13 @@ class OdkFragment : Fragment() {
                 }
             }
 
+            // Observing ODK Submissions from viewModel to add changes when submissions update
             viewModel.list.observe(viewLifecycleOwner) {
                 Log.d(this.toString(), it.keys.toString())
+                // Date Time Formatter
                 val formatter: DateTimeFormatter =
                     DateTimeFormatter.ofPattern("MM-dd")
-//                if(it.isNotEmpty()) {
-//                    binding.xAxis.text =
-//                        "Submission Dates (${it.keys.first().format(formatter)} - ${
-//                            it.keys.last().format(formatter)
-//                        })"
-//                }
-//                else {
-//                    binding.xAxis.text = "Submission Dates"
-//                }
-
+                // Initial values
                 val list = it
                 val entries1: ArrayList<BarEntry> = ArrayList()
                 val entries2: ArrayList<BarEntry> = ArrayList()
@@ -158,81 +163,43 @@ class OdkFragment : Fragment() {
                 val axis = ArrayList<String?>()
                 val subs = mutableMapOf<Int, List<OdkSubmission?>>()
 
+                // Minimium Price
                 var minPrice = 3500f
                 var xMax = 0f
 
-//                var i = 1
-//                for(color in traderColors) {
-//                    val legendEntry: LegendEntry
-//                    if(i != 1) {
-//                        legendEntry = LegendEntry(
-//                            traders[i - 2],
-//                            Legend.LegendForm.SQUARE,
-//                            10.0f,
-//                            10.0f,
-//                            null,
-//                            Color.parseColor(color)
-//                        )
-//                    }
-//                    else {
-//                        legendEntry = LegendEntry(
-//                            "Not filled",
-//                            Legend.LegendForm.SQUARE,
-//                            10.0f,
-//                            10.0f,
-//                            null,
-//                            Color.parseColor(color)
-//                        )
-//                    }
-//                    colorList.add(legendEntry)
-//                    i += 1
-//                }
-
+                // Add axis labels
                 if (list != null) {
                     for (i in list) {
-//                        axis.add("")
                         axis.add(i.key.format(formatter))
-//                        for(j in 0 until 3) axis.add("")
-//                        val count = i.value.size
-//                        if(count % 2 == 1) {
-//                            for (j in 0 until count / 2) {
-//                                axis.add("          ")
-//                            }
-//                            axis.add(i.key.format(formatter))
-//                            for (j in 0 until count / 2) {
-//                                axis.add("          ")
-//                            }
-//                        }
-//                        else {
-//                            for (j in 0 until (count / 2) - 1) {
-//                                axis.add("          ")
-//                            }
-//                            axis.add(i.key.format(formatter))
-//                            for (j in 0 until count / 2) {
-//                                axis.add("          ")
-//                            }
-//                        }
-//                        axis.add("          ")
                     }
                 }
-                Log.e("AXIS", axis.toString())
 
+                // Entries are split into 4 parts, each having the nth best price for a given crop and day, where n lies between 1 and 4
+                // To accomodate for days that have less than 4 prices, we add -1000 for the other prices, so as to maintain continuity
+                // First all entry lists are filled with -1000, if a value to replace exists then -1000 is removed and other value is added
                 if (list != null) {
                     var count = 0f
                     for (i in list) {
                         xMax += 1f
                         var pos = count
+
+                        // Obtain highest 4 values per day
                         val v = i.value.reversed().sortedBy { it!!.price }
                             .subList(0, min(4, i.value.size))
-                        entries1.add(BarEntry(pos, -100f))
-                        entries2.add(BarEntry(pos + 0.20f, -100f))
-                        entries3.add(BarEntry(pos + 0.40f, -100f))
-                        entries4.add(BarEntry(pos + 0.60f, -100f))
+
+                        // Fill all entries with -1000
+                        entries1.add(BarEntry(pos, -1000f))
+                        entries2.add(BarEntry(pos + 0.20f, -1000f))
+                        entries3.add(BarEntry(pos + 0.40f, -1000f))
+                        entries4.add(BarEntry(pos + 0.60f, -1000f))
                         barColors1.add(0)
                         barColors2.add(0)
                         barColors3.add(0)
                         barColors4.add(0)
                         for (j in v) {
+                            // While adding a new ODKSubmission into its respective list, we also add a LegendEntry and specific color
+                            // To handle cases where trader is not added, we have added an extra option "Not filled"
+                            // Hence the if-else statement to handle this case
                             if (j != null) {
                                 val legendEntry: LegendEntry
                                 if (j.localTraderId == -1) {
@@ -325,6 +292,7 @@ class OdkFragment : Fragment() {
                                     }
                                 }
                             }
+                            // Add odkSubmission to respective entries list
                             val barEntry = BarEntry(pos, j!!.price.toFloat())
                             if (j.price.toFloat() < minPrice) {
                                 minPrice = j.price.toFloat() - 200f
@@ -353,6 +321,7 @@ class OdkFragment : Fragment() {
                 Log.e("entries3", entries3.toString())
                 Log.e("entries4", entries4.toString())
 
+                // Create datasets and specify colors
                 val barDataSet1 = BarDataSet(entries1, "")
                 val barDataSet2 = BarDataSet(entries2, "")
                 val barDataSet3 = BarDataSet(entries3, "")
@@ -362,7 +331,10 @@ class OdkFragment : Fragment() {
                 barDataSet3.colors = barColors3
                 barDataSet4.colors = barColors4
 
+                // Create BarDataSet for multiple bar graphs
                 val data = BarData(barDataSet1, barDataSet2, barDataSet3, barDataSet4)
+
+                // Set custom specifications for barChart as needed
                 data.barWidth = 0.20f
                 barChart.description.isEnabled = false
                 barChart.axisRight.isEnabled = true
@@ -383,21 +355,25 @@ class OdkFragment : Fragment() {
                 barChart.xAxis.setCenterAxisLabels(true)
                 barChart.moveViewToX(xMax)
                 barChart.setFitBars(false)
+                // Compress settings
                 if (!sharedPref.getBoolean("compress", false)) {
                     barChart.setVisibleXRangeMaximum(8.0f)
                 } else {
                     barChart.setVisibleXRangeMaximum(365.0f)
                 }
+                // Add onChartValueSelected listener to show dialog for selected ODK Submission
                 barChart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
                     override fun onValueSelected(e: Entry, h: Highlight?) {
                         val x = e.x.toString()
-//                        val y = e.y.toString()
                         val selectedXAxisCount = x.substringBefore(".")
                         val selectedXAxisPos = x.substringAfter(".").substring(0, 2)
+
+                        // Build dialog for fragment
                         val dataDialogBuilder: AlertDialog.Builder? =
                             activity?.let { fragmentActivity ->
                                 AlertDialog.Builder(fragmentActivity)
                             }
+                        // Fill dialog with required fields and show
                         if (subs[selectedXAxisCount.toInt()]?.size!! > selectedXAxisPos.toInt() / 25) {
                             val selectedOdkSubmission =
                                 subs[selectedXAxisCount.toInt()]?.get(selectedXAxisPos.toInt() / 25)
@@ -421,14 +397,17 @@ class OdkFragment : Fragment() {
                         //pass
                     }
                 })
+                // Update barChart with updated values
                 barChart.invalidate()
             }
 
+            // Setting onClick listener to share a picture of the graph
             barChartShare.setOnClickListener {
                 val icon: Bitmap = barChart.chartBitmap
                 val share = Intent(Intent.ACTION_SEND)
                 share.type = "image/png"
 
+                // Create bitmap and push to file
                 try {
                     val file = File(requireContext().cacheDir, "temp.png")
                     val fOut = FileOutputStream(file)
@@ -444,11 +423,13 @@ class OdkFragment : Fragment() {
                             file
                         )
                     )
+                    // Create intent containing image to be shared
                     share.putExtra(
                         Intent.EXTRA_TEXT,
                         cropSpinner.selectedItem.toString() + " ODK prices in " + yearSpinner.selectedItem.toString()
                     )
 
+                    // Log event on Firebase Analytics
                     val bundle = Bundle()
                     bundle.putString(
                         FirebaseAnalytics.Param.ITEM_ID,
@@ -457,6 +438,7 @@ class OdkFragment : Fragment() {
                     bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "image")
                     analytics.logEvent(FirebaseAnalytics.Event.SHARE, bundle)
 
+                    // Share intent
                     startActivity(share)
                 } catch (e: IOException) {
                     e.printStackTrace()
@@ -470,6 +452,7 @@ class OdkFragment : Fragment() {
             }
         }
 
+        // Returning binding.root to update the layout with above code
         return binding.root
     }
 

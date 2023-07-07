@@ -35,12 +35,14 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.time.LocalDate
 
+// Int Price Fragment
 class IntPriceFragment : Fragment() {
 
     companion object {
         fun newInstance() = IntPriceFragment()
     }
 
+    // Late initialized variables
     private val viewModel by viewModels<IntPriceViewModel>()
     private lateinit var binding: FragmentIntPriceBinding
     private lateinit var analytics: FirebaseAnalytics
@@ -50,23 +52,29 @@ class IntPriceFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // Use viewbinding to bind the Int Price Fragment layout(fragment_int_price.xml) to Int Price Fragment.
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_int_price, container, false)
+        // Firebase Analytics
         analytics = FirebaseAnalytics.getInstance(requireContext())
 
+        // Shared Preferences
         val sharedPref =
             requireContext().getSharedPreferences(
                 "prefs",
                 Context.MODE_PRIVATE
             )
 
+        // Setting functions for UI components using viewbinding
         with(binding) {
 
+            // Setting onClick listener to navigate to ZoomedInFragment
             lineZoom.setOnClickListener {
                 val action =
                     IntPriceFragmentDirections.actionInternationalPricesFragmentToZoomedInFragment(2)
                 findNavController().navigate(action)
             }
 
+            // Setting up adapter for dropdown menu to select crop
             val cropAdapter = ArrayAdapter(
                 requireContext(),
                 android.R.layout.simple_spinner_item,
@@ -76,6 +84,7 @@ class IntPriceFragment : Fragment() {
             cropSpinner.adapter = cropAdapter
             cropSpinner.setSelection(viewModel.crop.value!!)
 
+            // Setting up onItemSelected listener to change selection and update values
             cropSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                     viewModel.changeCropId(p2)
@@ -86,6 +95,7 @@ class IntPriceFragment : Fragment() {
                 }
             }
 
+            // Creating list of years to show data for
             val current = if (LocalDate.now().isBefore(LocalDate.of(LocalDate.now().year, 6, 30)))
                 LocalDate.now().year - 1
             else LocalDate.now().year
@@ -96,12 +106,14 @@ class IntPriceFragment : Fragment() {
                 "${it}-${(it + 1) % 100}"
             }
 
+            // Setting up adapter for dropdown menu to select year
             val yearAdapter =
                 ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, arr)
             yearAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             yearSpinner.adapter = yearAdapter
             yearSpinner.setSelection(yearAdapter.getPosition("${current}-${(current + 1) % 100}"))
 
+            // Setting up onItemSelected listener to change selection and update values
             yearSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                     viewModel.changeYear(arr.toList()[p2].substring(0, 4).toInt())
@@ -112,27 +124,22 @@ class IntPriceFragment : Fragment() {
                 }
             }
 
+            // Observing international prices from viewModel to add changes when prices update
             viewModel.prices.observe(viewLifecycleOwner) {
                 lineChart.clear()
                 Log.e("Tag", it.toString())
-//                if(it.isNotEmpty()) {
-//                    binding.xAxis.text =
-//                        "Dates (${it.first().date} - ${
-//                            it.last().date
-//                        })"
-//                }
-//                else {
-//                    binding.xAxis.text = "Dates"
-//                }
 
+                // Initial variables
                 val list = it
                 val axis = ArrayList<String>()
                 val entries: ArrayList<ILineDataSet> = ArrayList()
                 val values = ArrayList<Entry>()
 
+                // Max Price and Min Price for graph
                 var maxPrice: Float = 0f
                 var minPrice: Float = 35000f
 
+                // Add axis labels to axis list and obtain maximum and minimum price
                 if (list != null) {
                     var pos = 0
                     for (i in list) {
@@ -148,15 +155,18 @@ class IntPriceFragment : Fragment() {
                     }
                 }
 
+                // onChartGestureListener from Utils
                 lineChart.onChartGestureListener =
                     Utils.Companion.CustomChartListener(requireContext(), lineChart, axis)
 
 
+                // Create dataset and set values
                 val dataSet = LineDataSet(values, internationalPricesCrops[viewModel.crop.value!!])
                 dataSet.color = Color.parseColor("#000000")
                 dataSet.setDrawCircles(false)
                 entries.add(dataSet)
 
+                // Set custom specifications for lineChart as needed
                 lineChart.data = LineData(entries)
                 lineChart.description.isEnabled = false
                 lineChart.axisRight.isEnabled = true
@@ -170,6 +180,7 @@ class IntPriceFragment : Fragment() {
                 lineChart.axisRight.setDrawGridLines(false)
                 lineChart.axisLeft.setDrawGridLines(false)
                 lineChart.xAxis.setDrawGridLines(false)
+                // Compress settings
                 if (it.isNotEmpty()) {
                     if (!sharedPref.getBoolean("compress", false)) {
                         lineChart.moveViewToX(entries[0].xMax)
@@ -179,14 +190,17 @@ class IntPriceFragment : Fragment() {
                         lineChart.setVisibleXRangeMaximum(365.0f)
                     }
                 }
+                // Update lineChart with new values
                 lineChart.invalidate()
             }
 
+            // Setting onClick listener to share a picture of the graph
             lineChartShare.setOnClickListener {
                 val icon: Bitmap = lineChart.chartBitmap
                 val share = Intent(Intent.ACTION_SEND)
                 share.type = "image/png"
 
+                // Create bitmap and push to file
                 try {
                     val file = File(requireContext().cacheDir, "temp.png")
                     val fOut = FileOutputStream(file)
@@ -202,11 +216,13 @@ class IntPriceFragment : Fragment() {
                             file
                         )
                     )
+                    // Create intent containing image to be shared
                     share.putExtra(
                         Intent.EXTRA_TEXT,
                         cropSpinner.selectedItem.toString() + " international prices in " + yearSpinner.selectedItem.toString()
                     )
 
+                    // Log event on Firebase Analytics
                     val bundle = Bundle()
                     bundle.putString(
                         FirebaseAnalytics.Param.ITEM_ID,
@@ -215,6 +231,7 @@ class IntPriceFragment : Fragment() {
                     bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "image")
                     analytics.logEvent(FirebaseAnalytics.Event.SHARE, bundle)
 
+                    // Share intent
                     startActivity(share)
                 } catch (e: IOException) {
                     e.printStackTrace()
@@ -228,6 +245,7 @@ class IntPriceFragment : Fragment() {
             }
         }
 
+        // Returning binding.root to update the layout with above code
         return binding.root
     }
 

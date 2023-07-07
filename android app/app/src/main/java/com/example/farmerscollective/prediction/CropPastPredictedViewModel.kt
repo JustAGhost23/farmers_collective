@@ -166,7 +166,7 @@ class CropPastPredictedViewModel(application: Application) : AndroidViewModel(ap
         _graph.value = listOf(map1, map2)
     }
 
-    // Function to change data and refresh Past Recommendations
+    // Function to change date and refresh Past Recommendations
     fun changeDate(newDate: LocalDate) {
         _date.value = if (newDate.isBefore(LocalDate.now().plusDays(1)))
             newDate

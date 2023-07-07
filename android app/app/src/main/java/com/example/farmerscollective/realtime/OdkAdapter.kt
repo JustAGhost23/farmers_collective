@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.farmerscollective.R
 import java.time.LocalDate
 
+// Recycler View Adapter for ODK (Currently unused)
+
 class OdkAdapter(private val dataset: Array<LocalDate>, val listener: Listener) :
     RecyclerView.Adapter<OdkAdapter.ViewHolder>() {
 
@@ -20,6 +22,7 @@ class OdkAdapter(private val dataset: Array<LocalDate>, val listener: Listener) 
         fun onClick(date: LocalDate)
     }
 
+    // ViewHolder
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val textView: TextView
         val mView: View
@@ -42,7 +45,6 @@ class OdkAdapter(private val dataset: Array<LocalDate>, val listener: Listener) 
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
         viewHolder.textView.text = dataset[position].toString()

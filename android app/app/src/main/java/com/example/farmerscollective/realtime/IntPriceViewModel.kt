@@ -11,10 +11,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
 
+// ViewModel for IntPrice Fragment
 class IntPriceViewModel(application: Application) : AndroidViewModel(application) {
-
+    // Dao for intPrice
     private val dao = PriceDatabase.getDatabase(application).intPriceDao()
 
+    // Private variables providing data to respective LiveData variables
     private val _crop = MutableLiveData(0)
     val crop: LiveData<Int>
         get() = _crop
@@ -31,6 +33,7 @@ class IntPriceViewModel(application: Application) : AndroidViewModel(application
         LocalDate.now().year - 1
     else LocalDate.now().year
 
+    // Code run when viewModel is initialized
     init {
         _year.value = current
         viewModelScope.launch {
@@ -40,8 +43,12 @@ class IntPriceViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
+    // Function to get International Crop Prices
     private fun loadList() {
+        // Get international crop prices from room database
         val list = dao.getPricesByCropId(_crop.value?.plus(1) ?: 1) as ArrayList<IntPriceEntry>
+
+        // Format list as per requirement to include only prices from year selected
         val realList: ArrayList<IntPriceEntry> = arrayListOf()
         for (item in list) {
             val y = item.date.substring(0, 4)
@@ -56,9 +63,11 @@ class IntPriceViewModel(application: Application) : AndroidViewModel(application
                 }
             }
         }
+        // Update prices with formatted list
         _prices.postValue(realList)
     }
 
+    // Function to change crop selected and refresh international prices
     fun changeCropId(index: Int) {
         _crop.value = index
         viewModelScope.launch {
@@ -68,6 +77,7 @@ class IntPriceViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
+    // Function to change year selected and refresh international prices
     fun changeYear(year: Int) {
         _year.value = year
         viewModelScope.launch {
