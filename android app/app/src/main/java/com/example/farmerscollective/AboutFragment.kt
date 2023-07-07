@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.findNavController
 
-
+// About Fragment
 class AboutFragment : Fragment() {
 
     override fun onCreateView(
@@ -19,6 +19,7 @@ class AboutFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        // Add a onClickListener on the header to navigate up to previous fragment
         val header: View = view.findViewById(R.id.about_view2)
         header.setOnClickListener {
             it.findNavController().navigateUp()

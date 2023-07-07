@@ -5,9 +5,11 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
+// Create Room Database
 @Database(entities = [IntPriceEntry::class], version = 1, exportSchema = false)
 public abstract class PriceDatabase : RoomDatabase() {
 
+    // Dao for International Prices
     abstract fun intPriceDao(): IntPriceDao
 
     companion object {

@@ -25,7 +25,8 @@ class Utils {
             Pair(2019, 3710f),
             Pair(2020, 3880f),
             Pair(2021, 3950f),
-            Pair(2022, 4300f)
+            Pair(2022, 4300f),
+            Pair(2023, 4600f)
         )
 
         //        val countryList = arrayListOf("Brazil", "Indonesia", "USA", "China", "Argentina")

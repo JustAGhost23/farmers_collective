@@ -45,9 +45,10 @@ import java.text.NumberFormat
 import java.time.LocalDate
 import java.util.*
 
+// Crop Predicted Fragment
 class CropPredictedFragment : Fragment() {
 
-
+    // Late initialized variables
     private lateinit var viewModel: CropPredictedViewModel
     private lateinit var binding: CropPredictedFragmentBinding
     private lateinit var loadTrace: Trace
@@ -61,6 +62,7 @@ class CropPredictedFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Register how long it takes for the fragment UI to load up
         FirstDrawListener.registerFirstDrawListener(
             view,
             object : FirstDrawListener.OnFirstDrawCallback {
@@ -79,19 +81,26 @@ class CropPredictedFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        // Use viewbinding to bind the Crop Predicted Fragment layout(crop_predicted_fragment.xml) to Crop Predicted Fragment.
         binding = CropPredictedFragmentBinding.inflate(layoutInflater)
+
+        // Obtain viewModel instance and attach it to viewbinding
         viewModel = ViewModelProvider(this)[CropPredictedViewModel::class.java]
         binding.viewmodel = viewModel
+        // Firebase analytics
         analytics = FirebaseAnalytics.getInstance(requireContext())
 
+        // Shared Preferences
         val sharedPref =
             requireContext().getSharedPreferences(
                 "prefs",
                 Context.MODE_PRIVATE
             )
 
+        // Setting functions for UI components using viewbinding
         with(binding) {
 
+            // Setting onClick listener to navigate to ZoomedInFragment
             recommZoom.setOnClickListener {
                 with(sharedPref.edit()) {
                     putBoolean("isWeekly", viewModel.dailyOrWeekly.value == "Weekly")
@@ -102,17 +111,17 @@ class CropPredictedFragment : Fragment() {
                 findNavController().navigate(action)
             }
 
+            // Setting up adapter for dropdown spinner to select daily or weekly
             val adap1 = ArrayAdapter(
                 requireContext(), android.R.layout.simple_spinner_item, resources.getStringArray(
                     R.array.dailyOrWeekly
                 )
             )
             adap1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
             dailyOrWeeklySelector.adapter = adap1
-
             dailyOrWeeklySelector.setSelection(adap1.getPosition("Daily"))
 
+            // Setting up onItemSelected listener to change selection and update values
             dailyOrWeeklySelector.onItemSelectedListener =
                 object : AdapterView.OnItemSelectedListener {
                     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
@@ -129,16 +138,21 @@ class CropPredictedFragment : Fragment() {
                 }
 
             predictChart.tag = "2"
+
+            // Setting onClick listener to navigate back up to previous fragment
             predictView2.setOnClickListener {
                 it.findNavController().navigateUp()
             }
 
             val data = ArrayList<ILineDataSet>()
 
+            // Util function
             ready(predictChart)
             predictChart.legend.isEnabled = false
 
+            // Observing date to update string showing price on a given day
             viewModel.today.observe(viewLifecycleOwner) {
+                // Update string showing price with today's/this week's price
                 var todayPrice: SpannableStringBuilder = SpannableStringBuilder()
                 if (viewModel.dailyOrWeekly.value == "Daily") {
                     todayPrice = SpannableStringBuilder().append(
@@ -158,6 +172,8 @@ class CropPredictedFragment : Fragment() {
                 binding.textView3.text = todayPrice
             }
 
+
+            // Observing list of recommendations from viewModel
             viewModel.data.observe(viewLifecycleOwner) {
 
                 val format = NumberFormat.getPercentInstance()
@@ -165,6 +181,7 @@ class CropPredictedFragment : Fragment() {
                 recomm.removeAllViews()
 
                 for (item in it) {
+                    // Use viewbinding to bind row to Recommendation layout(recomm.xml)
                     val row = LayoutInflater.from(context).inflate(R.layout.recomm, recomm, false)
 
                     val g = item.confidence
@@ -172,6 +189,7 @@ class CropPredictedFragment : Fragment() {
                     val prediction: ConstraintLayout = row.findViewById(R.id.prediction)
                     val date: TextView = row.findViewById(R.id.date)
 
+                    // Date
                     date.text = SpannableStringBuilder()
                         .append(item.date)
                         .append("\n")
@@ -179,9 +197,11 @@ class CropPredictedFragment : Fragment() {
                             append(format.format(g))
                         }
 
+                    // Guidelines for UI
                     val left: Guideline = prediction.findViewById(R.id.left)
                     val right: Guideline = prediction.findViewById(R.id.right)
 
+                    // Creating the row layout and adding it programmatically for each row
                     val param1 = left.layoutParams as ConstraintLayout.LayoutParams
                     param1.guidePercent = g / 2
                     left.layoutParams = param1
@@ -198,6 +218,7 @@ class CropPredictedFragment : Fragment() {
                     loss.setTextColor(Color.DKGRAY)
                     gain.setTextColor(Color.DKGRAY)
 
+                    // Dark Mode configuration for text
                     when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
                         Configuration.UI_MODE_NIGHT_NO -> {
                             date.setTextColor(Color.BLACK)
@@ -207,6 +228,7 @@ class CropPredictedFragment : Fragment() {
                         }
                     }
 
+                    // Add view to Recommendations binding
                     recomm.addView(row)
 
                 }
@@ -214,10 +236,12 @@ class CropPredictedFragment : Fragment() {
 
             }
 
+            // Observing list of prices needed for prediction graph from viewModel
             viewModel.graph.observe(viewLifecycleOwner) {
                 predictChart.clear()
                 data.clear()
 
+                // Add and sort dates to list
                 val dates = ArrayList<String>()
 
                 dates.addAll(it.keys)
@@ -229,7 +253,7 @@ class CropPredictedFragment : Fragment() {
                     d1.compareTo(d2)
                 }
 
-
+                // Set prediction dates and real dates according to daily/weekly
                 val pred_dates = if (viewModel.dailyOrWeekly.value == "Weekly") {
                     dates.subList(dates.size - 12, dates.size)
                 } else {
@@ -245,10 +269,13 @@ class CropPredictedFragment : Fragment() {
 
                 Log.d("k", dates.toString())
 
+                // values1 -> Predicted prices
+                // values2 -> Actual prices
                 val values1 = ArrayList<Entry>()
                 val values2 = ArrayList<Entry>()
                 val values3 = ArrayList<Entry>()
 
+                // Add prices to values1 and values2
                 for (date in real_dates) {
                     val i = dates.indexOf(date)
                     values1.add(Entry(i.toFloat(), it[date]!!))
@@ -276,10 +303,12 @@ class CropPredictedFragment : Fragment() {
                 Log.d("ccc", values3.toString())
                 Collections.sort(values3, EntryXComparator())
 
+                // Create datasets for graph
                 val dataset1 = LineDataSet(values1, "Nagpur")
                 val dataset2 = LineDataSet(values2, "Predicted")
                 val dataset3 = LineDataSet(values3, "")
 
+                // Adding color and other UI formatting settings to datasets
                 dataset1.setDrawCircles(false)
                 dataset1.color = Color.parseColor("#FF0000")
                 data.add(dataset1)
@@ -295,12 +324,14 @@ class CropPredictedFragment : Fragment() {
                 dataset3.setCircleColor(Color.parseColor("#0000FF"))
                 data.add(dataset3)
 
+                // Setting format for dates on xAxis
                 predictChart.xAxis.valueFormatter =
                     IndexAxisValueFormatter(ArrayList(dates.map { date ->
                         //2022-07-25
                         date.substring(8) + date.substring(4, 8) + date.substring(2, 4)
                     }))
 
+                // Set data for predictChart
                 predictChart.data = LineData(data)
                 predictChart.onChartGestureListener =
                     Utils.Companion.CustomChartListener(requireContext(), predictChart, dates)
@@ -311,6 +342,7 @@ class CropPredictedFragment : Fragment() {
                     predictChart.setVisibleXRangeMaximum(365.0f)
                 }
 
+                // Dark Mode configuration for text
                 when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
                     Configuration.UI_MODE_NIGHT_NO -> {
                         predictChart.xAxis.textColor = Color.BLACK
@@ -326,15 +358,18 @@ class CropPredictedFragment : Fragment() {
                     }
                 }
 
+                // Update predictChart with changes made above
                 predictChart.invalidate()
             }
 
+            // Setting onClick listener to share a picture of the graph
             recommShare.setOnClickListener {
                 val icon: Bitmap = predictChart.chartBitmap
                 val share = Intent(Intent.ACTION_SEND)
                 share.type = "image/png"
                 val list = viewModel.data.value!!
 
+                // Create bitmap and push to file
                 try {
                     val file = File(requireContext().cacheDir, "temp.png")
                     val fOut = FileOutputStream(file)
@@ -356,8 +391,10 @@ class CropPredictedFragment : Fragment() {
                         str += "${pred.date}: ${pred.confidence * 100}% chance, expected gain Rs. ${pred.gain}\n"
                     }
 
+                    // Create intent containing image to be shared
                     share.putExtra(Intent.EXTRA_TEXT, str)
 
+                    // Log event on Firebase Analytics
                     val bundle = Bundle()
                     bundle.putString(
                         FirebaseAnalytics.Param.ITEM_ID,
@@ -366,6 +403,7 @@ class CropPredictedFragment : Fragment() {
                     bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "image")
                     analytics.logEvent(FirebaseAnalytics.Event.SHARE, bundle)
 
+                    // Share intent
                     startActivity(share)
                 } catch (e: IOException) {
                     e.printStackTrace()
@@ -378,6 +416,7 @@ class CropPredictedFragment : Fragment() {
             }
         }
 
+        // Returning binding.root to update the layout with above code
         return binding.root
     }
 

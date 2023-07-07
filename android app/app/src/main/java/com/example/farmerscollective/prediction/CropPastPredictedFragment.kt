@@ -49,9 +49,10 @@ import java.time.LocalDate
 import java.util.*
 import kotlin.collections.ArrayList
 
-
+// Crop Past Predicted Fragment
 class CropPastPredictedFragment : Fragment() {
 
+    // Late initialized variables
     private lateinit var viewModel: CropPastPredictedViewModel
     private var dialog: DialogFragment? = null
     private lateinit var loadTrace: Trace
@@ -64,6 +65,7 @@ class CropPastPredictedFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Register how long it takes for the fragment UI to load up
         FirstDrawListener.registerFirstDrawListener(
             view,
             object : FirstDrawListener.OnFirstDrawCallback {
@@ -83,14 +85,14 @@ class CropPastPredictedFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
-
+        // Use viewbinding to bind the Crop Past Predicted Fragment layout(crop_past_predicted_fragment.xml) to Crop Past Predicted Fragment.
         val binding = DataBindingUtil.inflate<CropPastPredictedFragmentBinding>(
             inflater,
             R.layout.crop_past_predicted_fragment,
             container,
             false
         )
+        // Obtain viewModel instance and attach it to viewbinding
         viewModel = ViewModelProvider(this)[CropPastPredictedViewModel::class.java]
 
         binding.viewmodel = viewModel
@@ -99,13 +101,16 @@ class CropPastPredictedFragment : Fragment() {
 
         val scale = resources.displayMetrics.density
 
+        // Setting functions for UI components using viewbinding
         with(binding) {
             pastPredictChart.tag = "3"
 
+            // Setting onClick listener to navigate back up to previous fragment
             pastPredictView2.setOnClickListener {
                 it.findNavController().navigateUp()
             }
 
+            // Setting onClick listener to navigate to ZoomedInFragment
             pastRecommZoom.setOnClickListener {
                 val action =
                     CropPastPredictedFragmentDirections.actionCropPastPredictedFragmentToZoomedInFragment(
@@ -114,6 +119,7 @@ class CropPastPredictedFragment : Fragment() {
                 findNavController().navigate(action)
             }
 
+            // Observing list of recommendations from viewModel
             viewModel.recomm.observe(viewLifecycleOwner) {
 
                 Log.v("ok", "amhere")
@@ -123,6 +129,7 @@ class CropPastPredictedFragment : Fragment() {
                 format.minimumFractionDigits = 0
 
                 for (item in it) {
+                    // Use viewbinding to bind row to Past Recommendation layout(past_recomm.xml)
                     val row = DataBindingUtil.inflate<PastRecommBinding>(
                         layoutInflater,
                         R.layout.past_recomm,
@@ -132,10 +139,13 @@ class CropPastPredictedFragment : Fragment() {
 
                     with(row) {
 
+                        // l -> loss
+                        // g -> gain
                         val l = item[1].toFloat()
                         val g = item[2].toFloat()
                         val profit = item[5]
 
+                        // Date
                         date.text = SpannableStringBuilder()
                             .append(item[0])
                             .append("\n")
@@ -144,9 +154,11 @@ class CropPastPredictedFragment : Fragment() {
                             }
                         date.setPadding((32 * scale + 0.5f).toInt(), 0, 0, 0)
 
+                        // Guidelines for UI
                         val left: Guideline = prediction.findViewById(R.id.left)
                         val right: Guideline = prediction.findViewById(R.id.right)
 
+                        // Creating the row layout and adding it programmatically for each row
                         val param1 = left.layoutParams as ConstraintLayout.LayoutParams
                         param1.guidePercent = (1f - l) / 2
                         left.layoutParams = param1
@@ -165,6 +177,7 @@ class CropPastPredictedFragment : Fragment() {
 
                         actual.text = profit
 
+                        // Set text color for profit
                         if (profit != "N/A") {
                             actual.text = roundToString(item[5].toFloat())
 
@@ -172,6 +185,7 @@ class CropPastPredictedFragment : Fragment() {
                             else actual.setTextColor(Color.parseColor("#DD0000"))
                         }
 
+                        // Dark Mode configuration for text
                         when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
                             Configuration.UI_MODE_NIGHT_NO -> {
                                 date.setTextColor(Color.BLACK)
@@ -183,6 +197,7 @@ class CropPastPredictedFragment : Fragment() {
                     }
 
 
+                    // Add view to Past Recommendations binding
                     pastRecomm.addView(row.root)
 
                 }
@@ -192,16 +207,17 @@ class CropPastPredictedFragment : Fragment() {
 
             val data = ArrayList<ILineDataSet>()
 
+            // Util function
             ready(pastPredictChart)
             pastPredictChart.legend.isEnabled = false
 
+            // Observing list of prices needed for past prediction graph from viewModel
             viewModel.graph.observe(viewLifecycleOwner) {
-
-                Log.v("ok", "amhere")
 
                 pastPredictChart.clear()
                 data.clear()
 
+                // Add and sort dates to list
                 val dates = ArrayList<String>()
 
                 dates.addAll(it[0].keys)
@@ -213,12 +229,15 @@ class CropPastPredictedFragment : Fragment() {
                     d1.compareTo(d2)
                 }
 
-                Log.d("k", dates.toString())
+                Log.d("dates", dates.toString())
 
+                // values1 -> Predicted prices
+                // values2 -> Actual prices
                 val values1 = ArrayList<Entry>()
                 val values2 = ArrayList<Entry>()
                 val values3 = ArrayList<Entry>()
 
+                // Add prices to values1 and values2
                 for (date in dates) {
                     val i = dates.indexOf(date)
                     if (it[0].containsKey(date)) values1.add(Entry(i.toFloat(), it[0][date]!!))
@@ -236,10 +255,12 @@ class CropPastPredictedFragment : Fragment() {
 
                 Collections.sort(values3, EntryXComparator())
 
+                // Create datasets for graph
                 val dataset1 = LineDataSet(values1, "Predicted")
                 val dataset2 = LineDataSet(values2, "Actual")
                 val dataset3 = LineDataSet(values3, "")
 
+                // Adding color and other UI formatting settings to datasets
                 dataset1.setDrawCircles(false)
                 dataset1.color = Color.parseColor("#00FF00")
 
@@ -257,6 +278,7 @@ class CropPastPredictedFragment : Fragment() {
                 dataset3.setCircleColor(Color.parseColor("#0000FF"))
                 data.add(dataset3)
 
+                // Setting format for dates on xAxis
                 pastPredictChart.xAxis.valueFormatter =
                     IndexAxisValueFormatter(ArrayList(dates.map { date ->
                         //2022-07-25
@@ -264,10 +286,12 @@ class CropPastPredictedFragment : Fragment() {
                     }))
                 // enable scaling and dragging
 
+                // Set data for pastPredictChart
                 pastPredictChart.data = LineData(data)
                 pastPredictChart.onChartGestureListener =
                     Utils.Companion.CustomChartListener(requireContext(), pastPredictChart, dates)
 
+                // Dark Mode configuration for text
                 when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
                     Configuration.UI_MODE_NIGHT_NO -> {
                         pastPredictChart.xAxis.textColor = Color.BLACK
@@ -283,17 +307,21 @@ class CropPastPredictedFragment : Fragment() {
                     }
                 }
 
+                // Update pastPredictChart with changes made above
                 pastPredictChart.invalidate()
 
             }
 
+            // Setting onClick listener to share a picture of the graph
             pastRecommShare.setOnClickListener {
+                // Firebase analytics
                 val analytics = FirebaseAnalytics.getInstance(requireContext())
                 val icon: Bitmap = pastPredictChart.chartBitmap
                 val share = Intent(Intent.ACTION_SEND)
                 share.type = "image/png"
                 val list = viewModel.recomm.value!!
 
+                // Create bitmap and push to file
                 try {
                     val file = File(requireContext().cacheDir, "temp.png")
                     val fOut = FileOutputStream(file)
@@ -314,8 +342,10 @@ class CropPastPredictedFragment : Fragment() {
                         str += "${pred[0]}: Actual profit if sold Rs. ${pred[5]}\n"
                     }
 
+                    // Create intent containing image to be shared
                     share.putExtra(Intent.EXTRA_TEXT, str)
 
+                    // Log event on Firebase Analytics
                     val bundle = Bundle()
                     bundle.putString(
                         FirebaseAnalytics.Param.ITEM_ID,
@@ -324,8 +354,7 @@ class CropPastPredictedFragment : Fragment() {
                     bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "image")
                     analytics.logEvent(FirebaseAnalytics.Event.SHARE, bundle)
 
-
-
+                    // Share intent
                     startActivity(share)
                 } catch (e: IOException) {
                     e.printStackTrace()
@@ -339,9 +368,11 @@ class CropPastPredictedFragment : Fragment() {
 
         }
 
+        // Returning binding.root to update the layout with above code
         return binding.root
     }
 
+    // Function to obtain a Date Picker Dialog
     fun showDatePickerDialog() {
         if (dialog == null) dialog = DatePickerFragment(viewModel)
 

@@ -10,14 +10,16 @@ import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import java.io.File
 import java.time.LocalDate
 
+// ViewModel for Crop Predicted Fragment
 class CropPredictedViewModel(application: Application) : AndroidViewModel(application) {
-
+    // Private variables
     val context = application
     private val _data = MutableLiveData<List<Prediction>>(arrayListOf())
     private val _graph = MutableLiveData<Map<String, Float>>(mapOf())
     private val _today = MutableLiveData<Float>()
     private val _dailyOrWeekly = MutableLiveData<String>("Daily")
 
+    // LiveData variables, getting data from above private variables
     val data: LiveData<List<Prediction>>
         get() = _data
 
@@ -30,11 +32,14 @@ class CropPredictedViewModel(application: Application) : AndroidViewModel(applic
     val dailyOrWeekly: LiveData<String>
         get() = _dailyOrWeekly
 
+    // Code run when viewModel is initialized
     init {
         getData()
     }
 
+    // Function to get Recommendations
     private fun getData() {
+        // Initial variables
         var temp = ArrayList<Prediction>()
         val map = mutableMapOf<String, Float>()
         var date = ""
@@ -42,6 +47,7 @@ class CropPredictedViewModel(application: Application) : AndroidViewModel(applic
 
         if (context.fileList().isNotEmpty()) {
             var file: File
+            // Obtain daily or weekly prediction file according to dailyOrWeekly.value
             file = if (dailyOrWeekly.value == "Daily") {
                 File(context.filesDir, "dailyPredict.csv")
             } else {
@@ -50,6 +56,7 @@ class CropPredictedViewModel(application: Application) : AndroidViewModel(applic
 
 
             if (file.exists()) {
+                // Read csv file and data to a temp list
                 csvReader().open(file) {
                     readAllAsSequence().forEachIndexed { i, it ->
                         temp.add(
@@ -65,6 +72,7 @@ class CropPredictedViewModel(application: Application) : AndroidViewModel(applic
                         map[it[0]] = it[2].toFloat()
                     }
                 }
+                // Obtain last weekDate and date accordingly
                 csvReader().open(File(context.filesDir, "weeklyPredict.csv")) {
                     weekDate = readAllAsSequence().toList()[0][0]
                 }
@@ -73,9 +81,11 @@ class CropPredictedViewModel(application: Application) : AndroidViewModel(applic
                 }
             }
 
+            // Add price data for current year from Nagpur
             file = File(context.filesDir, "MAHARASHTRA_NAGPUR_Price_${LocalDate.now().year}")
 
             if (file.exists()) {
+                // Add data to map for daily/weekly accordingly
                 csvReader().open(file) {
                     if (dailyOrWeekly.value == "Daily") {
                         readAllAsSequence().forEach {
@@ -103,6 +113,7 @@ class CropPredictedViewModel(application: Application) : AndroidViewModel(applic
                 }
             }
 
+            // Obtain data from previous year csv file if needed if current date is in the first 6 months of the year
             if (LocalDate.now().isBefore(LocalDate.of(LocalDate.now().year, 7, 1))) {
                 file = File(
                     context.filesDir,
@@ -110,6 +121,7 @@ class CropPredictedViewModel(application: Application) : AndroidViewModel(applic
                 )
 
                 if (file.exists()) {
+                    // Add data to map for daily/weekly accordingly
                     csvReader().open(file) {
                         if (dailyOrWeekly.value == "Daily") {
                             readAllAsSequence().forEach {
@@ -139,6 +151,7 @@ class CropPredictedViewModel(application: Application) : AndroidViewModel(applic
 
             }
 
+            // Set value for today map and sort temp as needed
             if (dailyOrWeekly.value == "Daily") {
                 _today.value = map[LocalDate.parse(date).minusDays(1).toString()] ?: 0.0f
                 temp.sortBy { value -> value.output }
@@ -156,6 +169,7 @@ class CropPredictedViewModel(application: Application) : AndroidViewModel(applic
                     it
                 })
             }
+            // Assign value for data and graph
             Log.d("TAG", temp.reversed().subList(1, 4).toString())
             _data.value = temp.reversed().subList(1, 4)
 
@@ -164,6 +178,7 @@ class CropPredictedViewModel(application: Application) : AndroidViewModel(applic
         }
     }
 
+    // Function to change daily/weekly selection and refresh Recommendations
     fun changeSelection(dailyOrWeekly: String) {
         _dailyOrWeekly.value = dailyOrWeekly
         getData()
