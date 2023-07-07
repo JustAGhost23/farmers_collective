@@ -28,6 +28,7 @@ class DatePickerFragment(private val viewModel: CropPastPredictedViewModel) : Di
             dialog = DatePickerDialog(requireContext(), this, year, month, day)
         }
 
+        // Create instance of Firebase Analytics if it already doesn't exist
         if (analytics == null) {
             analytics = FirebaseAnalytics.getInstance(requireContext())
         }
@@ -35,6 +36,7 @@ class DatePickerFragment(private val viewModel: CropPastPredictedViewModel) : Di
         return dialog!!
     }
 
+    //Updates the date being viewed in Past Predictions Screen and fires off an event logged in Firebase Analytics
     override fun onDateSet(p0: DatePicker?, p1: Int, p2: Int, p3: Int) {
         dialog!!.updateDate(p1, p2, p3)
         val bundle = Bundle()

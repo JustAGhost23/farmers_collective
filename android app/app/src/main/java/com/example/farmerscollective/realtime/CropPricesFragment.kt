@@ -267,7 +267,7 @@ class CropPricesFragment : Fragment() {
                 chipGroup2.addView(mChip)
             }
 
-            // Utils functions to prepare yearChare and mandiChart
+            // Utils functions to prepare yearChart and mandiChart
             ready(yearChart)
             ready(mandiChart)
 

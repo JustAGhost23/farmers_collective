@@ -14,6 +14,8 @@ import java.time.LocalDate
 class CropPastPredictedViewModel(application: Application) : AndroidViewModel(application) {
     // Private variables
     val context = application
+
+
     private val _recomm = MutableLiveData<ArrayList<List<String>>>(arrayListOf())
     private val _graph = MutableLiveData<List<Map<String, Float>>>(listOf(mapOf(), mapOf()))
     private val _date = MutableLiveData<LocalDate>()

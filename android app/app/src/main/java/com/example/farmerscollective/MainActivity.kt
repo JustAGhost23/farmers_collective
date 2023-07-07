@@ -90,15 +90,17 @@ class MainActivity : AppCompatActivity(), ChartRangeDialog.DialogListener {
             }
         }
 
-
+        // Set up work manager for fetching data from Firebase
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
 
+        // One time worker for fetching all data from Firebase
         val worker1 = OneTimeWorkRequestBuilder<OneTimeWorker>()
             .setConstraints(constraints)
             .build()
 
+        // Periodic worker for fetching only daily data from Firebase
         val worker2 = PeriodicWorkRequestBuilder<DailyWorker>(24, TimeUnit.HOURS)
             .setConstraints(constraints)
             .setInitialDelay(24, TimeUnit.HOURS)
@@ -110,6 +112,7 @@ class MainActivity : AppCompatActivity(), ChartRangeDialog.DialogListener {
                 Context.MODE_PRIVATE
             )
 
+        // If latest data is not available, fetch it again from Firebase
         if (!sharedPref.getBoolean(
                 "isDailyDataAvailable",
                 false
@@ -123,6 +126,7 @@ class MainActivity : AppCompatActivity(), ChartRangeDialog.DialogListener {
             .getInstance(applicationContext)
             .enqueueUniquePeriodicWork("refresh", ExistingPeriodicWorkPolicy.KEEP, worker2)
 
+        // Reload data from Firebase on clicking refresh button
         refresh.setOnClickListener {
 
             if (!sharedPref.getBoolean(
@@ -153,6 +157,9 @@ class MainActivity : AppCompatActivity(), ChartRangeDialog.DialogListener {
 
         }
 
+        /**
+         * Set visible X-axis range for chart displayed
+         */
         settings.setOnClickListener {
             val dialog = ChartRangeDialog()
             dialog.show(supportFragmentManager, "chart range")
@@ -160,7 +167,9 @@ class MainActivity : AppCompatActivity(), ChartRangeDialog.DialogListener {
 
     }
 
-
+    /**
+     * Helper function to navigate to home fragment
+     */
     fun toHome(view: View) {
         controller.navigate(R.id.mainFragment)
     }
@@ -177,6 +186,9 @@ class MainActivity : AppCompatActivity(), ChartRangeDialog.DialogListener {
             apply()
         }
 
+        /**
+         * A very hacky way to navigate to the same fragment again to refresh the chart
+         */
         val id = controller.currentDestination?.id
         if (id == R.id.zoomedInFragment) {
             controller.popBackStack(id, true)

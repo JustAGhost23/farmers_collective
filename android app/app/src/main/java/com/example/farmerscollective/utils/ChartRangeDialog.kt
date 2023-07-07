@@ -46,6 +46,7 @@ class ChartRangeDialog : DialogFragment() {
                     Context.MODE_PRIVATE
                 )
 
+            // Creates a dialog for selecting the range of x-axis
             builder
                 .setTitle("Select X-axis range")
                 .setSingleChoiceItems(

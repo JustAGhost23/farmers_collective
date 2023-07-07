@@ -14,9 +14,14 @@ import java.util.stream.Stream
 import kotlin.math.pow
 import kotlin.math.roundToInt
 
+/**
+ * Class which holds commonly used constants and helper functions
+ */
 class Utils {
 
     companion object {
+
+        // MSP data for various agricultural years
         val MSP = mapOf(
             Pair(2015, 2600f),
             Pair(2016, 2775f),
@@ -45,6 +50,10 @@ class Utils {
             "#DDFFDD",
             "#AABBCC"
         )
+
+        /**
+         * List of traders for the price chart
+         */
         val traders = listOf(
             "PMRSS, DALLMILL",
             "Ankush-Utnoor",
@@ -56,6 +65,10 @@ class Utils {
             "Mahesh",
             "Others",
         )
+
+        /**
+         * List of colors for the traders
+         */
         val traderColors = listOf(
             "#ACDDDE",
             "#CAF1DE",
@@ -71,9 +84,12 @@ class Utils {
 
         init {
 
+            // The agricultural year for Soyabean is from 1st July to 30th June
+            // Ignore the year in the date
             val start = LocalDate.of(2001, 7, 1)
             val end = LocalDate.of(2002, 6, 30)
 
+            // Iterate through the range described above and add formatted dates to the list
             Stream.iterate(start) { d ->
                 d.plusDays(1)
             }
@@ -83,15 +99,20 @@ class Utils {
                     dates.add(dt.substring(8) + dt.substring(4, 7))
                 }
 
+            // Set current agricultural year
             val current = if (LocalDate.now().isBefore(LocalDate.of(LocalDate.now().year, 6, 30)))
                 LocalDate.now().year - 1
             else LocalDate.now().year
 
+            // Set colors for each year
             (current - 7..current).forEachIndexed { i, item ->
                 yearColors[item] = Color.parseColor(colors[i])
             }
         }
 
+        /**
+         * Function to adjust the axis of the chart to show the last 30 days
+         */
         fun adjustAxis(chart: LineChart) {
             var today = LocalDate.now().toString()
             today = today.substring(8) + today.substring(4, 7)
@@ -100,6 +121,9 @@ class Utils {
             chart.moveViewToX(index.toFloat())
         }
 
+        /**
+         * Function to set common properties for the chart
+         */
         fun ready(chart: LineChart) {
 
             chart.setDrawGridBackground(false)
@@ -121,9 +145,15 @@ class Utils {
         }
 
 
+        /**
+         *  String formatting for float values
+         */
         fun roundToString(value: Float, places: Int = 1) =
             ((value * 10.0.pow(places.toDouble())).roundToInt() / 10.0.pow(places.toDouble())).toString()
 
+        /** Gesture listener for the chart;
+        * Other functions can also be implemented for custom chart UI behavior
+         */
         class CustomChartListener(
             val context: Context,
             val chart: LineChart,
@@ -132,6 +162,7 @@ class Utils {
             OnChartGestureListener {
             private var mToast: Toast? = null
 
+            // Show the date and price of the point tapped
             override fun onChartSingleTapped(me: MotionEvent?) {
 
                 val x = chart.getHighlightByTouchPoint(me!!.x, me.y).x.toInt()
