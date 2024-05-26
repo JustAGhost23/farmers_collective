@@ -1,4 +1,6 @@
 # farmers_collective
+Publication : https://dl.acm.org/doi/10.1145/3609262
+
 The project is a sub-part of a larger project under the Google AI for Social Good programme and is in
 collaboration with ACT4D - IIT Delhi, Gram Vaani and CCD. 
 </br>
