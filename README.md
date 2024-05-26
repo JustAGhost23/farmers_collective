@@ -1,5 +1,6 @@
 # farmers_collective
 Title : AI-based Market Intelligence Systems for Farmer Collectives: A Case Study from India
+</br>
 Publication : https://dl.acm.org/doi/10.1145/3609262
 
 The project is a sub-part of a larger project under the Google AI for Social Good programme and is in
