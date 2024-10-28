@@ -1,7 +1,7 @@
 # Farmers Collective
 
 ## Title
-**AI-based Market Intelligence Systems for Farmer Collectives: A Case Study from India** [Funding](https://drive.google.com/file/d/1xw9WReTfl2XNVFip4J1P_PGC33dBlzol/view?usp=sharing)
+**AI-based Market Intelligence Systems for Farmer Collectives: A Case Study from India** [Funding](https://drive.google.com/file/d/1pkqTaaMOIHWkB5ayBQtXoK61rBnOsAx0/view)
 
 **Publication:** [ACM Digital Library](https://dl.acm.org/doi/10.1145/3609262)
 
